@@ -103,6 +103,24 @@ export const PROMO_QUERIES = [
   'SELECT * FROM admin_sponsors',
 ];
 
+export const PUBLICATION_QUERIES = [
+  'SELECT * FROM pub_category',
+  'SELECT * FROM pub_reaction_type',
+  'SELECT * FROM pub_live_notice',
+  'SELECT * FROM my_inbox',
+  'SELECT * FROM my_notify_prefs',
+  'SELECT * FROM my_push_devices',
+  'SELECT * FROM faq_entries',
+  'SELECT * FROM admin_publication_settings',
+  'SELECT * FROM admin_push_config',
+  'SELECT * FROM admin_campaigns',
+  'SELECT * FROM admin_auto_rules',
+  'SELECT * FROM admin_news',
+  'SELECT * FROM admin_news_settings',
+  'SELECT * FROM admin_news_sources',
+  'SELECT * FROM admin_faqs',
+];
+
 export function connect(token?: string, extra: string[] = []): Promise<Client> {
   return new Promise((resolve, reject) => {
     const b = DbConnection.builder()

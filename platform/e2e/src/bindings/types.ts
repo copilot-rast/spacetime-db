@@ -36,14 +36,23 @@ export type AdminAchievements = __Infer<typeof AdminAchievements>;
 export const AdminAdmins = __t.object("AdminAdmins", {});
 export type AdminAdmins = __Infer<typeof AdminAdmins>;
 
+export const AdminAutoRules = __t.object("AdminAutoRules", {});
+export type AdminAutoRules = __Infer<typeof AdminAutoRules>;
+
 export const AdminBanners = __t.object("AdminBanners", {});
 export type AdminBanners = __Infer<typeof AdminBanners>;
+
+export const AdminCampaigns = __t.object("AdminCampaigns", {});
+export type AdminCampaigns = __Infer<typeof AdminCampaigns>;
 
 export const AdminEconomySettings = __t.object("AdminEconomySettings", {});
 export type AdminEconomySettings = __Infer<typeof AdminEconomySettings>;
 
 export const AdminEventRules = __t.object("AdminEventRules", {});
 export type AdminEventRules = __Infer<typeof AdminEventRules>;
+
+export const AdminFaqs = __t.object("AdminFaqs", {});
+export type AdminFaqs = __Infer<typeof AdminFaqs>;
 
 export const AdminGamificationSettings = __t.object("AdminGamificationSettings", {});
 export type AdminGamificationSettings = __Infer<typeof AdminGamificationSettings>;
@@ -66,6 +75,15 @@ export type AdminLoginResult = __Infer<typeof AdminLoginResult>;
 export const AdminMetaRelations = __t.object("AdminMetaRelations", {});
 export type AdminMetaRelations = __Infer<typeof AdminMetaRelations>;
 
+export const AdminNews = __t.object("AdminNews", {});
+export type AdminNews = __Infer<typeof AdminNews>;
+
+export const AdminNewsSettings = __t.object("AdminNewsSettings", {});
+export type AdminNewsSettings = __Infer<typeof AdminNewsSettings>;
+
+export const AdminNewsSources = __t.object("AdminNewsSources", {});
+export type AdminNewsSources = __Infer<typeof AdminNewsSources>;
+
 export const AdminOfferSettings = __t.object("AdminOfferSettings", {});
 export type AdminOfferSettings = __Infer<typeof AdminOfferSettings>;
 
@@ -77,6 +95,12 @@ export type AdminPaymentMethods = __Infer<typeof AdminPaymentMethods>;
 
 export const AdminPromoSettings = __t.object("AdminPromoSettings", {});
 export type AdminPromoSettings = __Infer<typeof AdminPromoSettings>;
+
+export const AdminPublicationSettings = __t.object("AdminPublicationSettings", {});
+export type AdminPublicationSettings = __Infer<typeof AdminPublicationSettings>;
+
+export const AdminPushConfig = __t.object("AdminPushConfig", {});
+export type AdminPushConfig = __Infer<typeof AdminPushConfig>;
 
 export const AdminReportRules = __t.object("AdminReportRules", {});
 export type AdminReportRules = __Infer<typeof AdminReportRules>;
@@ -702,6 +726,54 @@ export const EconomyWallet = __t.object("EconomyWallet", {
   updatedAt: __t.timestamp(),
 });
 export type EconomyWallet = __Infer<typeof EconomyWallet>;
+
+export const FaqCategoryLine = __t.object("FaqCategoryLine", {
+  id: __t.u64(),
+  key: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+});
+export type FaqCategoryLine = __Infer<typeof FaqCategoryLine>;
+
+export const FaqEntries = __t.object("FaqEntries", {});
+export type FaqEntries = __Infer<typeof FaqEntries>;
+
+export const FaqEntry = __t.object("FaqEntry", {
+  id: __t.u64(),
+  categoryId: __t.u64(),
+  get question() {
+    return __t.array(Translation);
+  },
+  get answer() {
+    return __t.array(Translation);
+  },
+  get answerHtml() {
+    return __t.array(Translation);
+  },
+  sort: __t.i32(),
+});
+export type FaqEntry = __Infer<typeof FaqEntry>;
+
+export const FaqLine = __t.object("FaqLine", {
+  id: __t.u64(),
+  categoryKey: __t.string(),
+  question: __t.string(),
+  answer: __t.string(),
+  answerHtml: __t.string(),
+});
+export type FaqLine = __Infer<typeof FaqLine>;
+
+export const FaqList = __t.object("FaqList", {
+  lang: __t.string(),
+  get categories() {
+    return __t.array(FaqCategoryLine);
+  },
+  get items() {
+    return __t.array(FaqLine);
+  },
+});
+export type FaqList = __Infer<typeof FaqList>;
 
 export const GamAchievement = __t.object("GamAchievement", {
   id: __t.u64(),
@@ -1471,6 +1543,48 @@ export const GiftPage = __t.object("GiftPage", {
 });
 export type GiftPage = __Infer<typeof GiftPage>;
 
+export const InboxClaimResult = __t.object("InboxClaimResult", {
+  inboxId: __t.u64(),
+  already: __t.bool(),
+  get rewards() {
+    return __t.array(InboxReward);
+  },
+});
+export type InboxClaimResult = __Infer<typeof InboxClaimResult>;
+
+export const InboxEntry = __t.object("InboxEntry", {
+  id: __t.u64(),
+  kind: __t.string(),
+  categoryKey: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  get body() {
+    return __t.array(Translation);
+  },
+  imageUrl: __t.string(),
+  actionType: __t.string(),
+  actionValue: __t.string(),
+  get actionLabel() {
+    return __t.array(Translation);
+  },
+  prizeId: __t.u64(),
+  claimed: __t.bool(),
+  read: __t.bool(),
+  newsId: __t.u64(),
+  at: __t.u64(),
+});
+export type InboxEntry = __Infer<typeof InboxEntry>;
+
+export const InboxReward = __t.object("InboxReward", {
+  type: __t.string(),
+  key: __t.string(),
+  action: __t.string(),
+  value: __t.f64(),
+  prizeKey: __t.string(),
+});
+export type InboxReward = __Infer<typeof InboxReward>;
+
 export const InventoryEntry = __t.object("InventoryEntry", {
   id: __t.u64(),
   itemId: __t.u64(),
@@ -1874,6 +1988,9 @@ export type MyAchievements = __Infer<typeof MyAchievements>;
 export const MyChancePlays = __t.object("MyChancePlays", {});
 export type MyChancePlays = __Infer<typeof MyChancePlays>;
 
+export const MyInbox = __t.object("MyInbox", {});
+export type MyInbox = __Infer<typeof MyInbox>;
+
 export const MyInventory = __t.object("MyInventory", {});
 export type MyInventory = __Infer<typeof MyInventory>;
 
@@ -1886,8 +2003,14 @@ export type MyMetaRelations = __Infer<typeof MyMetaRelations>;
 export const MyMetas = __t.object("MyMetas", {});
 export type MyMetas = __Infer<typeof MyMetas>;
 
+export const MyNotifyPrefs = __t.object("MyNotifyPrefs", {});
+export type MyNotifyPrefs = __Infer<typeof MyNotifyPrefs>;
+
 export const MyProfile = __t.object("MyProfile", {});
 export type MyProfile = __Infer<typeof MyProfile>;
+
+export const MyPushDevices = __t.object("MyPushDevices", {});
+export type MyPushDevices = __Infer<typeof MyPushDevices>;
 
 export const MyReport = __t.object("MyReport", {
   id: __t.u64(),
@@ -1957,6 +2080,189 @@ export type MyTags = __Infer<typeof MyTags>;
 
 export const MyWallet = __t.object("MyWallet", {});
 export type MyWallet = __Infer<typeof MyWallet>;
+
+export const NewsAdminCommentPage = __t.object("NewsAdminCommentPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(PubNewsComment);
+  },
+});
+export type NewsAdminCommentPage = __Infer<typeof NewsAdminCommentPage>;
+
+export const NewsCommentLine = __t.object("NewsCommentLine", {
+  id: __t.u64(),
+  parentId: __t.u64(),
+  accountId: __t.u64(),
+  displayName: __t.string(),
+  message: __t.string(),
+  status: __t.string(),
+  mine: __t.bool(),
+  createdAt: __t.timestamp(),
+});
+export type NewsCommentLine = __Infer<typeof NewsCommentLine>;
+
+export const NewsCommentPage = __t.object("NewsCommentPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(NewsCommentLine);
+  },
+});
+export type NewsCommentPage = __Infer<typeof NewsCommentPage>;
+
+export const NewsIngestLogPage = __t.object("NewsIngestLogPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(PubIngestLog);
+  },
+});
+export type NewsIngestLogPage = __Infer<typeof NewsIngestLogPage>;
+
+export const NewsItem = __t.object("NewsItem", {
+  id: __t.u64(),
+  slug: __t.string(),
+  categoryKey: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  get summary() {
+    return __t.array(Translation);
+  },
+  get body() {
+    return __t.array(Translation);
+  },
+  coverUrl: __t.string(),
+  isPinned: __t.bool(),
+  publishedAt: __t.u64(),
+  expiresAt: __t.u64(),
+  expired: __t.bool(),
+  seen: __t.bool(),
+  get tags() {
+    return __t.array(NewsTag);
+  },
+  commentCount: __t.u32(),
+  get reactions() {
+    return __t.array(NewsReactionCount);
+  },
+  reactionCount: __t.u32(),
+  myReaction: __t.string(),
+  allowComment: __t.bool(),
+  allowReaction: __t.bool(),
+  sourceUrl: __t.string(),
+  get seo() {
+    return __t.option(NewsSeo);
+  },
+});
+export type NewsItem = __Infer<typeof NewsItem>;
+
+export const NewsPage = __t.object("NewsPage", {
+  total: __t.u32(),
+  unread: __t.u32(),
+  get items() {
+    return __t.array(NewsItem);
+  },
+});
+export type NewsPage = __Infer<typeof NewsPage>;
+
+export const NewsReactResult = __t.object("NewsReactResult", {
+  get reactions() {
+    return __t.array(NewsReactionCount);
+  },
+  reactionCount: __t.u32(),
+  myReaction: __t.string(),
+});
+export type NewsReactResult = __Infer<typeof NewsReactResult>;
+
+export const NewsReactionCount = __t.object("NewsReactionCount", {
+  key: __t.string(),
+  count: __t.u32(),
+});
+export type NewsReactionCount = __Infer<typeof NewsReactionCount>;
+
+export const NewsSeo = __t.object("NewsSeo", {
+  slug: __t.string(),
+  get metaTitle() {
+    return __t.array(Translation);
+  },
+  get metaDescription() {
+    return __t.array(Translation);
+  },
+  keywords: __t.array(__t.string()),
+  canonicalUrl: __t.string(),
+  ogImage: __t.string(),
+  noindex: __t.bool(),
+});
+export type NewsSeo = __Infer<typeof NewsSeo>;
+
+export const NewsSourceInfo = __t.object("NewsSourceInfo", {
+  id: __t.u64(),
+  key: __t.string(),
+  name: __t.string(),
+  isActive: __t.bool(),
+  authMode: __t.string(),
+  tokenHeader: __t.string(),
+  signatureHeader: __t.string(),
+  timestampHeader: __t.string(),
+  skewSeconds: __t.u32(),
+  secretHint: __t.string(),
+  itemsPath: __t.string(),
+  mapping: __t.string(),
+  bodyFormat: __t.string(),
+  defaultCategoryId: __t.u64(),
+  defaultLang: __t.string(),
+  defaultTagIds: __t.array(__t.u64()),
+  publishMode: __t.string(),
+  updateMode: __t.string(),
+  rateLimitPerMinute: __t.u32(),
+  notifyMode: __t.string(),
+  allowComment: __t.bool(),
+  allowReaction: __t.bool(),
+  lastReceivedAt: __t.u64(),
+});
+export type NewsSourceInfo = __Infer<typeof NewsSourceInfo>;
+
+export const NewsTag = __t.object("NewsTag", {
+  key: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+});
+export type NewsTag = __Infer<typeof NewsTag>;
+
+export const NotifyChannelPref = __t.object("NotifyChannelPref", {
+  channel: __t.string(),
+  enabled: __t.bool(),
+});
+export type NotifyChannelPref = __Infer<typeof NotifyChannelPref>;
+
+export const NotifyPrefInput = __t.object("NotifyPrefInput", {
+  categoryKey: __t.string(),
+  channel: __t.string(),
+  enabled: __t.bool(),
+});
+export type NotifyPrefInput = __Infer<typeof NotifyPrefInput>;
+
+export const NotifyPrefLine = __t.object("NotifyPrefLine", {
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  mandatory: __t.bool(),
+  get channels() {
+    return __t.array(NotifyChannelPref);
+  },
+});
+export type NotifyPrefLine = __Infer<typeof NotifyPrefLine>;
+
+export const NotifyPrefRow = __t.object("NotifyPrefRow", {
+  key: __t.string(),
+  categoryKey: __t.string(),
+  channel: __t.string(),
+  enabled: __t.bool(),
+});
+export type NotifyPrefRow = __Infer<typeof NotifyPrefRow>;
 
 export const OfferDaily = __t.object("OfferDaily", {
   enabled: __t.bool(),
@@ -2795,6 +3101,576 @@ export const PromoTickTimer = __t.object("PromoTickTimer", {
 });
 export type PromoTickTimer = __Infer<typeof PromoTickTimer>;
 
+export const PubAutoFire = __t.object("PubAutoFire", {
+  key: __t.string(),
+  ruleId: __t.u64(),
+  accountId: __t.u64(),
+  occurrence: __t.string(),
+  status: __t.string(),
+  reason: __t.string(),
+  vars: __t.string(),
+  dueAt: __t.u64(),
+  inboxId: __t.u64(),
+  at: __t.u64(),
+  doneAt: __t.u64(),
+});
+export type PubAutoFire = __Infer<typeof PubAutoFire>;
+
+export const PubAutoLast = __t.object("PubAutoLast", {
+  key: __t.string(),
+  at: __t.u64(),
+});
+export type PubAutoLast = __Infer<typeof PubAutoLast>;
+
+export const PubAutoRule = __t.object("PubAutoRule", {
+  id: __t.u64(),
+  key: __t.string(),
+  name: __t.string(),
+  trigger: __t.string(),
+  eventKey: __t.string(),
+  matchField: __t.string(),
+  matchValue: __t.string(),
+  inactiveDays: __t.u32(),
+  channels: __t.array(__t.string()),
+  categoryKey: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  get body() {
+    return __t.array(Translation);
+  },
+  imageUrl: __t.string(),
+  actionType: __t.string(),
+  actionValue: __t.string(),
+  get actionLabel() {
+    return __t.array(Translation);
+  },
+  prizeId: __t.u64(),
+  cooldownMinutes: __t.u32(),
+  quietStart: __t.u16(),
+  quietEnd: __t.u16(),
+  isActive: __t.bool(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type PubAutoRule = __Infer<typeof PubAutoRule>;
+
+export const PubCampaign = __t.object("PubCampaign", {
+  id: __t.u64(),
+  kind: __t.string(),
+  name: __t.string(),
+  categoryKey: __t.string(),
+  channels: __t.array(__t.string()),
+  get title() {
+    return __t.array(Translation);
+  },
+  get body() {
+    return __t.array(Translation);
+  },
+  imageUrl: __t.string(),
+  actionType: __t.string(),
+  actionValue: __t.string(),
+  get actionLabel() {
+    return __t.array(Translation);
+  },
+  prizeId: __t.u64(),
+  newsId: __t.u64(),
+  target: __t.string(),
+  accountIds: __t.array(__t.u64()),
+  tagIds: __t.array(__t.u64()),
+  excludeTagIds: __t.array(__t.u64()),
+  levelTableId: __t.u64(),
+  minLevel: __t.u32(),
+  maxLevel: __t.u32(),
+  countries: __t.array(__t.string()),
+  inactiveDays: __t.u32(),
+  schedule: __t.string(),
+  scheduledAt: __t.u64(),
+  repeatMinutes: __t.u32(),
+  repeatUntil: __t.u64(),
+  quietStart: __t.u16(),
+  quietEnd: __t.u16(),
+  status: __t.string(),
+  run: __t.u32(),
+  runStartedAt: __t.u64(),
+  nextAt: __t.u64(),
+  cursor: __t.u64(),
+  batches: __t.u32(),
+  recipients: __t.u32(),
+  sent: __t.u32(),
+  skipped: __t.u32(),
+  failed: __t.u32(),
+  inboxCount: __t.u32(),
+  pushSent: __t.u32(),
+  pushFailed: __t.u32(),
+  smsSent: __t.u32(),
+  opened: __t.u32(),
+  createdBy: __t.u64(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+  finishedAt: __t.u64(),
+});
+export type PubCampaign = __Infer<typeof PubCampaign>;
+
+export const PubCampaignPreview = __t.object("PubCampaignPreview", {
+  targeted: __t.u32(),
+  optedOut: __t.u32(),
+  withPush: __t.u32(),
+  withPhone: __t.u32(),
+});
+export type PubCampaignPreview = __Infer<typeof PubCampaignPreview>;
+
+export const PubCap = __t.object("PubCap", {
+  key: __t.string(),
+  accountId: __t.u64(),
+  day: __t.u32(),
+  count: __t.u32(),
+});
+export type PubCap = __Infer<typeof PubCap>;
+
+export const PubCategory = __t.object("PubCategory", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  mandatory: __t.bool(),
+  defaultOn: __t.bool(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+});
+export type PubCategory = __Infer<typeof PubCategory>;
+
+export const PubDelivery = __t.object("PubDelivery", {
+  key: __t.string(),
+  campaignId: __t.u64(),
+  run: __t.u32(),
+  accountId: __t.u64(),
+  status: __t.string(),
+  reason: __t.string(),
+  channels: __t.array(__t.string()),
+  inboxId: __t.u64(),
+  at: __t.u64(),
+});
+export type PubDelivery = __Infer<typeof PubDelivery>;
+
+export const PubDeliveryPage = __t.object("PubDeliveryPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(PubDelivery);
+  },
+});
+export type PubDeliveryPage = __Infer<typeof PubDeliveryPage>;
+
+export const PubDevice = __t.object("PubDevice", {
+  id: __t.u64(),
+  token: __t.string(),
+  accountId: __t.u64(),
+  platform: __t.string(),
+  appVersion: __t.string(),
+  deviceKey: __t.string(),
+  isActive: __t.bool(),
+  failCount: __t.u32(),
+  lastError: __t.string(),
+  createdAt: __t.timestamp(),
+  lastSeenAt: __t.u64(),
+});
+export type PubDevice = __Infer<typeof PubDevice>;
+
+export const PubDeviceAdmin = __t.object("PubDeviceAdmin", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  token: __t.string(),
+  platform: __t.string(),
+  appVersion: __t.string(),
+  isActive: __t.bool(),
+  failCount: __t.u32(),
+  lastError: __t.string(),
+  lastSeenAt: __t.u64(),
+});
+export type PubDeviceAdmin = __Infer<typeof PubDeviceAdmin>;
+
+export const PubFaq = __t.object("PubFaq", {
+  id: __t.u64(),
+  categoryId: __t.u64(),
+  get question() {
+    return __t.array(Translation);
+  },
+  get answer() {
+    return __t.array(Translation);
+  },
+  get answerHtml() {
+    return __t.array(Translation);
+  },
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type PubFaq = __Infer<typeof PubFaq>;
+
+export const PubFirePage = __t.object("PubFirePage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(PubAutoFire);
+  },
+});
+export type PubFirePage = __Infer<typeof PubFirePage>;
+
+export const PubInbox = __t.object("PubInbox", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  kind: __t.string(),
+  campaignId: __t.u64(),
+  ruleId: __t.u64(),
+  newsId: __t.u64(),
+  categoryKey: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  get body() {
+    return __t.array(Translation);
+  },
+  imageUrl: __t.string(),
+  actionType: __t.string(),
+  actionValue: __t.string(),
+  get actionLabel() {
+    return __t.array(Translation);
+  },
+  prizeId: __t.u64(),
+  claimedAt: __t.u64(),
+  rewards: __t.string(),
+  read: __t.bool(),
+  readAt: __t.u64(),
+  at: __t.u64(),
+  createdAt: __t.timestamp(),
+});
+export type PubInbox = __Infer<typeof PubInbox>;
+
+export const PubIngestLog = __t.object("PubIngestLog", {
+  id: __t.u64(),
+  sourceId: __t.u64(),
+  status: __t.string(),
+  httpStatus: __t.u16(),
+  code: __t.string(),
+  created: __t.u32(),
+  updated: __t.u32(),
+  unchanged: __t.u32(),
+  ignored: __t.u32(),
+  failed: __t.u32(),
+  results: __t.string(),
+  body: __t.string(),
+  at: __t.timestamp(),
+});
+export type PubIngestLog = __Infer<typeof PubIngestLog>;
+
+export const PubIngestReplay = __t.object("PubIngestReplay", {
+  key: __t.string(),
+  expiresAt: __t.u64(),
+});
+export type PubIngestReplay = __Infer<typeof PubIngestReplay>;
+
+export const PubJwtPreview = __t.object("PubJwtPreview", {
+  jwt: __t.string(),
+  projectId: __t.string(),
+  clientEmail: __t.string(),
+});
+export type PubJwtPreview = __Infer<typeof PubJwtPreview>;
+
+export const PubLiveNotice = __t.object("PubLiveNotice", {
+  id: __t.u64(),
+  event: __t.string(),
+  newsId: __t.u64(),
+  get title() {
+    return __t.array(Translation);
+  },
+  at: __t.timestamp(),
+});
+export type PubLiveNotice = __Infer<typeof PubLiveNotice>;
+
+export const PubNews = __t.object("PubNews", {
+  id: __t.u64(),
+  slug: __t.string(),
+  status: __t.string(),
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  get title() {
+    return __t.array(Translation);
+  },
+  get summary() {
+    return __t.array(Translation);
+  },
+  get body() {
+    return __t.array(Translation);
+  },
+  coverUrl: __t.string(),
+  isPinned: __t.bool(),
+  publishedAt: __t.u64(),
+  expiresAt: __t.u64(),
+  allowComment: __t.bool(),
+  freeComment: __t.bool(),
+  allowReaction: __t.bool(),
+  notifyMode: __t.string(),
+  notifyTagIds: __t.array(__t.u64()),
+  notifiedAt: __t.u64(),
+  campaignId: __t.u64(),
+  source: __t.string(),
+  externalKey: __t.string(),
+  sourceUrl: __t.string(),
+  contentHash: __t.string(),
+  lang: __t.string(),
+  get metaTitle() {
+    return __t.array(Translation);
+  },
+  get metaDescription() {
+    return __t.array(Translation);
+  },
+  keywords: __t.array(__t.string()),
+  canonicalUrl: __t.string(),
+  ogImage: __t.string(),
+  noindex: __t.bool(),
+  approvedBy: __t.u64(),
+  approvedAt: __t.u64(),
+  rejectReason: __t.string(),
+  createdBy: __t.u64(),
+  updatedBy: __t.u64(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type PubNews = __Infer<typeof PubNews>;
+
+export const PubNewsComment = __t.object("PubNewsComment", {
+  id: __t.u64(),
+  newsId: __t.u64(),
+  accountId: __t.u64(),
+  parentId: __t.u64(),
+  message: __t.string(),
+  status: __t.string(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type PubNewsComment = __Infer<typeof PubNewsComment>;
+
+export const PubNewsReaction = __t.object("PubNewsReaction", {
+  key: __t.string(),
+  newsId: __t.u64(),
+  accountId: __t.u64(),
+  reaction: __t.string(),
+  at: __t.u64(),
+});
+export type PubNewsReaction = __Infer<typeof PubNewsReaction>;
+
+export const PubNewsSeen = __t.object("PubNewsSeen", {
+  key: __t.string(),
+  newsId: __t.u64(),
+  accountId: __t.u64(),
+  at: __t.u64(),
+});
+export type PubNewsSeen = __Infer<typeof PubNewsSeen>;
+
+export const PubNewsSettings = __t.object("PubNewsSettings", {
+  id: __t.u8(),
+  commentsPerMinute: __t.u32(),
+  reactionsPerMinute: __t.u32(),
+  listPerMinute: __t.u32(),
+  unreadScope: __t.string(),
+  showExpired: __t.bool(),
+  fillDefaultLang: __t.bool(),
+  realtimeOnPublish: __t.bool(),
+  notifyCategoryKey: __t.string(),
+  logRetentionDays: __t.u32(),
+  logPayloadBytes: __t.u32(),
+  ingestMaxKb: __t.u32(),
+  slugStyle: __t.string(),
+  publicEnabled: __t.bool(),
+  publicBaseUrl: __t.string(),
+  publicPath: __t.string(),
+  rssEnabled: __t.bool(),
+  publicCacheSeconds: __t.u32(),
+  get siteTitle() {
+    return __t.array(Translation);
+  },
+  updatedAt: __t.timestamp(),
+});
+export type PubNewsSettings = __Infer<typeof PubNewsSettings>;
+
+export const PubNewsSource = __t.object("PubNewsSource", {
+  id: __t.u64(),
+  key: __t.string(),
+  name: __t.string(),
+  isActive: __t.bool(),
+  authMode: __t.string(),
+  tokenHeader: __t.string(),
+  signatureHeader: __t.string(),
+  timestampHeader: __t.string(),
+  skewSeconds: __t.u32(),
+  secret: __t.string(),
+  itemsPath: __t.string(),
+  mapping: __t.string(),
+  bodyFormat: __t.string(),
+  defaultCategoryId: __t.u64(),
+  defaultLang: __t.string(),
+  defaultTagIds: __t.array(__t.u64()),
+  publishMode: __t.string(),
+  updateMode: __t.string(),
+  rateLimitPerMinute: __t.u32(),
+  notifyMode: __t.string(),
+  allowComment: __t.bool(),
+  allowReaction: __t.bool(),
+  lastReceivedAt: __t.u64(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type PubNewsSource = __Infer<typeof PubNewsSource>;
+
+export const PubOutbox = __t.object("PubOutbox", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  channel: __t.string(),
+  kind: __t.string(),
+  inboxId: __t.u64(),
+  campaignId: __t.u64(),
+  ruleId: __t.u64(),
+  categoryKey: __t.string(),
+  lang: __t.string(),
+  title: __t.string(),
+  body: __t.string(),
+  imageUrl: __t.string(),
+  data: __t.string(),
+  status: __t.string(),
+  attempts: __t.u32(),
+  nextAt: __t.u64(),
+  devices: __t.u32(),
+  sent: __t.u32(),
+  error: __t.string(),
+  createdAt: __t.timestamp(),
+  doneAt: __t.u64(),
+});
+export type PubOutbox = __Infer<typeof PubOutbox>;
+
+export const PubOutboxPage = __t.object("PubOutboxPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(PubOutbox);
+  },
+});
+export type PubOutboxPage = __Infer<typeof PubOutboxPage>;
+
+export const PubPref = __t.object("PubPref", {
+  key: __t.string(),
+  accountId: __t.u64(),
+  categoryKey: __t.string(),
+  channel: __t.string(),
+  enabled: __t.bool(),
+  updatedAt: __t.timestamp(),
+});
+export type PubPref = __Infer<typeof PubPref>;
+
+export const PubPushConfig = __t.object("PubPushConfig", {
+  id: __t.u8(),
+  provider: __t.string(),
+  projectId: __t.string(),
+  clientEmail: __t.string(),
+  privateKeyId: __t.string(),
+  privateKey: __t.string(),
+  updatedAt: __t.timestamp(),
+});
+export type PubPushConfig = __Infer<typeof PubPushConfig>;
+
+export const PubPushLog = __t.object("PubPushLog", {
+  id: __t.u64(),
+  outboxId: __t.u64(),
+  deviceId: __t.u64(),
+  accountId: __t.u64(),
+  provider: __t.string(),
+  token: __t.string(),
+  title: __t.string(),
+  body: __t.string(),
+  status: __t.string(),
+  error: __t.string(),
+  at: __t.timestamp(),
+});
+export type PubPushLog = __Infer<typeof PubPushLog>;
+
+export const PubPushLogPage = __t.object("PubPushLogPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(PubPushLog);
+  },
+});
+export type PubPushLogPage = __Infer<typeof PubPushLogPage>;
+
+export const PubPushToken = __t.object("PubPushToken", {
+  id: __t.u8(),
+  keyHash: __t.string(),
+  accessToken: __t.string(),
+  expiresAt: __t.u64(),
+});
+export type PubPushToken = __Infer<typeof PubPushToken>;
+
+export const PubRate = __t.object("PubRate", {
+  key: __t.string(),
+  minute: __t.u64(),
+  count: __t.u32(),
+});
+export type PubRate = __Infer<typeof PubRate>;
+
+export const PubReactionType = __t.object("PubReactionType", {
+  key: __t.string(),
+  emoji: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  isActive: __t.bool(),
+  sort: __t.i32(),
+});
+export type PubReactionType = __Infer<typeof PubReactionType>;
+
+export const PubRunResult = __t.object("PubRunResult", {
+  batches: __t.u32(),
+  fires: __t.u32(),
+  outbox: __t.u32(),
+});
+export type PubRunResult = __Infer<typeof PubRunResult>;
+
+export const PubSettings = __t.object("PubSettings", {
+  id: __t.u8(),
+  inboxKeepDays: __t.u32(),
+  inboxMaxPerPlayer: __t.u32(),
+  maxDevices: __t.u32(),
+  devicePerMinute: __t.u32(),
+  prefsPerMinute: __t.u32(),
+  inboxPerMinute: __t.u32(),
+  batchSize: __t.u32(),
+  batchesPerTick: __t.u32(),
+  capPerDay: __t.u32(),
+  capPerWeek: __t.u32(),
+  pushRetries: __t.u32(),
+  smsMaxChars: __t.u32(),
+  liveNoticeMinutes: __t.u32(),
+  inactiveScanMinutes: __t.u32(),
+  clockOffsetSec: __t.i64(),
+  updatedAt: __t.timestamp(),
+});
+export type PubSettings = __Infer<typeof PubSettings>;
+
+export const PubState = __t.object("PubState", {
+  id: __t.u8(),
+  lastInactiveScan: __t.u64(),
+  lastSweep: __t.u64(),
+});
+export type PubState = __Infer<typeof PubState>;
+
+export const PubTickTimer = __t.object("PubTickTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type PubTickTimer = __Infer<typeof PubTickTimer>;
+
 export const PurchaseStartResult = __t.object("PurchaseStartResult", {
   paymentId: __t.u64(),
   status: __t.string(),
@@ -2813,6 +3689,33 @@ export const PurchaseStatusResult = __t.object("PurchaseStatusResult", {
   rewards: __t.string(),
 });
 export type PurchaseStatusResult = __Infer<typeof PurchaseStatusResult>;
+
+export const PushConfigInfo = __t.object("PushConfigInfo", {
+  provider: __t.string(),
+  projectId: __t.string(),
+  clientEmail: __t.string(),
+  configured: __t.bool(),
+  keyHint: __t.string(),
+});
+export type PushConfigInfo = __Infer<typeof PushConfigInfo>;
+
+export const PushDeviceEntry = __t.object("PushDeviceEntry", {
+  id: __t.u64(),
+  token: __t.string(),
+  platform: __t.string(),
+  appVersion: __t.string(),
+  isActive: __t.bool(),
+  lastSeenAt: __t.u64(),
+});
+export type PushDeviceEntry = __Infer<typeof PushDeviceEntry>;
+
+export const PushRegisterResult = __t.object("PushRegisterResult", {
+  deviceId: __t.u64(),
+  platform: __t.string(),
+  active: __t.bool(),
+  deactivated: __t.u32(),
+});
+export type PushRegisterResult = __Infer<typeof PushRegisterResult>;
 
 export const RedeemResult = __t.object("RedeemResult", {
   get rewards() {
