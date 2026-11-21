@@ -1,7 +1,7 @@
 import { ECONOMY_QUERIES, PLAYER_QUERIES, DB, check, connect, done, loginOwner, panelUser, errorOf, login, tr, uniquePhone, waitFor, type Client } from './src/lib.ts';
 
 const BASE = process.env.STG_HTTP ?? 'http://127.0.0.1:7500';
-const PW = process.env.PLAYWRIGHT_CORE ?? '/Users/mazyar/Projects/spacetime-game-backend/platform/node_modules/playwright-core/index.mjs';
+const PW = process.env.PLAYWRIGHT_CORE ?? new URL('../node_modules/playwright-core/index.mjs', import.meta.url).pathname;
 const c = (token?: string) => connect(token, [...PLAYER_QUERIES, ...ECONOMY_QUERIES]);
 const rows = <T>(it: Iterable<T>) => [...it];
 
