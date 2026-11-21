@@ -6,7 +6,7 @@ import { seedEconomy } from './seed';
 export { economyTables, economyEnv, PrizeItem, GroupEntry, seedEconomy };
 export type { EconomySchema };
 export * from './engine';
-export { checkGift, prizeUseChecks, discounted, METHODS } from './catalog';
+export { checkGift, prizeUseChecks, metaUseChecks, itemValidators, discounted, METHODS } from './catalog';
 export { paymentHooks, grantPayment } from './payments';
 
 export function defineEconomy(spacetimedb: unknown) {

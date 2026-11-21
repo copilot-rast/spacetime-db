@@ -99,7 +99,10 @@ function checkItems(ctx: ETx, items: { type: string; key: string; action: string
       if (!ctx.db.prizeGroup.key.find(i.key)) fail('PRIZE_GROUP_NOT_FOUND');
       return { type: i.type, key: i.key, action: 'give', value: 1 };
     }
-    if (extraItemTypes.includes(i.type)) return { ...i };
+    if (extraItemTypes.includes(i.type)) {
+      for (const v of itemValidators) v(ctx, i);
+      return { ...i };
+    }
     fail('INVALID_ITEM_TYPE');
   });
 }
@@ -230,6 +233,7 @@ export function defineCatalog(st: EconomySchema) {
     const m = ctx.db.meta.id.find(id);
     if (!m) fail('NOT_FOUND');
     if ([...ctx.db.prize.iter()].some(p => p.items.some(i => i.type === 'meta' && i.key === m.key))) fail('IN_USE');
+    for (const h of metaUseChecks) if (h(ctx, m.key)) fail('IN_USE');
     ctx.db.meta.id.delete(id);
     for (const um of [...ctx.db.userMeta.iter()]) if (um.metaKey === m.key) ctx.db.userMeta.id.delete(um.id);
     audit(base(ctx), me.id, 'meta.delete', String(id), m.key);
@@ -547,6 +551,8 @@ export function defineCatalog(st: EconomySchema) {
 }
 
 export const prizeUseChecks: ((ctx: ETx, prizeId: bigint) => boolean)[] = [];
+export const metaUseChecks: ((ctx: ETx, metaKey: string) => boolean)[] = [];
+export const itemValidators: ((ctx: ETx, item: { type: string; key: string; action: string; value: number }) => void)[] = [];
 
 export function checkGift(ctx: ETx, accountId: bigint, raw: string, type: string) {
   const code = toLatinDigits(raw).trim().toUpperCase();
