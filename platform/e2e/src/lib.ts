@@ -121,6 +121,27 @@ export const PUBLICATION_QUERIES = [
   'SELECT * FROM admin_faqs',
 ];
 
+export const SUPPORT_QUERIES = [
+  'SELECT * FROM support_departments',
+  'SELECT * FROM my_tickets',
+  'SELECT * FROM my_ticket_messages',
+  'SELECT * FROM my_chats',
+  'SELECT * FROM my_chat_messages',
+  'SELECT * FROM my_referral',
+  'SELECT * FROM my_referrals',
+  'SELECT * FROM my_remote_config',
+  'SELECT * FROM my_activity',
+  'SELECT * FROM admin_support_settings',
+  'SELECT * FROM admin_support_departments',
+  'SELECT * FROM admin_support_canned',
+  'SELECT * FROM admin_support_agents',
+  'SELECT * FROM admin_ticket_thread',
+  'SELECT * FROM admin_chat_queue',
+  'SELECT * FROM admin_chat_messages',
+  'SELECT * FROM admin_referral_settings',
+  'SELECT * FROM admin_config_keys',
+];
+
 export function connect(token?: string, extra: string[] = []): Promise<Client> {
   return new Promise((resolve, reject) => {
     const b = DbConnection.builder()

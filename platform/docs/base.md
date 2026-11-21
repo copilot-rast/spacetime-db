@@ -13,11 +13,15 @@ Phase 1 of the roadmap. All names below are the wire names (SQL, subscriptions, 
 
 Only panel accounts hold roles. A panel account is the env owner or a panel user the owner creates; its account phone is `admin:<username>`. Phone (SMS) accounts are players and never hold a role: `roleOf`, `adminOrNull` and `my_role` ignore them, and `init`/`clientConnected` drop any old role row that belongs to one.
 
-`owner` > `admin` > `operator`. A higher role can do everything a lower one can.
+`owner` > `admin` > `operator` > `support`. A higher role can do everything a lower one can. `support` (used by `@stg/support`, see `docs/support.md`) passes only support checks and `admin_change_my_password`; it has no operator access.
 
 - `operator`: dashboard, account list, admin list, settings view.
 - `admin`: every setting, SMS providers, test phones, languages, key types, categories, tags, account status, audit log.
 - `owner`: manages panel users. The env owner cannot be edited or removed here (`ENV_ADMIN_LOCKED`).
+
+## Activity hook
+
+`logActivity(ctx, accountId, {kind, action, refId?, data?, actor?})` writes one player activity row through the writers in `activityWriters`. Base has no writer; `@stg/support` registers one. Players (restrictions) and economy (gift codes) call it.
 
 ## Public tables
 
@@ -44,6 +48,8 @@ Only panel accounts hold roles. A panel account is the env owner or a panel user
 `admin_login(username, password)` → `{ ok, error, accountId, role, retryAfterSec }`. The env user (exact match) is checked against `ADMIN_PASSWORD` and is always `owner`. Any other username (case-insensitive) is a panel user checked against its PBKDF2-SHA256 hash (20 000 rounds, HMAC salt). An inactive or deleted user gets `INVALID_CREDENTIALS`, the same as a wrong password.
 
 Panel users (owner only): `admin_create_user(username, password, role)`, `admin_set_user_role`, `admin_set_user_password` (logs the user out), `admin_set_user_active` (inactive logs out), `admin_delete_user` (frees the username). Any panel user: `admin_change_my_password(oldPassword, newPassword)` (logs out its other devices). Usernames are 3–32 of `a-z 0-9 _ . -`; passwords 10–128 characters with letters and digits. Errors: `INVALID_USERNAME`, `USERNAME_TAKEN`, `PASSWORD_TOO_SHORT`, `PASSWORD_TOO_LONG`, `PASSWORD_TOO_WEAK`, `ENV_ADMIN_LOCKED`, `LAST_OWNER`, `CANNOT_CHANGE_SELF`.
+
+Any panel user (`support` and up): `admin_change_my_password`. Roles for `admin_create_user` / `admin_set_user_role`: `owner`, `admin`, `operator`, `support`.
 
 `admin_admins` rows: `accountId, username, displayName, role, isActive, isEnv, createdAt, lastLoginAt`. Errors: `PASSWORD_LOGIN_DISABLED`, `INVALID_CREDENTIALS`, `TOO_MANY_ATTEMPTS` (with `retryAfterSec`).
 

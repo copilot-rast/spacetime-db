@@ -78,6 +78,20 @@
         "packages/publication/src/news.ts",
         "packages/publication/src/faq.ts"
       ]
+    },
+    {
+      "name": "@stg/support",
+      "define": "defineSupport",
+      "seed": "seedSupport",
+      "tables": "supportTables",
+      "env": "supportEnv",
+      "files": [
+        "packages/support/src/tickets.ts",
+        "packages/support/src/chat.ts",
+        "packages/support/src/referral.ts",
+        "packages/support/src/config.ts",
+        "packages/support/src/activity.ts"
+      ]
     }
   ]
 }

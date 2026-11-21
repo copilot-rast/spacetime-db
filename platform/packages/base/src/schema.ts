@@ -3,7 +3,7 @@ import { schema, table, t } from 'spacetimedb/server';
 export const Translation = t.object('Translation', { lang: t.string(), text: t.string() });
 export const Translations = t.array(Translation);
 
-export const ROLES = ['owner', 'admin', 'operator'] as const;
+export const ROLES = ['owner', 'admin', 'operator', 'support'] as const;
 export type Role = (typeof ROLES)[number];
 
 const account = table(
