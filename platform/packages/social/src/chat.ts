@@ -292,7 +292,7 @@ export function defineChat(st: SocialSchema) {
     });
   });
 
-  const myChatMessages = st.view({ name: 'my_chat_messages', public: true }, t.array(LiveMessage), ctx => {
+  const myChatLive = st.view({ name: 'my_chat_live', public: true }, t.array(LiveMessage), ctx => {
     const me = sessionId(ctx as never);
     if (me === undefined) return [];
     const n = ctx.db.socialSettings.id.find(0)?.liveMessages ?? 30;
@@ -410,7 +410,7 @@ export function defineChat(st: SocialSchema) {
     return { message: m, channelKind: c?.kind ?? '', channelName: name, senderName: nameOf(ctx, m.senderId), reports: count };
   };
 
-  const adminChatMessages = st.procedure(
+  const adminSocialMessages = st.procedure(
     { channelId: t.u64(), senderId: t.u64(), query: t.string(), flagged: t.bool(), status: t.string(), page: t.u32(), pageSize: t.u32() },
     AdminMessagePage,
     (ctx, a) =>
@@ -426,7 +426,7 @@ export function defineChat(st: SocialSchema) {
       })
   );
 
-  const adminChatMessage = st.procedure({ id: t.u64() }, AdminMessageDetail, (ctx, a) =>
+  const adminSocialMessage = st.procedure({ id: t.u64() }, AdminMessageDetail, (ctx, a) =>
     ctx.withTx(tx => {
       requireRole(base(tx), 'operator');
       const m = tx.db.chatMessage.id.find(a.id);
@@ -488,7 +488,7 @@ export function defineChat(st: SocialSchema) {
     chatReport,
     chatRooms,
     myChannels,
-    myChatMessages,
+    myChatLive,
     adminChatSettings,
     adminSaveChatSettings,
     adminSetSocialClockOffset,
@@ -499,8 +499,8 @@ export function defineChat(st: SocialSchema) {
     adminRooms,
     adminSaveRoom,
     adminDeleteRoom,
-    adminChatMessages,
-    adminChatMessage,
+    adminSocialMessages,
+    adminSocialMessage,
     adminDeleteChatMessage,
     adminRestoreChatMessage,
     adminChatGroups,

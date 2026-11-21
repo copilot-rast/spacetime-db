@@ -6,6 +6,7 @@ import {
   DAY_US,
   HOUR_US,
   areFriends,
+  act,
   base,
   bump,
   checkPriority,
@@ -144,6 +145,8 @@ function accept(ctx: STx, me: bigint, other: bigint, extra = 0) {
   if (theirs.maxFriends && friendIds(ctx, other).length >= theirs.maxFriends) fail('FRIEND_TARGET_LIMIT_REACHED');
   setEdge(ctx, me, other, 'friend');
   setEdge(ctx, other, me, 'friend');
+  act(ctx, me, 'friend', 'accepted', String(other));
+  act(ctx, other, 'friend', 'accepted', String(me));
   ctx.db.rejection.key.delete(`${me}|${other}`);
   ctx.db.rejection.key.delete(`${other}|${me}`);
 }
@@ -196,6 +199,7 @@ export function defineFriends(st: SocialSchema) {
       accepts.forEach((id, i) => accept(tx, me, id, i));
       const exp = lim.s.expiryDays ? now + BigInt(lim.s.expiryDays) * DAY_US : 0n;
       for (const id of send) {
+        act(tx, me, 'friend', 'requested', String(id));
         setEdge(tx, me, id, 'sent', exp);
         setEdge(tx, id, me, 'received', exp);
         tx.db.rejection.key.delete(`${id}|${me}`);
@@ -237,6 +241,7 @@ export function defineFriends(st: SocialSchema) {
     const me = requireAccount(base(ctx)).id;
     if (!areFriends(ctx, me, a.accountId)) fail('NOT_FRIENDS');
     dropPair(ctx, me, a.accountId);
+    act(ctx, me, 'friend', 'removed', String(a.accountId));
   });
 
   const friendBlock = st.reducer({ accountId: t.u64() }, (ctx, a) => {
@@ -244,6 +249,7 @@ export function defineFriends(st: SocialSchema) {
     target(ctx, me, a.accountId);
     dropPair(ctx, me, a.accountId);
     setEdge(ctx, me, a.accountId, 'blocked');
+    act(ctx, me, 'friend', 'blocked', String(a.accountId));
   });
 
   const friendUnblock = st.reducer({ accountId: t.u64() }, (ctx, a) => {

@@ -10,6 +10,7 @@
     "@stg/items": "*",
     "@stg/promo": "*",
     "@stg/publication": "*",
+    "@stg/support": "*",
     "@stg/social": "*",
     "spacetimedb": "2.12.0"
   },

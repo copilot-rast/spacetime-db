@@ -1,5 +1,5 @@
 import type { InferSchema, ProcedureCtx, ReducerCtx } from 'spacetimedb/server';
-import { fail, isPanelAccount, type Tr, type Tx } from '@stg/base';
+import { fail, isPanelAccount, logActivity, type Tr, type Tx } from '@stg/base';
 import type { ETx } from '@stg/economy';
 import { sendNotification } from '@stg/publication';
 import type { SocialSchema } from './schema';
@@ -172,6 +172,10 @@ export function notify(ctx: STx, accountId: bigint, channels: string[], kind: st
   try {
     sendNotification(ctx, accountId, { categoryKey: 'social', kind, channels, title, body, actionType: 'screen', actionValue, vars });
   } catch {}
+}
+
+export function act(ctx: STx, accountId: bigint, kind: string, action: string, refId: string, data: Record<string, string> = {}, actor = 'player') {
+  logActivity(ctx, accountId, { kind, action, refId, data: JSON.stringify(data), actor });
 }
 
 export const tr = (fa: string, en: string) => [

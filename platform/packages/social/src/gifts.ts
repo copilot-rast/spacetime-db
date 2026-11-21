@@ -26,6 +26,7 @@ import { GiftCurrency, socialRows, type SocialSchema } from './schema';
 import {
   DAY_US,
   HOUR_US,
+  act,
   areFriends,
   base,
   blockedEither,
@@ -318,6 +319,7 @@ function deliver(ctx: STx, g: GiftRow, status = 'delivered') {
   }
   const next = ctx.db.friendGift.id.update({ ...g, status, outcome: 'delivered', deliveredAt: now, respondedAt: g.delivery === 'accept' ? now : g.respondedAt, rewards: rewards || g.rewards });
   event(ctx, next, next.recipientId, 'Gift:Received');
+  act(ctx, next.recipientId, 'prize', 'gift_received', String(g.id), { kind: g.kind, from: String(g.senderId) });
   audit(base(ctx), g.recipientId, 'gift.delivered', `gift:${g.id}`, g.kind);
   return next;
 }
@@ -331,6 +333,7 @@ function hold(ctx: STx, g: GiftRow) {
 
 function sent(ctx: STx, g: GiftRow) {
   event(ctx, g, g.senderId, 'Gift:Sent');
+  act(ctx, g.senderId, 'prize', 'gift_sent', String(g.id), { kind: g.kind, to: String(g.recipientId) });
   if (g.delivery === 'accept') return hold(ctx, g);
   const d = deliver(ctx, g);
   tell(ctx, d, 'recipient', 'received');
@@ -372,6 +375,7 @@ function returnGift(ctx: STx, g: GiftRow, status: string) {
   const outcome = giveBack(ctx, g);
   const next = ctx.db.friendGift.id.update({ ...g, status, outcome, respondedAt: nowUs(ctx) });
   if (status === 'cancelled') countGift(ctx, g, -1);
+  act(ctx, g.senderId, 'prize', 'gift_returned', String(g.id), { status, outcome }, status === 'reversed' ? 'admin' : 'player');
   if (outcome !== 'kept' && status !== 'cancelled') tell(ctx, next, 'sender', 'returned');
   audit(base(ctx), status === 'declined' ? g.recipientId : g.senderId, `gift.${status}`, `gift:${g.id}`, outcome);
   return next;
@@ -924,6 +928,8 @@ export function defineGifts(st: SocialSchema) {
     }
     const next = ctx.db.friendGift.id.update({ ...g, status: 'reversed', outcome, reversedAt: nowUs(ctx), reversedBy: me.id, reverseNote: note });
     tell(ctx, next, 'recipient', 'reversed');
+    act(ctx, g.recipientId, 'prize', 'gift_reversed', String(g.id), { returnTo: a.returnTo }, `admin:${me.id}`);
+    act(ctx, g.senderId, 'prize', 'gift_reversed', String(g.id), { returnTo: a.returnTo }, `admin:${me.id}`);
     audit(base(ctx), me.id, 'gift.reverse', target, `${a.returnTo} ${note}`);
   });
 

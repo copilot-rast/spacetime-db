@@ -12,11 +12,11 @@ import {
 
 export default __t.row({
   id: __t.u64().primaryKey(),
-  channelId: __t.u64().name("channel_id"),
-  senderId: __t.u64().name("sender_id"),
-  senderName: __t.string().name("sender_name"),
-  text: __t.string(),
-  replyToId: __t.u64().name("reply_to_id"),
-  deleted: __t.bool(),
-  createdAt: __t.timestamp().name("created_at"),
+  chatId: __t.u64().name("chat_id"),
+  seq: __t.u32(),
+  authorType: __t.string().name("author_type"),
+  authorName: __t.string().name("author_name"),
+  body: __t.string(),
+  event: __t.string(),
+  at: __t.u64(),
 });

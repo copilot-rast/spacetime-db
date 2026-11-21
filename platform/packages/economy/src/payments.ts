@@ -1,7 +1,7 @@
 import { Router, SyncResponse, t } from 'spacetimedb/server';
 import { TimeDuration, Timestamp } from 'spacetimedb';
 import { bytesToHex } from '@noble/hashes/utils.js';
-import { audit, fail, maskSecret, requireAccount, requireRole, sign, toLatinDigits, type Tx } from '@stg/base';
+import { audit, fail, hasRole, maskSecret, requireAccount, requireRole, sign, toLatinDigits, type Tx } from '@stg/base';
 import { economyRows, economyTables, type EconomySchema } from './schema';
 import { changeBalance, grantPrize, type EProc, type ETx } from './engine';
 import { GATEWAYS, METHODS, STORES, activeMethods, checkGift, discounted, productVisible } from './catalog';
@@ -502,7 +502,7 @@ export function definePayments(st: EconomySchema) {
 
   const adminEconomySettings = st.view({ name: 'admin_economy_settings', public: true }, t.option(economyRows.settings), ctx => {
     const s = ctx.db.session.identity.find(ctx.sender);
-    if (!s || !ctx.db.admin.accountId.find(s.accountId)) return undefined;
+    if (!s || !hasRole(ctx.db.admin.accountId.find(s.accountId)?.role, 'operator')) return undefined;
     return ctx.db.economySettings.id.find(0) ?? undefined;
   });
 

@@ -12,7 +12,7 @@ export type Proc = ProcedureCtx<S>;
 
 export type Tr = { lang: string; text: string };
 
-const ROLE_RANK: Record<string, number> = { operator: 1, admin: 2, owner: 3 };
+const ROLE_RANK: Record<string, number> = { support: 0.5, operator: 1, admin: 2, owner: 3 };
 
 export function fail(code: string): never {
   throw new SenderError(code);

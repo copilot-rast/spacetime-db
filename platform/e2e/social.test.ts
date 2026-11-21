@@ -332,8 +332,8 @@ async function chatSuite() {
   await b.p.conn.reducers.chatJoinRoom({ channelId: room.id });
   const rm = await send(a, { channelId: room.id, text: 'سلام همه' });
   check('room message sent', rm.ok && rm.messageId > 0n && rm.text === 'سلام همه');
-  check('room member sees it live', await waitFor(() => rows(b.p.conn.db.myChatMessages.iter()).some(m => m.id === rm.messageId && m.senderId === a.id)));
-  check('non-member sees nothing', rows(cc.p.conn.db.myChatMessages.iter()).every(m => m.id !== rm.messageId));
+  check('room member sees it live', await waitFor(() => rows(b.p.conn.db.myChatLive.iter()).some(m => m.id === rm.messageId && m.senderId === a.id)));
+  check('non-member sees nothing', rows(cc.p.conn.db.myChatLive.iter()).every(m => m.id !== rm.messageId));
   check('non-member cannot read history', (await errorOf(cc.p.conn.procedures.chatHistory({ channelId: room.id, beforeId: 0n, limit: 10 }))).includes('NOT_MEMBER'));
 
   const dm = await send(a, { peerId: cc.id, text: 'hello there' });
@@ -341,7 +341,7 @@ async function chatSuite() {
   check('peer sees the channel unread', await waitFor(() => rows(cc.p.conn.db.myChannels.iter()).some(ch => ch.channelId === dm.channelId && ch.kind === 'direct' && ch.peerId === a.id && ch.unread)));
   await cc.p.conn.reducers.chatMarkRead({ channelId: dm.channelId, messageId: 0n });
   check('mark read clears unread', await waitFor(() => rows(cc.p.conn.db.myChannels.iter()).some(ch => ch.channelId === dm.channelId && !ch.unread)));
-  check('third player cannot see the DM', rows(d.p.conn.db.myChatMessages.iter()).every(m => m.channelId !== dm.channelId) && rows(b.p.conn.db.myChatMessages.iter()).every(m => m.channelId !== dm.channelId));
+  check('third player cannot see the DM', rows(d.p.conn.db.myChatLive.iter()).every(m => m.channelId !== dm.channelId) && rows(b.p.conn.db.myChatLive.iter()).every(m => m.channelId !== dm.channelId));
   check('outsider cannot post into the DM channel', (await errorOf(send(d, { channelId: dm.channelId, text: 'x' }))).includes('NOT_MEMBER'));
   check('self DM refused', (await errorOf(send(a, { peerId: a.id }))).includes('CANNOT_TARGET_SELF'));
   check('empty text refused', (await errorOf(send(a, { peerId: cc.id, text: '   ' }))).includes('TEXT_REQUIRED'));
@@ -412,19 +412,19 @@ async function chatSuite() {
   check('own message report refused', (await errorOf(a.p.conn.procedures.chatReport({ messageId: target.messageId, titleKey: 'abuse', note: '' }))).includes('CANNOT_REPORT_OWN'));
   check('outsider cannot report an unseen message', (await errorOf(d.p.conn.procedures.chatReport({ messageId: target.messageId, titleKey: 'abuse', note: '' }))).includes('MESSAGE_NOT_FOUND'));
   check('bad title refused', (await errorOf(cc.p.conn.procedures.chatReport({ messageId: dm.messageId, titleKey: 'nope', note: '' }))).includes('REPORT_TITLE_NOT_FOUND'));
-  const md = await o.conn.procedures.adminChatMessage({ id: target.messageId });
+  const md = await o.conn.procedures.adminSocialMessage({ id: target.messageId });
   check('admin sees message with context and reports', md.reports.length === 1 && md.context.some(x => x.id === rm.messageId) && md.row.channelKind === 'room');
   await o.conn.reducers.adminDeleteChatMessage({ id: target.messageId, note: 'rude' });
-  check('deleted message hidden from players', await waitFor(() => rows(b.p.conn.db.myChatMessages.iter()).some(m => m.id === target.messageId && m.deleted && m.text === '')));
+  check('deleted message hidden from players', await waitFor(() => rows(b.p.conn.db.myChatLive.iter()).some(m => m.id === target.messageId && m.deleted && m.text === '')));
   check('delete twice refused', (await errorOf(o.conn.reducers.adminDeleteChatMessage({ id: target.messageId, note: '' }))).includes('ALREADY_REMOVED'));
   await o.conn.reducers.adminRestoreChatMessage({ id: target.messageId });
-  check('restored message visible again', await waitFor(() => rows(b.p.conn.db.myChatMessages.iter()).some(m => m.id === target.messageId && !m.deleted)));
-  const list = await o.conn.procedures.adminChatMessages({ channelId: 0n, senderId: a.id, query: '', flagged: true, status: '', page: 1, pageSize: 20 });
+  check('restored message visible again', await waitFor(() => rows(b.p.conn.db.myChatLive.iter()).some(m => m.id === target.messageId && !m.deleted)));
+  const list = await o.conn.procedures.adminSocialMessages({ channelId: 0n, senderId: a.id, query: '', flagged: true, status: '', page: 1, pageSize: 20 });
   check('admin filters flagged messages', list.rows.length >= 1 && list.rows.every(r => r.message.flagged && r.message.senderId === a.id));
-  check('admin sees original text of masked messages', (await o.conn.procedures.adminChatMessages({ channelId: 0n, senderId: a.id, query: 'احمق', flagged: false, status: '', page: 1, pageSize: 20 })).rows.some(r => r.message.original.includes('احمق')));
+  check('admin sees original text of masked messages', (await o.conn.procedures.adminSocialMessages({ channelId: 0n, senderId: a.id, query: 'احمق', flagged: false, status: '', page: 1, pageSize: 20 })).rows.some(r => r.message.original.includes('احمق')));
   const own = await send(a, { channelId: room.id, text: 'oops' });
   await a.p.conn.reducers.chatDeleteMessage({ messageId: own.messageId });
-  check('sender deletes own message', await waitFor(() => rows(b.p.conn.db.myChatMessages.iter()).some(m => m.id === own.messageId && m.deleted)));
+  check('sender deletes own message', await waitFor(() => rows(b.p.conn.db.myChatLive.iter()).some(m => m.id === own.messageId && m.deleted)));
   check('cannot delete others message', (await errorOf(b.p.conn.reducers.chatDeleteMessage({ messageId: rm.messageId }))).includes('MESSAGE_NOT_FOUND'));
 
   check('group with stranger refused', (await errorOf(a.p.conn.procedures.chatCreateGroup({ name: 'team', memberIds: [b.id, d.id] }))).includes('NOT_FRIENDS'));
@@ -432,7 +432,7 @@ async function chatSuite() {
   const grp = await a.p.conn.procedures.chatCreateGroup({ name: 'تیم احمق', memberIds: [b.id] });
   check('group created with members', await waitFor(() => rows(b.p.conn.db.myChannels.iter()).some(x => x.channelId === grp.channelId && x.kind === 'group' && x.members === 2 && x.name === 'تیم ****')));
   check('member cannot add others', (await errorOf(b.p.conn.reducers.chatGroupAdd({ channelId: grp.channelId, accountId: cc.id }))).includes('NOT_GROUP_OWNER'));
-  check('group message reaches members', (await send(b, { channelId: grp.channelId, text: 'group hi' })).ok && (await waitFor(() => rows(a.p.conn.db.myChatMessages.iter()).some(m => m.channelId === grp.channelId))));
+  check('group message reaches members', (await send(b, { channelId: grp.channelId, text: 'group hi' })).ok && (await waitFor(() => rows(a.p.conn.db.myChatLive.iter()).some(m => m.channelId === grp.channelId))));
   check('non-member cannot post in group', (await errorOf(send(cc, { channelId: grp.channelId, text: 'x' }))).includes('NOT_MEMBER'));
   await chatSet({ groupsPerPlayer: 1 });
   check('groups per player limit', (await errorOf(a.p.conn.procedures.chatCreateGroup({ name: 'two', memberIds: [] }))).includes('TOO_MANY_GROUPS'));
@@ -480,7 +480,7 @@ async function quotaSuite() {
   check('refusal carries reset time and pack products', !!ref.quota && ref.quota.resetsAt.microsSinceUnixEpoch > BigInt(Date.now()) * 1000n && ref.quota.products.some(p => p.id === packProduct && p.amount === 5) && ref.quota.message.length > 0);
   const st1 = await a.p.conn.procedures.chatQuota();
   check('status shows the refusal', st1.enabled && st1.freeLeft === 0 && st1.today.blocked === 1 && st1.today.sent === 2 && st1.messages.used === 2);
-  check('refused message not stored', !rows(b.p.conn.db.myChatMessages.iter()).some(m => m.text === '3'));
+  check('refused message not stored', !rows(b.p.conn.db.myChatLive.iter()).some(m => m.text === '3'));
   check('room messages not counted by default', await (async () => {
     await o.conn.reducers.adminSaveRoom({ id: 0n, key: k('qroom'), title: tr('q'), description: [], isActive: true, sort: 0 });
     await waitFor(() => rows(a.p.conn.db.chatRooms.iter()).some(r => r.key === k('qroom')));
