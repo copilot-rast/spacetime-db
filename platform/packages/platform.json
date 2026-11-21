@@ -66,6 +66,18 @@
         "packages/promo/src/sponsors.ts",
         "packages/promo/src/chance.ts"
       ]
+    },
+    {
+      "name": "@stg/publication",
+      "define": "definePublication",
+      "seed": "seedPublication",
+      "tables": "publicationTables",
+      "env": "publicationEnv",
+      "files": [
+        "packages/publication/src/notify.ts",
+        "packages/publication/src/news.ts",
+        "packages/publication/src/faq.ts"
+      ]
     }
   ]
 }

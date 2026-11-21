@@ -4,6 +4,7 @@ import { defineEconomy, seedEconomy } from '@stg/economy';
 import { defineGamification, seedGamification } from '@stg/gamification';
 import { defineItems, seedItems } from '@stg/items';
 import { definePromo, seedPromo } from '@stg/promo';
+import { definePublication, seedPublication } from '@stg/publication';
 import spacetimedb from './schema';
 import { gameInit } from './game/init';
 
@@ -14,6 +15,7 @@ function seedAll(ctx: unknown) {
   seedGamification(ctx as never);
   seedItems(ctx as never);
   seedPromo(ctx as never);
+  seedPublication(ctx as never);
 }
 
 export const init = spacetimedb.init(ctx => {
@@ -275,3 +277,76 @@ export const {
   chancePlay,
   chancePlayWithTicket,
 } = definePromo(spacetimedb);
+
+export const {
+  pubTick,
+  myInbox,
+  myNotifyPrefs,
+  myPushDevices,
+  adminPublicationSettings,
+  adminPushConfig,
+  adminCampaigns,
+  adminAutoRules,
+  adminSavePublicationSettings,
+  adminSetPublicationClockOffset,
+  adminSavePushConfig,
+  adminPushJwtPreview,
+  adminSaveNotifyCategory,
+  adminDeleteNotifyCategory,
+  notifyPrefs,
+  notifyPrefsSet,
+  inboxRead,
+  inboxDelete,
+  inboxClaim,
+  pushRegister,
+  pushUnregister,
+  adminSaveCampaign,
+  adminSendCampaign,
+  adminCancelCampaign,
+  adminDeleteCampaign,
+  adminCampaignDeliveries,
+  adminCampaignPreview,
+  adminSaveAutoRule,
+  adminDeleteAutoRule,
+  adminAutoFires,
+  adminPushLog,
+  adminOutbox,
+  adminPushDevices,
+  adminTestNotification,
+  adminPublicationRun,
+  adminNews,
+  adminNewsSettings,
+  adminNewsSources,
+  adminSaveNewsSettings,
+  adminSaveNews,
+  adminReviewNews,
+  adminDeleteNews,
+  adminSaveReactionType,
+  adminDeleteReactionType,
+  adminSaveNewsSource,
+  adminDeleteNewsSource,
+  adminIngestLog,
+  adminNewsComments,
+  adminModerateComment,
+  adminDeleteComment,
+  newsList,
+  newsGet,
+  newsBySlug,
+  newsUnread,
+  newsSeen,
+  newsReact,
+  newsComments,
+  newsComment,
+  newsCommentDelete,
+  newsIngest,
+  publicNews,
+  publicArticle,
+  publicSitemap,
+  publicRss,
+  publicationRoutes,
+  faqEntries,
+  adminFaqs,
+  adminSaveFaq,
+  adminDeleteFaq,
+  faqList,
+} = definePublication(spacetimedb);

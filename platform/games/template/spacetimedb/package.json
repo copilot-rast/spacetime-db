@@ -9,6 +9,7 @@
     "@stg/gamification": "*",
     "@stg/items": "*",
     "@stg/promo": "*",
+    "@stg/publication": "*",
     "spacetimedb": "2.12.0"
   },
   "devDependencies": {
