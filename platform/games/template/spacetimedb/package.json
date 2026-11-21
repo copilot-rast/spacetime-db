@@ -5,6 +5,7 @@
   "dependencies": {
     "@stg/base": "*",
     "@stg/players": "*",
+    "@stg/economy": "*",
     "spacetimedb": "2.12.0"
   },
   "devDependencies": {

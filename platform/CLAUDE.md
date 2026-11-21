@@ -31,7 +31,7 @@ export PATH=~/.nvm/versions/node/v22.18.0/bin:$PATH
 npm install
 ./scripts/dev-server.sh
 OTP_SECRET=$(cat .local/otp_secret) ADMIN_PHONES=09120000001 spacetime publish stg-template -s stglocal -p games/template/spacetimedb --no-config --yes
-cd e2e && npm run gen && npx tsx base.test.ts && npx tsx players.test.ts
+cd e2e && npm run gen && npx tsx base.test.ts && npx tsx players.test.ts && npx tsx economy.test.ts
 ```
 
 - SpacetimeDB CLI stays on 2.12.0 (`spacetime version use 2.12.0`), matching the `spacetimedb` npm package.

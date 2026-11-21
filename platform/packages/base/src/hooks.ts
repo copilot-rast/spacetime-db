@@ -6,6 +6,8 @@ export type ProfileValidator = (ctx: Tx, accountId: bigint, displayName: string)
 
 export const accountGuards: AccountGuard[] = [];
 export const profileValidators: ProfileValidator[] = [];
+export type LoginHook = (ctx: Tx, accountId: bigint, isNew: boolean) => void;
+export const loginHooks: LoginHook[] = [];
 
 export function checkAccountGuards(ctx: Tx, accountId: bigint): GuardResult {
   for (const g of accountGuards) {

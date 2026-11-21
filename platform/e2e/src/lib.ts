@@ -50,6 +50,18 @@ export const PLAYER_QUERIES = [
   'SELECT * FROM admin_report_rules',
 ];
 
+export const ECONOMY_QUERIES = [
+  'SELECT * FROM economy_currency',
+  'SELECT * FROM economy_meta',
+  'SELECT * FROM economy_prize',
+  'SELECT * FROM economy_prize_group',
+  'SELECT * FROM my_wallet',
+  'SELECT * FROM my_metas',
+  'SELECT * FROM shop',
+  'SELECT * FROM admin_payment_methods',
+  'SELECT * FROM admin_economy_settings',
+];
+
 export function connect(token?: string, extra: string[] = []): Promise<Client> {
   return new Promise((resolve, reject) => {
     const b = DbConnection.builder()

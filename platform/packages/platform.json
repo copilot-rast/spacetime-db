@@ -6,7 +6,10 @@
       "seed": "seedBase",
       "tables": "baseTables",
       "env": "baseEnv",
-      "files": ["packages/base/src/auth.ts", "packages/base/src/admin.ts"]
+      "files": [
+        "packages/base/src/auth.ts",
+        "packages/base/src/admin.ts"
+      ]
     },
     {
       "name": "@stg/players",
@@ -14,7 +17,21 @@
       "seed": "seedPlayers",
       "tables": "playersTables",
       "env": "playersEnv",
-      "files": ["packages/players/src/rules.ts", "packages/players/src/moderation.ts"]
+      "files": [
+        "packages/players/src/rules.ts",
+        "packages/players/src/moderation.ts"
+      ]
+    },
+    {
+      "name": "@stg/economy",
+      "define": "defineEconomy",
+      "seed": "seedEconomy",
+      "tables": "economyTables",
+      "env": "economyEnv",
+      "files": [
+        "packages/economy/src/catalog.ts",
+        "packages/economy/src/payments.ts"
+      ]
     }
   ]
 }

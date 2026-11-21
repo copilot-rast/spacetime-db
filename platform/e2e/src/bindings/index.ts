@@ -34,14 +34,21 @@ import {
 } from "spacetimedb";
 
 // Import all reducer arg schemas
+import AdminAdjustReducer from "./admin_adjust_reducer";
 import AdminBulkPlayerTagsReducer from "./admin_bulk_player_tags_reducer";
 import AdminClearSandboxSmsReducer from "./admin_clear_sandbox_sms_reducer";
 import AdminCompleteSetupReducer from "./admin_complete_setup_reducer";
 import AdminDeleteAppVersionReducer from "./admin_delete_app_version_reducer";
 import AdminDeleteCategoryReducer from "./admin_delete_category_reducer";
 import AdminDeleteCountryReducer from "./admin_delete_country_reducer";
+import AdminDeleteCurrencyReducer from "./admin_delete_currency_reducer";
+import AdminDeleteGiftReducer from "./admin_delete_gift_reducer";
 import AdminDeleteKeyTypeReducer from "./admin_delete_key_type_reducer";
 import AdminDeleteLanguageReducer from "./admin_delete_language_reducer";
+import AdminDeleteMetaReducer from "./admin_delete_meta_reducer";
+import AdminDeletePrizeReducer from "./admin_delete_prize_reducer";
+import AdminDeletePrizeGroupReducer from "./admin_delete_prize_group_reducer";
+import AdminDeleteProductReducer from "./admin_delete_product_reducer";
 import AdminDeleteReportTitleReducer from "./admin_delete_report_title_reducer";
 import AdminDeleteSmsProviderReducer from "./admin_delete_sms_provider_reducer";
 import AdminDeleteTagReducer from "./admin_delete_tag_reducer";
@@ -57,8 +64,16 @@ import AdminSaveAppVersionReducer from "./admin_save_app_version_reducer";
 import AdminSaveBrandReducer from "./admin_save_brand_reducer";
 import AdminSaveCategoryReducer from "./admin_save_category_reducer";
 import AdminSaveCountryReducer from "./admin_save_country_reducer";
+import AdminSaveCurrencyReducer from "./admin_save_currency_reducer";
+import AdminSaveEconomySettingsReducer from "./admin_save_economy_settings_reducer";
+import AdminSaveGiftReducer from "./admin_save_gift_reducer";
 import AdminSaveKeyTypeReducer from "./admin_save_key_type_reducer";
 import AdminSaveLanguageReducer from "./admin_save_language_reducer";
+import AdminSaveMetaReducer from "./admin_save_meta_reducer";
+import AdminSavePaymentMethodReducer from "./admin_save_payment_method_reducer";
+import AdminSavePrizeReducer from "./admin_save_prize_reducer";
+import AdminSavePrizeGroupReducer from "./admin_save_prize_group_reducer";
+import AdminSaveProductReducer from "./admin_save_product_reducer";
 import AdminSaveReportRulesReducer from "./admin_save_report_rules_reducer";
 import AdminSaveReportTitleReducer from "./admin_save_report_title_reducer";
 import AdminSaveSettingsReducer from "./admin_save_settings_reducer";
@@ -73,21 +88,36 @@ import AdminSetPlayerTagsReducer from "./admin_set_player_tags_reducer";
 import AdminSetTagVisibilityReducer from "./admin_set_tag_visibility_reducer";
 import LogoutReducer from "./logout_reducer";
 import SetMyCountryReducer from "./set_my_country_reducer";
+import SyncEconomyReducer from "./sync_economy_reducer";
 import UpdateProfileReducer from "./update_profile_reducer";
 
 // Import all procedure arg schemas
 import * as AdminAccountsProcedure from "./admin_accounts_procedure";
 import * as AdminAuditProcedure from "./admin_audit_procedure";
 import * as AdminDashboardProcedure from "./admin_dashboard_procedure";
+import * as AdminEconomySummaryProcedure from "./admin_economy_summary_procedure";
+import * as AdminGiftsProcedure from "./admin_gifts_procedure";
+import * as AdminGrantPrizeProcedure from "./admin_grant_prize_procedure";
+import * as AdminInquirePaymentProcedure from "./admin_inquire_payment_procedure";
 import * as AdminModerationSummaryProcedure from "./admin_moderation_summary_procedure";
+import * as AdminPaymentProcedure from "./admin_payment_procedure";
+import * as AdminPaymentsProcedure from "./admin_payments_procedure";
 import * as AdminPlayerProcedure from "./admin_player_procedure";
 import * as AdminPlayersProcedure from "./admin_players_procedure";
+import * as AdminProductsProcedure from "./admin_products_procedure";
 import * as AdminReportProcedure from "./admin_report_procedure";
 import * as AdminReportsProcedure from "./admin_reports_procedure";
 import * as AdminRestrictionsProcedure from "./admin_restrictions_procedure";
+import * as AdminRetryGrantProcedure from "./admin_retry_grant_procedure";
 import * as AdminTestSmsProcedure from "./admin_test_sms_procedure";
+import * as AdminUserEconomyProcedure from "./admin_user_economy_procedure";
 import * as CheckAppVersionProcedure from "./check_app_version_procedure";
+import * as MyPaymentsProcedure from "./my_payments_procedure";
 import * as MyReportsProcedure from "./my_reports_procedure";
+import * as PurchaseStartProcedure from "./purchase_start_procedure";
+import * as PurchaseStatusProcedure from "./purchase_status_procedure";
+import * as PurchaseSubmitProcedure from "./purchase_submit_procedure";
+import * as RedeemGiftProcedure from "./redeem_gift_procedure";
 import * as ReportPlayerProcedure from "./report_player_procedure";
 import * as RequestOtpProcedure from "./request_otp_procedure";
 import * as VerifyOtpProcedure from "./verify_otp_procedure";
@@ -95,6 +125,8 @@ import * as VerifyOtpProcedure from "./verify_otp_procedure";
 // Import all table schema definitions
 import AccountRulesRow from "./account_rules_table";
 import AdminAdminsRow from "./admin_admins_table";
+import AdminEconomySettingsRow from "./admin_economy_settings_table";
+import AdminPaymentMethodsRow from "./admin_payment_methods_table";
 import AdminReportRulesRow from "./admin_report_rules_table";
 import AdminSandboxSmsRow from "./admin_sandbox_sms_table";
 import AdminSettingsRow from "./admin_settings_table";
@@ -104,14 +136,21 @@ import AppVersionRow from "./app_version_table";
 import BrandRow from "./brand_table";
 import CategoryRow from "./category_table";
 import CountryRow from "./country_table";
+import CurrencyRow from "./currency_table";
 import KeyTypeRow from "./key_type_table";
 import LanguageRow from "./language_table";
 import MeRow from "./me_table";
+import MetaRow from "./meta_table";
+import MyMetasRow from "./my_metas_table";
 import MyProfileRow from "./my_profile_table";
 import MyRoleRow from "./my_role_table";
 import MyStatusRow from "./my_status_table";
 import MyTagsRow from "./my_tags_table";
+import MyWalletRow from "./my_wallet_table";
+import PrizeRow from "./prize_table";
+import PrizeGroupRow from "./prize_group_table";
 import ReportTitleRow from "./report_title_table";
+import ShopRow from "./shop_table";
 import TagRow from "./tag_table";
 import TagMetaRow from "./tag_meta_table";
 
@@ -185,6 +224,66 @@ const tablesSchema = __schema({
       { name: 'base_tag_id_key', constraint: 'unique', columns: ['id'] },
     ],
   }, TagRow),
+  currency: __table({
+    name: 'economy_currency',
+    indexes: [
+      { accessor: 'id', name: 'economy_currency_id_idx_btree', algorithm: 'btree', columns: [
+        'id',
+      ] },
+      { accessor: 'key', name: 'economy_currency_key_idx_btree', algorithm: 'btree', columns: [
+        'key',
+      ] },
+    ],
+    constraints: [
+      { name: 'economy_currency_id_key', constraint: 'unique', columns: ['id'] },
+      { name: 'economy_currency_key_key', constraint: 'unique', columns: ['key'] },
+    ],
+  }, CurrencyRow),
+  meta: __table({
+    name: 'economy_meta',
+    indexes: [
+      { accessor: 'id', name: 'economy_meta_id_idx_btree', algorithm: 'btree', columns: [
+        'id',
+      ] },
+      { accessor: 'key', name: 'economy_meta_key_idx_btree', algorithm: 'btree', columns: [
+        'key',
+      ] },
+    ],
+    constraints: [
+      { name: 'economy_meta_id_key', constraint: 'unique', columns: ['id'] },
+      { name: 'economy_meta_key_key', constraint: 'unique', columns: ['key'] },
+    ],
+  }, MetaRow),
+  prize: __table({
+    name: 'economy_prize',
+    indexes: [
+      { accessor: 'id', name: 'economy_prize_id_idx_btree', algorithm: 'btree', columns: [
+        'id',
+      ] },
+      { accessor: 'key', name: 'economy_prize_key_idx_btree', algorithm: 'btree', columns: [
+        'key',
+      ] },
+    ],
+    constraints: [
+      { name: 'economy_prize_id_key', constraint: 'unique', columns: ['id'] },
+      { name: 'economy_prize_key_key', constraint: 'unique', columns: ['key'] },
+    ],
+  }, PrizeRow),
+  prizeGroup: __table({
+    name: 'economy_prize_group',
+    indexes: [
+      { accessor: 'id', name: 'economy_prize_group_id_idx_btree', algorithm: 'btree', columns: [
+        'id',
+      ] },
+      { accessor: 'key', name: 'economy_prize_group_key_idx_btree', algorithm: 'btree', columns: [
+        'key',
+      ] },
+    ],
+    constraints: [
+      { name: 'economy_prize_group_id_key', constraint: 'unique', columns: ['id'] },
+      { name: 'economy_prize_group_key_key', constraint: 'unique', columns: ['key'] },
+    ],
+  }, PrizeGroupRow),
   accountRules: __table({
     name: 'players_account_rules',
     indexes: [
@@ -251,6 +350,20 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, AdminAdminsRow),
+  adminEconomySettings: __table({
+    name: 'admin_economy_settings',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminEconomySettingsRow),
+  adminPaymentMethods: __table({
+    name: 'admin_payment_methods',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminPaymentMethodsRow),
   adminReportRules: __table({
     name: 'admin_report_rules',
     indexes: [
@@ -293,6 +406,13 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, MeRow),
+  myMetas: __table({
+    name: 'my_metas',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyMetasRow),
   myProfile: __table({
     name: 'my_profile',
     indexes: [
@@ -321,18 +441,39 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, MyTagsRow),
+  myWallet: __table({
+    name: 'my_wallet',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyWalletRow),
+  shop: __table({
+    name: 'shop',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, ShopRow),
 });
 
 /** The schema information for all reducers in this module. This is defined the same way as the reducers would have been defined in the server, except the body of the reducer is omitted in code generation. */
 const reducersSchema = __reducers(
+  __reducerSchema("admin_adjust", AdminAdjustReducer),
   __reducerSchema("admin_bulk_player_tags", AdminBulkPlayerTagsReducer),
   __reducerSchema("admin_clear_sandbox_sms", AdminClearSandboxSmsReducer),
   __reducerSchema("admin_complete_setup", AdminCompleteSetupReducer),
   __reducerSchema("admin_delete_app_version", AdminDeleteAppVersionReducer),
   __reducerSchema("admin_delete_category", AdminDeleteCategoryReducer),
   __reducerSchema("admin_delete_country", AdminDeleteCountryReducer),
+  __reducerSchema("admin_delete_currency", AdminDeleteCurrencyReducer),
+  __reducerSchema("admin_delete_gift", AdminDeleteGiftReducer),
   __reducerSchema("admin_delete_key_type", AdminDeleteKeyTypeReducer),
   __reducerSchema("admin_delete_language", AdminDeleteLanguageReducer),
+  __reducerSchema("admin_delete_meta", AdminDeleteMetaReducer),
+  __reducerSchema("admin_delete_prize", AdminDeletePrizeReducer),
+  __reducerSchema("admin_delete_prize_group", AdminDeletePrizeGroupReducer),
+  __reducerSchema("admin_delete_product", AdminDeleteProductReducer),
   __reducerSchema("admin_delete_report_title", AdminDeleteReportTitleReducer),
   __reducerSchema("admin_delete_sms_provider", AdminDeleteSmsProviderReducer),
   __reducerSchema("admin_delete_tag", AdminDeleteTagReducer),
@@ -348,8 +489,16 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_save_brand", AdminSaveBrandReducer),
   __reducerSchema("admin_save_category", AdminSaveCategoryReducer),
   __reducerSchema("admin_save_country", AdminSaveCountryReducer),
+  __reducerSchema("admin_save_currency", AdminSaveCurrencyReducer),
+  __reducerSchema("admin_save_economy_settings", AdminSaveEconomySettingsReducer),
+  __reducerSchema("admin_save_gift", AdminSaveGiftReducer),
   __reducerSchema("admin_save_key_type", AdminSaveKeyTypeReducer),
   __reducerSchema("admin_save_language", AdminSaveLanguageReducer),
+  __reducerSchema("admin_save_meta", AdminSaveMetaReducer),
+  __reducerSchema("admin_save_payment_method", AdminSavePaymentMethodReducer),
+  __reducerSchema("admin_save_prize", AdminSavePrizeReducer),
+  __reducerSchema("admin_save_prize_group", AdminSavePrizeGroupReducer),
+  __reducerSchema("admin_save_product", AdminSaveProductReducer),
   __reducerSchema("admin_save_report_rules", AdminSaveReportRulesReducer),
   __reducerSchema("admin_save_report_title", AdminSaveReportTitleReducer),
   __reducerSchema("admin_save_settings", AdminSaveSettingsReducer),
@@ -364,6 +513,7 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_set_tag_visibility", AdminSetTagVisibilityReducer),
   __reducerSchema("logout", LogoutReducer),
   __reducerSchema("set_my_country", SetMyCountryReducer),
+  __reducerSchema("sync_economy", SyncEconomyReducer),
   __reducerSchema("update_profile", UpdateProfileReducer),
 );
 
@@ -372,15 +522,29 @@ const proceduresSchema = __procedures(
   __procedureSchema("admin_accounts", AdminAccountsProcedure.params, AdminAccountsProcedure.returnType),
   __procedureSchema("admin_audit", AdminAuditProcedure.params, AdminAuditProcedure.returnType),
   __procedureSchema("admin_dashboard", AdminDashboardProcedure.params, AdminDashboardProcedure.returnType),
+  __procedureSchema("admin_economy_summary", AdminEconomySummaryProcedure.params, AdminEconomySummaryProcedure.returnType),
+  __procedureSchema("admin_gifts", AdminGiftsProcedure.params, AdminGiftsProcedure.returnType),
+  __procedureSchema("admin_grant_prize", AdminGrantPrizeProcedure.params, AdminGrantPrizeProcedure.returnType),
+  __procedureSchema("admin_inquire_payment", AdminInquirePaymentProcedure.params, AdminInquirePaymentProcedure.returnType),
   __procedureSchema("admin_moderation_summary", AdminModerationSummaryProcedure.params, AdminModerationSummaryProcedure.returnType),
+  __procedureSchema("admin_payment", AdminPaymentProcedure.params, AdminPaymentProcedure.returnType),
+  __procedureSchema("admin_payments", AdminPaymentsProcedure.params, AdminPaymentsProcedure.returnType),
   __procedureSchema("admin_player", AdminPlayerProcedure.params, AdminPlayerProcedure.returnType),
   __procedureSchema("admin_players", AdminPlayersProcedure.params, AdminPlayersProcedure.returnType),
+  __procedureSchema("admin_products", AdminProductsProcedure.params, AdminProductsProcedure.returnType),
   __procedureSchema("admin_report", AdminReportProcedure.params, AdminReportProcedure.returnType),
   __procedureSchema("admin_reports", AdminReportsProcedure.params, AdminReportsProcedure.returnType),
   __procedureSchema("admin_restrictions", AdminRestrictionsProcedure.params, AdminRestrictionsProcedure.returnType),
+  __procedureSchema("admin_retry_grant", AdminRetryGrantProcedure.params, AdminRetryGrantProcedure.returnType),
   __procedureSchema("admin_test_sms", AdminTestSmsProcedure.params, AdminTestSmsProcedure.returnType),
+  __procedureSchema("admin_user_economy", AdminUserEconomyProcedure.params, AdminUserEconomyProcedure.returnType),
   __procedureSchema("check_app_version", CheckAppVersionProcedure.params, CheckAppVersionProcedure.returnType),
+  __procedureSchema("my_payments", MyPaymentsProcedure.params, MyPaymentsProcedure.returnType),
   __procedureSchema("my_reports", MyReportsProcedure.params, MyReportsProcedure.returnType),
+  __procedureSchema("purchase_start", PurchaseStartProcedure.params, PurchaseStartProcedure.returnType),
+  __procedureSchema("purchase_status", PurchaseStatusProcedure.params, PurchaseStatusProcedure.returnType),
+  __procedureSchema("purchase_submit", PurchaseSubmitProcedure.params, PurchaseSubmitProcedure.returnType),
+  __procedureSchema("redeem_gift", RedeemGiftProcedure.params, RedeemGiftProcedure.returnType),
   __procedureSchema("report_player", ReportPlayerProcedure.params, ReportPlayerProcedure.returnType),
   __procedureSchema("request_otp", RequestOtpProcedure.params, RequestOtpProcedure.returnType),
   __procedureSchema("verify_otp", VerifyOtpProcedure.params, VerifyOtpProcedure.returnType),

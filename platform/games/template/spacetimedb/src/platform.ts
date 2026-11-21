@@ -1,11 +1,13 @@
 import { defineBase, seedBase } from '@stg/base';
 import { definePlayers, seedPlayers } from '@stg/players';
+import { defineEconomy, seedEconomy } from '@stg/economy';
 import spacetimedb from './schema';
 import { gameInit } from './game/init';
 
 function seedAll(ctx: unknown) {
   seedBase(ctx as never);
   seedPlayers(ctx as never);
+  seedEconomy(ctx as never);
 }
 
 export const init = spacetimedb.init(ctx => {
@@ -89,3 +91,44 @@ export const {
   adminResolveReport,
   adminModerationSummary,
 } = definePlayers(spacetimedb);
+
+export const {
+  myWallet,
+  myMetas,
+  shop,
+  syncEconomy,
+  adminSaveCurrency,
+  adminDeleteCurrency,
+  adminSaveMeta,
+  adminDeleteMeta,
+  adminSavePrize,
+  adminDeletePrize,
+  adminSavePrizeGroup,
+  adminDeletePrizeGroup,
+  adminSaveProduct,
+  adminDeleteProduct,
+  adminProducts,
+  adminSaveGift,
+  adminDeleteGift,
+  adminGifts,
+  redeemGift,
+  adminUserEconomy,
+  adminGrantPrize,
+  adminAdjust,
+  adminPaymentMethods,
+  adminSavePaymentMethod,
+  adminEconomySettings,
+  adminSaveEconomySettings,
+  purchaseStart,
+  purchaseSubmit,
+  purchaseStatus,
+  myPayments,
+  paymentCallback,
+  routes,
+  reconcilePayments,
+  adminPayments,
+  adminPayment,
+  adminInquirePayment,
+  adminRetryGrant,
+  adminEconomySummary,
+} = defineEconomy(spacetimedb);

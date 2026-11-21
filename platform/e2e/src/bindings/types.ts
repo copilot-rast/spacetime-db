@@ -33,6 +33,12 @@ export type AccountPage = __Infer<typeof AccountPage>;
 export const AdminAdmins = __t.object("AdminAdmins", {});
 export type AdminAdmins = __Infer<typeof AdminAdmins>;
 
+export const AdminEconomySettings = __t.object("AdminEconomySettings", {});
+export type AdminEconomySettings = __Infer<typeof AdminEconomySettings>;
+
+export const AdminPaymentMethods = __t.object("AdminPaymentMethods", {});
+export type AdminPaymentMethods = __Infer<typeof AdminPaymentMethods>;
+
 export const AdminReportRules = __t.object("AdminReportRules", {});
 export type AdminReportRules = __Infer<typeof AdminReportRules>;
 
@@ -273,8 +279,275 @@ export const BaseTestPhone = __t.object("BaseTestPhone", {
 });
 export type BaseTestPhone = __Infer<typeof BaseTestPhone>;
 
+export const EconomyCurrency = __t.object("EconomyCurrency", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  type: __t.string(),
+  defaultValue: __t.i64(),
+  iconUrl: __t.string(),
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  sort: __t.i32(),
+  isActive: __t.bool(),
+  createdAt: __t.timestamp(),
+});
+export type EconomyCurrency = __Infer<typeof EconomyCurrency>;
+
+export const EconomyCurrencyInit = __t.object("EconomyCurrencyInit", {
+  key: __t.string(),
+});
+export type EconomyCurrencyInit = __Infer<typeof EconomyCurrencyInit>;
+
+export const EconomyGift = __t.object("EconomyGift", {
+  id: __t.u64(),
+  get name() {
+    return __t.array(Translation);
+  },
+  type: __t.string(),
+  code: __t.string(),
+  prizeId: __t.u64(),
+  discountPercent: __t.u8(),
+  perUserLimit: __t.u32(),
+  maxTotalUses: __t.u32(),
+  totalUsed: __t.u32(),
+  validFrom: __t.option(__t.timestamp()),
+  expireAt: __t.option(__t.timestamp()),
+  isActive: __t.bool(),
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  createdAt: __t.timestamp(),
+});
+export type EconomyGift = __Infer<typeof EconomyGift>;
+
+export const EconomyGiftUse = __t.object("EconomyGiftUse", {
+  id: __t.u64(),
+  giftId: __t.u64(),
+  accountId: __t.u64(),
+  paymentId: __t.u64(),
+  status: __t.string(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type EconomyGiftUse = __Infer<typeof EconomyGiftUse>;
+
+export const EconomyLedger = __t.object("EconomyLedger", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  currencyKey: __t.string(),
+  delta: __t.i64(),
+  balanceAfter: __t.i64(),
+  reason: __t.string(),
+  sourceType: __t.string(),
+  sourceId: __t.string(),
+  at: __t.timestamp(),
+});
+export type EconomyLedger = __Infer<typeof EconomyLedger>;
+
+export const EconomyMeta = __t.object("EconomyMeta", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  defaultValue: __t.f64(),
+  serverOnly: __t.bool(),
+  createdAt: __t.timestamp(),
+});
+export type EconomyMeta = __Infer<typeof EconomyMeta>;
+
+export const EconomyPayment = __t.object("EconomyPayment", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  productId: __t.u64(),
+  method: __t.string(),
+  sandbox: __t.bool(),
+  status: __t.string(),
+  originalToman: __t.i64(),
+  finalToman: __t.i64(),
+  amountRial: __t.i64(),
+  coinCurrency: __t.string(),
+  coinAmount: __t.i64(),
+  giftId: __t.u64(),
+  discountPercent: __t.u8(),
+  authority: __t.string(),
+  refId: __t.string(),
+  storeToken: __t.string(),
+  cardMask: __t.string(),
+  error: __t.string(),
+  rewardGranted: __t.bool(),
+  rewardError: __t.string(),
+  rewards: __t.string(),
+  inquiryCount: __t.u32(),
+  inquiredAt: __t.option(__t.timestamp()),
+  verifiedAt: __t.option(__t.timestamp()),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type EconomyPayment = __Infer<typeof EconomyPayment>;
+
+export const EconomyPaymentLog = __t.object("EconomyPaymentLog", {
+  id: __t.u64(),
+  paymentId: __t.u64(),
+  action: __t.string(),
+  url: __t.string(),
+  request: __t.string(),
+  response: __t.string(),
+  httpStatus: __t.u32(),
+  at: __t.timestamp(),
+});
+export type EconomyPaymentLog = __Infer<typeof EconomyPaymentLog>;
+
+export const EconomyPaymentMethod = __t.object("EconomyPaymentMethod", {
+  method: __t.string(),
+  isActive: __t.bool(),
+  config: __t.string(),
+  updatedAt: __t.timestamp(),
+});
+export type EconomyPaymentMethod = __Infer<typeof EconomyPaymentMethod>;
+
+export const EconomyPrize = __t.object("EconomyPrize", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get message() {
+    return __t.array(Translation);
+  },
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  isRepeatable: __t.bool(),
+  get items() {
+    return __t.array(PrizeItem);
+  },
+  createdAt: __t.timestamp(),
+});
+export type EconomyPrize = __Infer<typeof EconomyPrize>;
+
+export const EconomyPrizeGroup = __t.object("EconomyPrizeGroup", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get entries() {
+    return __t.array(PrizeGroupEntry);
+  },
+  isActive: __t.bool(),
+  createdAt: __t.timestamp(),
+});
+export type EconomyPrizeGroup = __Infer<typeof EconomyPrizeGroup>;
+
+export const EconomyProduct = __t.object("EconomyProduct", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  isActive: __t.bool(),
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  audienceTagIds: __t.array(__t.u64()),
+  priceToman: __t.i64(),
+  coinCurrency: __t.string(),
+  coinAmount: __t.i64(),
+  discountPercent: __t.u8(),
+  paymentMethods: __t.array(__t.string()),
+  skuBazaar: __t.string(),
+  skuMyket: __t.string(),
+  prizeId: __t.u64(),
+  iconUrl: __t.string(),
+  coverUrl: __t.string(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type EconomyProduct = __Infer<typeof EconomyProduct>;
+
+export const EconomyReconcileTimer = __t.object("EconomyReconcileTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type EconomyReconcileTimer = __Infer<typeof EconomyReconcileTimer>;
+
+export const EconomySettings = __t.object("EconomySettings", {
+  id: __t.u8(),
+  publicBaseUrl: __t.string(),
+  redirectUrl: __t.string(),
+  pendingTtlMinutes: __t.u32(),
+  updatedAt: __t.timestamp(),
+});
+export type EconomySettings = __Infer<typeof EconomySettings>;
+
+export const EconomySummary = __t.object("EconomySummary", {
+  currencies: __t.u32(),
+  metas: __t.u32(),
+  prizes: __t.u32(),
+  products: __t.u32(),
+  activeProducts: __t.u32(),
+  gifts: __t.u32(),
+  activeGifts: __t.u32(),
+  paymentsDay: __t.u32(),
+  pending: __t.u32(),
+  grantErrors: __t.u32(),
+  revenueToman30: __t.i64(),
+  get revenueDaily() {
+    return __t.array(RevenueDay);
+  },
+});
+export type EconomySummary = __Infer<typeof EconomySummary>;
+
+export const EconomyUserMeta = __t.object("EconomyUserMeta", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  metaKey: __t.string(),
+  value: __t.f64(),
+  updatedAt: __t.timestamp(),
+});
+export type EconomyUserMeta = __Infer<typeof EconomyUserMeta>;
+
+export const EconomyUserPrize = __t.object("EconomyUserPrize", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  prizeId: __t.u64(),
+  sourceType: __t.string(),
+  sourceId: __t.string(),
+  rewards: __t.string(),
+  createdAt: __t.timestamp(),
+});
+export type EconomyUserPrize = __Infer<typeof EconomyUserPrize>;
+
+export const EconomyWallet = __t.object("EconomyWallet", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  currencyKey: __t.string(),
+  balance: __t.i64(),
+  updatedAt: __t.timestamp(),
+});
+export type EconomyWallet = __Infer<typeof EconomyWallet>;
+
+export const GiftPage = __t.object("GiftPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(EconomyGift);
+  },
+});
+export type GiftPage = __Infer<typeof GiftPage>;
+
 export const Me = __t.object("Me", {});
 export type Me = __Infer<typeof Me>;
+
+export const MetaEntry = __t.object("MetaEntry", {
+  metaKey: __t.string(),
+  value: __t.f64(),
+});
+export type MetaEntry = __Infer<typeof MetaEntry>;
 
 export const ModerationSummary = __t.object("ModerationSummary", {
   suspended: __t.u32(),
@@ -284,6 +557,9 @@ export const ModerationSummary = __t.object("ModerationSummary", {
   tagged: __t.u32(),
 });
 export type ModerationSummary = __Infer<typeof ModerationSummary>;
+
+export const MyMetas = __t.object("MyMetas", {});
+export type MyMetas = __Infer<typeof MyMetas>;
 
 export const MyProfile = __t.object("MyProfile", {});
 export type MyProfile = __Infer<typeof MyProfile>;
@@ -350,6 +626,55 @@ export type MyTagRow = __Infer<typeof MyTagRow>;
 
 export const MyTags = __t.object("MyTags", {});
 export type MyTags = __Infer<typeof MyTags>;
+
+export const MyWallet = __t.object("MyWallet", {});
+export type MyWallet = __Infer<typeof MyWallet>;
+
+export const PaymentDetail = __t.object("PaymentDetail", {
+  get row() {
+    return PaymentListRow;
+  },
+  get logs() {
+    return __t.array(EconomyPaymentLog);
+  },
+});
+export type PaymentDetail = __Infer<typeof PaymentDetail>;
+
+export const PaymentListRow = __t.object("PaymentListRow", {
+  get payment() {
+    return EconomyPayment;
+  },
+  phone: __t.string(),
+  productKey: __t.string(),
+});
+export type PaymentListRow = __Infer<typeof PaymentListRow>;
+
+export const PaymentMethodField = __t.object("PaymentMethodField", {
+  name: __t.string(),
+  type: __t.string(),
+  required: __t.bool(),
+});
+export type PaymentMethodField = __Infer<typeof PaymentMethodField>;
+
+export const PaymentMethodView = __t.object("PaymentMethodView", {
+  method: __t.string(),
+  isActive: __t.bool(),
+  configured: __t.bool(),
+  get fields() {
+    return __t.array(PaymentMethodField);
+  },
+  config: __t.string(),
+  updatedAt: __t.timestamp(),
+});
+export type PaymentMethodView = __Infer<typeof PaymentMethodView>;
+
+export const PaymentPage = __t.object("PaymentPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(PaymentListRow);
+  },
+});
+export type PaymentPage = __Infer<typeof PaymentPage>;
 
 export const PlayerDetail = __t.object("PlayerDetail", {
   get player() {
@@ -541,6 +866,57 @@ export const PlayersUserTag = __t.object("PlayersUserTag", {
 });
 export type PlayersUserTag = __Infer<typeof PlayersUserTag>;
 
+export const PrizeGroupEntry = __t.object("PrizeGroupEntry", {
+  prizeId: __t.u64(),
+  weight: __t.u32(),
+});
+export type PrizeGroupEntry = __Infer<typeof PrizeGroupEntry>;
+
+export const PrizeItem = __t.object("PrizeItem", {
+  type: __t.string(),
+  key: __t.string(),
+  action: __t.string(),
+  value: __t.f64(),
+});
+export type PrizeItem = __Infer<typeof PrizeItem>;
+
+export const ProductPage = __t.object("ProductPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(EconomyProduct);
+  },
+});
+export type ProductPage = __Infer<typeof ProductPage>;
+
+export const PurchaseStartResult = __t.object("PurchaseStartResult", {
+  paymentId: __t.u64(),
+  status: __t.string(),
+  redirectUrl: __t.string(),
+  sku: __t.string(),
+  developerPayload: __t.string(),
+  rewards: __t.string(),
+});
+export type PurchaseStartResult = __Infer<typeof PurchaseStartResult>;
+
+export const PurchaseStatusResult = __t.object("PurchaseStatusResult", {
+  paymentId: __t.u64(),
+  status: __t.string(),
+  rewardGranted: __t.bool(),
+  error: __t.string(),
+  rewards: __t.string(),
+});
+export type PurchaseStatusResult = __Infer<typeof PurchaseStatusResult>;
+
+export const RedeemResult = __t.object("RedeemResult", {
+  get rewards() {
+    return __t.array(RewardRow);
+  },
+  get giftName() {
+    return __t.array(Translation);
+  },
+});
+export type RedeemResult = __Infer<typeof RedeemResult>;
+
 export const ReportDetail = __t.object("ReportDetail", {
   get row() {
     return ReportListRow;
@@ -636,6 +1012,53 @@ export const RestrictionRef = __t.object("RestrictionRef", {
 });
 export type RestrictionRef = __Infer<typeof RestrictionRef>;
 
+export const RevenueDay = __t.object("RevenueDay", {
+  day: __t.string(),
+  toman: __t.i64(),
+  success: __t.u32(),
+  payments: __t.u32(),
+});
+export type RevenueDay = __Infer<typeof RevenueDay>;
+
+export const RewardRow = __t.object("RewardRow", {
+  type: __t.string(),
+  key: __t.string(),
+  action: __t.string(),
+  value: __t.f64(),
+  prizeKey: __t.string(),
+});
+export type RewardRow = __Infer<typeof RewardRow>;
+
+export const Shop = __t.object("Shop", {});
+export type Shop = __Infer<typeof Shop>;
+
+export const ShopProduct = __t.object("ShopProduct", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  priceToman: __t.i64(),
+  finalToman: __t.i64(),
+  coinCurrency: __t.string(),
+  coinAmount: __t.i64(),
+  discountPercent: __t.u8(),
+  paymentMethods: __t.array(__t.string()),
+  skuBazaar: __t.string(),
+  skuMyket: __t.string(),
+  iconUrl: __t.string(),
+  coverUrl: __t.string(),
+  sort: __t.i32(),
+  exclusive: __t.bool(),
+  prizeId: __t.u64(),
+});
+export type ShopProduct = __Infer<typeof ShopProduct>;
+
 export const SmsProviderView = __t.object("SmsProviderView", {
   id: __t.u64(),
   kind: __t.string(),
@@ -681,6 +1104,34 @@ export const Translation = __t.object("Translation", {
 });
 export type Translation = __Infer<typeof Translation>;
 
+export const UserEconomy = __t.object("UserEconomy", {
+  get wallet() {
+    return __t.array(UserWalletLine);
+  },
+  get metas() {
+    return __t.array(UserMetaLine);
+  },
+  get prizes() {
+    return __t.array(EconomyUserPrize);
+  },
+  get ledger() {
+    return __t.array(EconomyLedger);
+  },
+});
+export type UserEconomy = __Infer<typeof UserEconomy>;
+
+export const UserMetaLine = __t.object("UserMetaLine", {
+  metaKey: __t.string(),
+  value: __t.f64(),
+});
+export type UserMetaLine = __Infer<typeof UserMetaLine>;
+
+export const UserWalletLine = __t.object("UserWalletLine", {
+  currencyKey: __t.string(),
+  balance: __t.i64(),
+});
+export type UserWalletLine = __Infer<typeof UserWalletLine>;
+
 export const VerifyOtpResult = __t.object("VerifyOtpResult", {
   ok: __t.bool(),
   error: __t.string(),
@@ -691,6 +1142,12 @@ export const VerifyOtpResult = __t.object("VerifyOtpResult", {
   detail: __t.string(),
 });
 export type VerifyOtpResult = __Infer<typeof VerifyOtpResult>;
+
+export const WalletEntry = __t.object("WalletEntry", {
+  currencyKey: __t.string(),
+  balance: __t.i64(),
+});
+export type WalletEntry = __Infer<typeof WalletEntry>;
 
 export const WarningNotice = __t.object("WarningNotice", {
   id: __t.u64(),

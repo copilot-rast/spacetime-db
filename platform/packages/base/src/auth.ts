@@ -2,7 +2,7 @@ import { t } from 'spacetimedb/server';
 import { bytesToHex } from '@noble/hashes/utils.js';
 import { baseRows, type BaseSchema } from './schema';
 import { sendSms, type SmsProviderRow } from './sms';
-import { checkAccountGuards, profileValidators } from './hooks';
+import { checkAccountGuards, loginHooks, profileValidators } from './hooks';
 import {
   addSeconds,
   dayKey,
@@ -185,6 +185,7 @@ export function defineAuth(st: BaseSchema) {
       if (tx.db.session.identity.find(tx.sender)) tx.db.session.identity.update(sessionRow);
       else tx.db.session.insert(sessionRow);
       ensureBootstrapOwner(tx, acc.id, phone);
+      for (const h of loginHooks) h(tx, acc.id, isNew);
       return { ok: true, error: '', accountId: acc.id, isNew, attemptsLeft: 0, role: tx.db.admin.accountId.find(acc.id)?.role ?? '', detail: '' };
     });
   });
