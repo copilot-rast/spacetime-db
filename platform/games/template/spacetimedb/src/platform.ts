@@ -5,6 +5,7 @@ import { defineGamification, seedGamification } from '@stg/gamification';
 import { defineItems, seedItems } from '@stg/items';
 import { definePromo, seedPromo } from '@stg/promo';
 import { definePublication, seedPublication } from '@stg/publication';
+import { defineSupport, seedSupport } from '@stg/support';
 import spacetimedb from './schema';
 import { gameInit } from './game/init';
 
@@ -16,6 +17,7 @@ function seedAll(ctx: unknown) {
   seedItems(ctx as never);
   seedPromo(ctx as never);
   seedPublication(ctx as never);
+  seedSupport(ctx as never);
 }
 
 export const init = spacetimedb.init(ctx => {
@@ -350,3 +352,79 @@ export const {
   adminDeleteFaq,
   faqList,
 } = definePublication(spacetimedb);
+
+export const {
+  supportTick,
+  adminSupportSettings,
+  adminSaveSupportSettings,
+  adminSetSupportClockOffset,
+  supportDepartments,
+  adminSupportDepartments,
+  adminSaveSupportDepartment,
+  adminDeleteSupportDepartment,
+  adminSupportCanned,
+  adminSaveSupportCanned,
+  adminDeleteSupportCanned,
+  supportInfo,
+  supportTicketCreate,
+  supportTicketReply,
+  supportTicketResolve,
+  supportTicketRate,
+  supportTicketSeen,
+  myTickets,
+  myTicketMessages,
+  adminSupportCreateTicket,
+  adminSupportReply,
+  adminSupportStatus,
+  adminSupportAssign,
+  adminSupportTake,
+  adminTickets,
+  adminTicket,
+  adminSupportHeartbeat,
+  adminSupportFocus,
+  adminSupportAgents,
+  adminTicketThread,
+  adminSupportSummary,
+  adminSupportRun,
+  supportChatOpen,
+  supportChatSend,
+  supportChatTyping,
+  supportChatSeen,
+  supportChatClose,
+  supportChatRate,
+  myChats,
+  myChatMessages,
+  adminChatQueue,
+  adminChatMessages,
+  adminChatTake,
+  adminChatSend,
+  adminChatTyping,
+  adminChatRead,
+  adminChatTransfer,
+  adminChatClose,
+  adminChats,
+  adminReferralSettings,
+  adminSaveReferralSettings,
+  myReferral,
+  myReferrals,
+  referralMe,
+  referralEnter,
+  adminApproveReferral,
+  adminRejectReferral,
+  adminReferrals,
+  adminReferralSummary,
+  adminReferralTree,
+  adminConfigKeys,
+  adminSaveConfigKey,
+  adminDeleteConfigKey,
+  adminRollbackConfig,
+  adminConfigHistory,
+  adminConfigPreview,
+  setMyClient,
+  myRemoteConfig,
+  remoteConfig,
+  myActivity,
+  activityMine,
+  adminActivity,
+  adminActivitySummary,
+} = defineSupport(spacetimedb);
