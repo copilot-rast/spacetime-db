@@ -1,6 +1,7 @@
 import { defineBase, seedBase } from '@stg/base';
 import { definePlayers, seedPlayers } from '@stg/players';
 import { defineEconomy, seedEconomy } from '@stg/economy';
+import { defineGamification, seedGamification } from '@stg/gamification';
 import spacetimedb from './schema';
 import { gameInit } from './game/init';
 
@@ -8,6 +9,7 @@ function seedAll(ctx: unknown) {
   seedBase(ctx as never);
   seedPlayers(ctx as never);
   seedEconomy(ctx as never);
+  seedGamification(ctx as never);
 }
 
 export const init = spacetimedb.init(ctx => {
@@ -132,3 +134,58 @@ export const {
   adminRetryGrant,
   adminEconomySummary,
 } = defineEconomy(spacetimedb);
+
+export const {
+  adminGamificationSettings,
+  adminSaveGamificationSettings,
+  adminSetClockOffset,
+  adminSaveEventType,
+  adminDeleteEventType,
+  adminEventRules,
+  adminSaveEventRule,
+  adminDeleteEventRule,
+  adminLevelTables,
+  adminSaveLevelTable,
+  adminDeleteLevelTable,
+  adminStreaks,
+  adminSaveStreak,
+  adminDeleteStreak,
+  adminResetStreak,
+  adminMetaRelations,
+  adminSaveMetaRelation,
+  adminDeleteMetaRelation,
+  adminForgetRelation,
+  recordEvent,
+  adminRecordEvent,
+  claimReward,
+  myRewards,
+  myLevels,
+  myMetaRelations,
+  myStreaks,
+  myEventRules,
+  gamGrantWorker,
+  gamTick,
+  adminRetryClaim,
+  adminClaims,
+  adminEventLog,
+  adminPlayerProgress,
+  adminGamificationSummary,
+  adminTasks,
+  adminSaveTask,
+  adminDeleteTask,
+  adminTaskGroups,
+  adminSaveTaskGroup,
+  adminDeleteTaskGroup,
+  myTasks,
+  claimTask,
+  taskGroupNext,
+  adminCompleteTask,
+  adminResetTask,
+  adminAchievements,
+  adminSaveAchievement,
+  adminDeleteAchievement,
+  adminGiveAchievement,
+  adminRevokeAchievement,
+  myAchievements,
+  claimAchievement,
+} = defineGamification(spacetimedb);

@@ -32,6 +32,17 @@
         "packages/economy/src/catalog.ts",
         "packages/economy/src/payments.ts"
       ]
+    },
+    {
+      "name": "@stg/gamification",
+      "define": "defineGamification",
+      "seed": "seedGamification",
+      "tables": "gamificationTables",
+      "env": "gamificationEnv",
+      "files": [
+        "packages/gamification/src/events.ts",
+        "packages/gamification/src/missions.ts"
+      ]
     }
   ]
 }
