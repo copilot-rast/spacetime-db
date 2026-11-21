@@ -36,6 +36,9 @@ export type AdminAchievements = __Infer<typeof AdminAchievements>;
 export const AdminAdmins = __t.object("AdminAdmins", {});
 export type AdminAdmins = __Infer<typeof AdminAdmins>;
 
+export const AdminBanners = __t.object("AdminBanners", {});
+export type AdminBanners = __Infer<typeof AdminBanners>;
+
 export const AdminEconomySettings = __t.object("AdminEconomySettings", {});
 export type AdminEconomySettings = __Infer<typeof AdminEconomySettings>;
 
@@ -44,6 +47,9 @@ export type AdminEventRules = __Infer<typeof AdminEventRules>;
 
 export const AdminGamificationSettings = __t.object("AdminGamificationSettings", {});
 export type AdminGamificationSettings = __Infer<typeof AdminGamificationSettings>;
+
+export const AdminItemsSettings = __t.object("AdminItemsSettings", {});
+export type AdminItemsSettings = __Infer<typeof AdminItemsSettings>;
 
 export const AdminLevelTables = __t.object("AdminLevelTables", {});
 export type AdminLevelTables = __Infer<typeof AdminLevelTables>;
@@ -60,8 +66,17 @@ export type AdminLoginResult = __Infer<typeof AdminLoginResult>;
 export const AdminMetaRelations = __t.object("AdminMetaRelations", {});
 export type AdminMetaRelations = __Infer<typeof AdminMetaRelations>;
 
+export const AdminOfferSettings = __t.object("AdminOfferSettings", {});
+export type AdminOfferSettings = __Infer<typeof AdminOfferSettings>;
+
+export const AdminOffers = __t.object("AdminOffers", {});
+export type AdminOffers = __Infer<typeof AdminOffers>;
+
 export const AdminPaymentMethods = __t.object("AdminPaymentMethods", {});
 export type AdminPaymentMethods = __Infer<typeof AdminPaymentMethods>;
+
+export const AdminPromoSettings = __t.object("AdminPromoSettings", {});
+export type AdminPromoSettings = __Infer<typeof AdminPromoSettings>;
 
 export const AdminReportRules = __t.object("AdminReportRules", {});
 export type AdminReportRules = __Infer<typeof AdminReportRules>;
@@ -74,6 +89,9 @@ export type AdminSettings = __Infer<typeof AdminSettings>;
 
 export const AdminSmsProviders = __t.object("AdminSmsProviders", {});
 export type AdminSmsProviders = __Infer<typeof AdminSmsProviders>;
+
+export const AdminSponsors = __t.object("AdminSponsors", {});
+export type AdminSponsors = __Infer<typeof AdminSponsors>;
 
 export const AdminStreaks = __t.object("AdminStreaks", {});
 export type AdminStreaks = __Infer<typeof AdminStreaks>;
@@ -334,6 +352,103 @@ export const BaseTestPhone = __t.object("BaseTestPhone", {
   note: __t.string(),
 });
 export type BaseTestPhone = __Infer<typeof BaseTestPhone>;
+
+export const ChanceGameLine = __t.object("ChanceGameLine", {
+  get game() {
+    return PromoChanceGame;
+  },
+  plays: __t.u64(),
+  todayPlays: __t.u32(),
+  hasFreeTurn: __t.bool(),
+  canPlay: __t.bool(),
+  nextPlayTime: __t.u64(),
+  nextPlayAt: __t.u64(),
+  freeLeft: __t.i32(),
+  lastPlayAt: __t.u64(),
+});
+export type ChanceGameLine = __Infer<typeof ChanceGameLine>;
+
+export const ChancePlayEntry = __t.object("ChancePlayEntry", {
+  id: __t.u64(),
+  gameId: __t.u64(),
+  gameKey: __t.string(),
+  mode: __t.string(),
+  status: __t.string(),
+  roll: __t.u32(),
+  slot: __t.i32(),
+  prizeId: __t.u64(),
+  prizeGroupId: __t.u64(),
+  spent: __t.string(),
+  rewards: __t.string(),
+  error: __t.string(),
+  at: __t.timestamp(),
+});
+export type ChancePlayEntry = __Infer<typeof ChancePlayEntry>;
+
+export const ChancePlayPage = __t.object("ChancePlayPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(PromoChancePlay);
+  },
+});
+export type ChancePlayPage = __Infer<typeof ChancePlayPage>;
+
+export const ChancePlayResult = __t.object("ChancePlayResult", {
+  code: __t.string(),
+  status: __t.u16(),
+  playId: __t.u64(),
+  gameId: __t.u64(),
+  gameKey: __t.string(),
+  mode: __t.string(),
+  slot: __t.i32(),
+  roll: __t.f64(),
+  won: __t.bool(),
+  prizeId: __t.u64(),
+  prizeGroupId: __t.u64(),
+  alreadyOwned: __t.bool(),
+  get rewards() {
+    return __t.array(ChanceReward);
+  },
+  get spent() {
+    return __t.option(ChanceTicketPrice);
+  },
+  nextPlayTime: __t.u64(),
+  nextPlayAt: __t.u64(),
+  replayed: __t.bool(),
+});
+export type ChancePlayResult = __Infer<typeof ChancePlayResult>;
+
+export const ChanceReward = __t.object("ChanceReward", {
+  type: __t.string(),
+  key: __t.string(),
+  action: __t.string(),
+  value: __t.f64(),
+  prizeKey: __t.string(),
+});
+export type ChanceReward = __Infer<typeof ChanceReward>;
+
+export const ChanceSlot = __t.object("ChanceSlot", {
+  chance: __t.f64(),
+  prizeId: __t.u64(),
+  prizeGroupId: __t.u64(),
+});
+export type ChanceSlot = __Infer<typeof ChanceSlot>;
+
+export const ChanceTicketPrice = __t.object("ChanceTicketPrice", {
+  type: __t.string(),
+  key: __t.string(),
+  amount: __t.i64(),
+});
+export type ChanceTicketPrice = __Infer<typeof ChanceTicketPrice>;
+
+export const ChanceTurn = __t.object("ChanceTurn", {
+  code: __t.string(),
+  status: __t.u16(),
+  canPlay: __t.bool(),
+  nextPlayTime: __t.u64(),
+  nextPlayAt: __t.u64(),
+});
+export type ChanceTurn = __Infer<typeof ChanceTurn>;
 
 export const EconomyCurrency = __t.object("EconomyCurrency", {
   id: __t.u64(),
@@ -1356,6 +1471,385 @@ export const GiftPage = __t.object("GiftPage", {
 });
 export type GiftPage = __Infer<typeof GiftPage>;
 
+export const InventoryEntry = __t.object("InventoryEntry", {
+  id: __t.u64(),
+  itemId: __t.u64(),
+  itemKey: __t.string(),
+  slot: __t.string(),
+  quantity: __t.u32(),
+  level: __t.u32(),
+  equipped: __t.bool(),
+  source: __t.string(),
+  ownedAt: __t.timestamp(),
+});
+export type InventoryEntry = __Infer<typeof InventoryEntry>;
+
+export const ItemActionResult = __t.object("ItemActionResult", {
+  itemKey: __t.string(),
+  quantity: __t.u32(),
+  level: __t.u32(),
+  equipped: __t.bool(),
+  get paid() {
+    return __t.array(ItemPaid);
+  },
+  get rewards() {
+    return __t.array(ItemReward);
+  },
+  replayed: __t.bool(),
+});
+export type ItemActionResult = __Infer<typeof ItemActionResult>;
+
+export const ItemAdminPage = __t.object("ItemAdminPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(ItemAdminRow);
+  },
+});
+export type ItemAdminPage = __Infer<typeof ItemAdminPage>;
+
+export const ItemAdminRow = __t.object("ItemAdminRow", {
+  get item() {
+    return ItemsItem;
+  },
+  owners: __t.u32(),
+  equippedBy: __t.u32(),
+});
+export type ItemAdminRow = __Infer<typeof ItemAdminRow>;
+
+export const ItemCatalog = __t.object("ItemCatalog", {
+  total: __t.u32(),
+  owned: __t.u32(),
+  get items() {
+    return __t.array(ItemCatalogLine);
+  },
+});
+export type ItemCatalog = __Infer<typeof ItemCatalog>;
+
+export const ItemCatalogLine = __t.object("ItemCatalogLine", {
+  itemId: __t.u64(),
+  key: __t.string(),
+  typeKey: __t.string(),
+  rarity: __t.string(),
+  stackable: __t.bool(),
+  owned: __t.bool(),
+  quantity: __t.u32(),
+  level: __t.u32(),
+  maxLevel: __t.u32(),
+  equipped: __t.bool(),
+  equippable: __t.bool(),
+  unlockLevel: __t.u32(),
+  playerLevel: __t.u32(),
+  locked: __t.bool(),
+  requirementMet: __t.bool(),
+  canBuy: __t.bool(),
+  canUnlock: __t.bool(),
+  canUpgrade: __t.bool(),
+  get nextUpgradePrice() {
+    return __t.option(ItemPrice);
+  },
+});
+export type ItemCatalogLine = __Infer<typeof ItemCatalogLine>;
+
+export const ItemEquipResult = __t.object("ItemEquipResult", {
+  itemKey: __t.string(),
+  slot: __t.string(),
+  equipped: __t.bool(),
+  unequipped: __t.array(__t.string()),
+});
+export type ItemEquipResult = __Infer<typeof ItemEquipResult>;
+
+export const ItemPaid = __t.object("ItemPaid", {
+  currencyKey: __t.string(),
+  amount: __t.i64(),
+});
+export type ItemPaid = __Infer<typeof ItemPaid>;
+
+export const ItemPrice = __t.object("ItemPrice", {
+  currencyKey: __t.string(),
+  amount: __t.i64(),
+});
+export type ItemPrice = __Infer<typeof ItemPrice>;
+
+export const ItemReward = __t.object("ItemReward", {
+  type: __t.string(),
+  key: __t.string(),
+  action: __t.string(),
+  value: __t.f64(),
+  prizeKey: __t.string(),
+});
+export type ItemReward = __Infer<typeof ItemReward>;
+
+export const ItemService = __t.object("ItemService", {
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  currencyKey: __t.string(),
+  unitPrice: __t.i64(),
+  maxUnits: __t.u32(),
+  prizeId: __t.u64(),
+});
+export type ItemService = __Infer<typeof ItemService>;
+
+export const ItemsInventory = __t.object("ItemsInventory", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  itemId: __t.u64(),
+  itemKey: __t.string(),
+  slot: __t.string(),
+  quantity: __t.u32(),
+  level: __t.u32(),
+  equipped: __t.bool(),
+  source: __t.string(),
+  sourceRef: __t.string(),
+  ownedAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type ItemsInventory = __Infer<typeof ItemsInventory>;
+
+export const ItemsItem = __t.object("ItemsItem", {
+  id: __t.u64(),
+  key: __t.string(),
+  typeKey: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  imageUrl: __t.string(),
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  rarity: __t.string(),
+  stackable: __t.bool(),
+  maxStack: __t.u32(),
+  requiresKey: __t.string(),
+  isStarter: __t.bool(),
+  starterQuantity: __t.u32(),
+  levelTableId: __t.u64(),
+  unlockLevel: __t.u32(),
+  get price() {
+    return __t.option(ItemPrice);
+  },
+  get upgrades() {
+    return __t.array(ItemPrice);
+  },
+  get services() {
+    return __t.array(ItemService);
+  },
+  usePrizeId: __t.u64(),
+  metadata: __t.string(),
+  sort: __t.i32(),
+  isActive: __t.bool(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type ItemsItem = __Infer<typeof ItemsItem>;
+
+export const ItemsOffer = __t.object("ItemsOffer", {
+  id: __t.u64(),
+  key: __t.string(),
+  kind: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  get badge() {
+    return __t.array(Translation);
+  },
+  productId: __t.u64(),
+  priceMode: __t.string(),
+  discountPercent: __t.u8(),
+  priceToman: __t.i64(),
+  coinAmount: __t.i64(),
+  purchaseLimit: __t.u32(),
+  weight: __t.u32(),
+  audienceTagIds: __t.array(__t.u64()),
+  excludeTagIds: __t.array(__t.u64()),
+  levelTableId: __t.u64(),
+  minLevel: __t.u32(),
+  maxLevel: __t.u32(),
+  get metaConditions() {
+    return __t.array(OfferMetaCondition);
+  },
+  minAccountDays: __t.u32(),
+  maxAccountDays: __t.u32(),
+  triggerType: __t.string(),
+  triggerValue: __t.f64(),
+  triggerRefId: __t.u64(),
+  triggerMetaKey: __t.string(),
+  durationMinutes: __t.u32(),
+  repeat: __t.string(),
+  cooldownHours: __t.u32(),
+  maxTriggers: __t.u32(),
+  startsAt: __t.u64(),
+  endsAt: __t.u64(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type ItemsOffer = __Infer<typeof ItemsOffer>;
+
+export const ItemsOfferPayment = __t.object("ItemsOfferPayment", {
+  paymentId: __t.u64(),
+  userOfferId: __t.u64(),
+  offerId: __t.u64(),
+  accountId: __t.u64(),
+  createdAt: __t.timestamp(),
+});
+export type ItemsOfferPayment = __Infer<typeof ItemsOfferPayment>;
+
+export const ItemsOfferPeriod = __t.object("ItemsOfferPeriod", {
+  key: __t.string(),
+  accountId: __t.u64(),
+  period: __t.i64(),
+  rerolls: __t.u32(),
+  drawn: __t.bool(),
+});
+export type ItemsOfferPeriod = __Infer<typeof ItemsOfferPeriod>;
+
+export const ItemsOfferSettings = __t.object("ItemsOfferSettings", {
+  id: __t.u8(),
+  dailyEnabled: __t.bool(),
+  periodDays: __t.u8(),
+  resetMinute: __t.u16(),
+  count: __t.u8(),
+  get countByTag() {
+    return __t.array(OfferTagCount);
+  },
+  weighting: __t.string(),
+  noRepeatDays: __t.u16(),
+  fillWithRepeats: __t.bool(),
+  boughtCooldownDays: __t.i32(),
+  excludeOwned: __t.bool(),
+  respectProductRules: __t.bool(),
+  inactiveProducts: __t.string(),
+  showSoldOut: __t.bool(),
+  giftCodes: __t.bool(),
+  rerollEnabled: __t.bool(),
+  rerollLimit: __t.u8(),
+  rerollFree: __t.u8(),
+  rerollCurrency: __t.string(),
+  rerollCost: __t.i64(),
+  rerollCostStep: __t.i64(),
+  rerollAvoidCurrent: __t.bool(),
+  entryEnabled: __t.bool(),
+  entryMaxActive: __t.u8(),
+  entryTimerStart: __t.string(),
+  updatedAt: __t.timestamp(),
+});
+export type ItemsOfferSettings = __Infer<typeof ItemsOfferSettings>;
+
+export const ItemsOfferState = __t.object("ItemsOfferState", {
+  accountId: __t.u64(),
+  lastLoginAt: __t.u64(),
+  prevLoginAt: __t.u64(),
+});
+export type ItemsOfferState = __Infer<typeof ItemsOfferState>;
+
+export const ItemsProductRule = __t.object("ItemsProductRule", {
+  productId: __t.u64(),
+  minLevel: __t.u32(),
+  maxLevel: __t.u32(),
+  levelTableId: __t.u64(),
+  isOneTime: __t.bool(),
+  checkContents: __t.bool(),
+  get purchaseMessage() {
+    return __t.array(Translation);
+  },
+  updatedAt: __t.timestamp(),
+});
+export type ItemsProductRule = __Infer<typeof ItemsProductRule>;
+
+export const ItemsRequest = __t.object("ItemsRequest", {
+  key: __t.string(),
+  accountId: __t.u64(),
+  action: __t.string(),
+  detail: __t.string(),
+  result: __t.string(),
+  expiresAt: __t.u64(),
+});
+export type ItemsRequest = __Infer<typeof ItemsRequest>;
+
+export const ItemsSettings = __t.object("ItemsSettings", {
+  id: __t.u8(),
+  hideBoughtOneTime: __t.bool(),
+  hideAboveMaxLevel: __t.bool(),
+  requestTtlHours: __t.u32(),
+  clockOffsetSec: __t.i64(),
+  updatedAt: __t.timestamp(),
+});
+export type ItemsSettings = __Infer<typeof ItemsSettings>;
+
+export const ItemsStarterGiven = __t.object("ItemsStarterGiven", {
+  key: __t.string(),
+  at: __t.timestamp(),
+});
+export type ItemsStarterGiven = __Infer<typeof ItemsStarterGiven>;
+
+export const ItemsTickTimer = __t.object("ItemsTickTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type ItemsTickTimer = __Infer<typeof ItemsTickTimer>;
+
+export const ItemsType = __t.object("ItemsType", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  slots: __t.u8(),
+  sort: __t.i32(),
+  isSystem: __t.bool(),
+  createdAt: __t.timestamp(),
+});
+export type ItemsType = __Infer<typeof ItemsType>;
+
+export const ItemsUseLog = __t.object("ItemsUseLog", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  itemKey: __t.string(),
+  service: __t.string(),
+  units: __t.u32(),
+  paid: __t.string(),
+  rewards: __t.string(),
+  requestId: __t.string(),
+  at: __t.timestamp(),
+});
+export type ItemsUseLog = __Infer<typeof ItemsUseLog>;
+
+export const ItemsUserOffer = __t.object("ItemsUserOffer", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  offerId: __t.u64(),
+  kind: __t.string(),
+  period: __t.i64(),
+  slot: __t.u8(),
+  status: __t.string(),
+  originalToman: __t.i64(),
+  finalToman: __t.i64(),
+  coinCurrency: __t.string(),
+  coinAmount: __t.i64(),
+  coinOriginal: __t.i64(),
+  discountPercent: __t.u8(),
+  purchaseLimit: __t.u32(),
+  bought: __t.u32(),
+  reroll: __t.u32(),
+  forgotten: __t.bool(),
+  madeAt: __t.u64(),
+  shownAt: __t.u64(),
+  startedAt: __t.u64(),
+  expiresAt: __t.u64(),
+  endedAt: __t.u64(),
+  lastBoughtAt: __t.u64(),
+});
+export type ItemsUserOffer = __Infer<typeof ItemsUserOffer>;
+
 export const Me = __t.object("Me", {});
 export type Me = __Infer<typeof Me>;
 
@@ -1376,6 +1870,12 @@ export type ModerationSummary = __Infer<typeof ModerationSummary>;
 
 export const MyAchievements = __t.object("MyAchievements", {});
 export type MyAchievements = __Infer<typeof MyAchievements>;
+
+export const MyChancePlays = __t.object("MyChancePlays", {});
+export type MyChancePlays = __Infer<typeof MyChancePlays>;
+
+export const MyInventory = __t.object("MyInventory", {});
+export type MyInventory = __Infer<typeof MyInventory>;
 
 export const MyLevels = __t.object("MyLevels", {});
 export type MyLevels = __Infer<typeof MyLevels>;
@@ -1458,6 +1958,112 @@ export type MyTags = __Infer<typeof MyTags>;
 export const MyWallet = __t.object("MyWallet", {});
 export type MyWallet = __Infer<typeof MyWallet>;
 
+export const OfferDaily = __t.object("OfferDaily", {
+  enabled: __t.bool(),
+  period: __t.i64(),
+  periodStart: __t.u64(),
+  periodEnd: __t.u64(),
+  secondsLeft: __t.u64(),
+  get items() {
+    return __t.array(OfferItem);
+  },
+  get reroll() {
+    return OfferRerollInfo;
+  },
+});
+export type OfferDaily = __Infer<typeof OfferDaily>;
+
+export const OfferEntry = __t.object("OfferEntry", {
+  enabled: __t.bool(),
+  timerStart: __t.string(),
+  get items() {
+    return __t.array(OfferItem);
+  },
+});
+export type OfferEntry = __Infer<typeof OfferEntry>;
+
+export const OfferItem = __t.object("OfferItem", {
+  userOfferId: __t.u64(),
+  offerId: __t.u64(),
+  key: __t.string(),
+  kind: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  get badge() {
+    return __t.array(Translation);
+  },
+  productId: __t.u64(),
+  productKey: __t.string(),
+  iconUrl: __t.string(),
+  coverUrl: __t.string(),
+  originalToman: __t.i64(),
+  finalToman: __t.i64(),
+  coinCurrency: __t.string(),
+  coinAmount: __t.i64(),
+  coinOriginal: __t.i64(),
+  discountPercent: __t.u8(),
+  paymentMethods: __t.array(__t.string()),
+  purchaseLimit: __t.u32(),
+  bought: __t.u32(),
+  remaining: __t.u32(),
+  soldOut: __t.bool(),
+  started: __t.bool(),
+  expiresAt: __t.u64(),
+  secondsLeft: __t.u64(),
+  shownAt: __t.u64(),
+  slot: __t.u8(),
+  durationMinutes: __t.u32(),
+});
+export type OfferItem = __Infer<typeof OfferItem>;
+
+export const OfferMetaCondition = __t.object("OfferMetaCondition", {
+  metaKey: __t.string(),
+  operator: __t.string(),
+  value: __t.f64(),
+});
+export type OfferMetaCondition = __Infer<typeof OfferMetaCondition>;
+
+export const OfferRerollInfo = __t.object("OfferRerollInfo", {
+  enabled: __t.bool(),
+  used: __t.u32(),
+  limit: __t.u32(),
+  left: __t.u32(),
+  currencyKey: __t.string(),
+  nextCost: __t.i64(),
+});
+export type OfferRerollInfo = __Infer<typeof OfferRerollInfo>;
+
+export const OfferSeenResult = __t.object("OfferSeenResult", {
+  userOfferId: __t.u64(),
+  expiresAt: __t.u64(),
+  secondsLeft: __t.u64(),
+});
+export type OfferSeenResult = __Infer<typeof OfferSeenResult>;
+
+export const OfferTagCount = __t.object("OfferTagCount", {
+  tagId: __t.u64(),
+  count: __t.u8(),
+});
+export type OfferTagCount = __Infer<typeof OfferTagCount>;
+
+export const OffersAnswer = __t.object("OffersAnswer", {
+  now: __t.u64(),
+  get daily() {
+    return OfferDaily;
+  },
+  get entry() {
+    return OfferEntry;
+  },
+  get paid() {
+    return __t.option(ItemPrice);
+  },
+});
+export type OffersAnswer = __Infer<typeof OffersAnswer>;
+
 export const PaymentDetail = __t.object("PaymentDetail", {
   get row() {
     return PaymentListRow;
@@ -1516,6 +2122,14 @@ export const PlayerDetail = __t.object("PlayerDetail", {
   reportsOpen: __t.u32(),
 });
 export type PlayerDetail = __Infer<typeof PlayerDetail>;
+
+export const PlayerOffers = __t.object("PlayerOffers", {
+  get copies() {
+    return __t.array(ItemsUserOffer);
+  },
+  period: __t.i64(),
+});
+export type PlayerOffers = __Infer<typeof PlayerOffers>;
 
 export const PlayerPage = __t.object("PlayerPage", {
   total: __t.u32(),
@@ -1716,6 +2330,471 @@ export const ProductPage = __t.object("ProductPage", {
 });
 export type ProductPage = __Infer<typeof ProductPage>;
 
+export const ProductPurchaseCount = __t.object("ProductPurchaseCount", {
+  productId: __t.u64(),
+  key: __t.string(),
+  count: __t.u32(),
+  lastPurchasedAt: __t.u64(),
+});
+export type ProductPurchaseCount = __Infer<typeof ProductPurchaseCount>;
+
+export const PromoBanner = __t.object("PromoBanner", {
+  id: __t.u64(),
+  key: __t.string(),
+  placementId: __t.u64(),
+  name: __t.string(),
+  tagIds: __t.array(__t.u64()),
+  get title() {
+    return __t.array(Translation);
+  },
+  get subtitle() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  imageUrl: __t.string(),
+  bgColor: __t.string(),
+  actionType: __t.string(),
+  actionValue: __t.string(),
+  get actionLabel() {
+    return __t.array(Translation);
+  },
+  priority: __t.i32(),
+  startsAt: __t.u64(),
+  endsAt: __t.u64(),
+  days: __t.array(__t.i32()),
+  dayStart: __t.u16(),
+  dayEnd: __t.u16(),
+  audienceTagIds: __t.array(__t.u64()),
+  excludeTagIds: __t.array(__t.u64()),
+  levelTableId: __t.u64(),
+  minLevel: __t.u32(),
+  maxLevel: __t.u32(),
+  playerAge: __t.string(),
+  countries: __t.array(__t.string()),
+  sponsorId: __t.u64(),
+  isActive: __t.bool(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type PromoBanner = __Infer<typeof PromoBanner>;
+
+export const PromoBannerAction = __t.object("PromoBannerAction", {
+  type: __t.string(),
+  value: __t.string(),
+  url: __t.string(),
+  get label() {
+    return __t.array(Translation);
+  },
+  sponsorId: __t.u64(),
+});
+export type PromoBannerAction = __Infer<typeof PromoBannerAction>;
+
+export const PromoBannerClickResult = __t.object("PromoBannerClickResult", {
+  counted: __t.bool(),
+  bannerId: __t.u64(),
+  get action() {
+    return PromoBannerAction;
+  },
+  sponsorCounted: __t.bool(),
+});
+export type PromoBannerClickResult = __Infer<typeof PromoBannerClickResult>;
+
+export const PromoBannerDay = __t.object("PromoBannerDay", {
+  key: __t.string(),
+  bannerId: __t.u64(),
+  day: __t.string(),
+  views: __t.u32(),
+  clicks: __t.u32(),
+});
+export type PromoBannerDay = __Infer<typeof PromoBannerDay>;
+
+export const PromoBannerDayLine = __t.object("PromoBannerDayLine", {
+  day: __t.string(),
+  views: __t.u32(),
+  clicks: __t.u32(),
+});
+export type PromoBannerDayLine = __Infer<typeof PromoBannerDayLine>;
+
+export const PromoBannerItem = __t.object("PromoBannerItem", {
+  id: __t.u64(),
+  key: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  get subtitle() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  imageUrl: __t.string(),
+  bgColor: __t.string(),
+  priority: __t.i32(),
+  endsAt: __t.u64(),
+  get action() {
+    return PromoBannerAction;
+  },
+  get sponsor() {
+    return __t.option(PromoSponsorBrief);
+  },
+});
+export type PromoBannerItem = __Infer<typeof PromoBannerItem>;
+
+export const PromoBannerList = __t.object("PromoBannerList", {
+  get placement() {
+    return PromoPlacementInfo;
+  },
+  get items() {
+    return __t.array(PromoBannerItem);
+  },
+  now: __t.u64(),
+});
+export type PromoBannerList = __Infer<typeof PromoBannerList>;
+
+export const PromoBannerSeen = __t.object("PromoBannerSeen", {
+  key: __t.string(),
+  bannerId: __t.u64(),
+  accountId: __t.u64(),
+  day: __t.string(),
+  viewed: __t.bool(),
+  clicked: __t.bool(),
+  at: __t.u64(),
+});
+export type PromoBannerSeen = __Infer<typeof PromoBannerSeen>;
+
+export const PromoBannerStats = __t.object("PromoBannerStats", {
+  bannerId: __t.u64(),
+  views: __t.u32(),
+  clicks: __t.u32(),
+  get days() {
+    return __t.array(PromoBannerDayLine);
+  },
+});
+export type PromoBannerStats = __Infer<typeof PromoBannerStats>;
+
+export const PromoBannerViewResult = __t.object("PromoBannerViewResult", {
+  counted: __t.array(__t.u64()),
+  already: __t.array(__t.u64()),
+  skipped: __t.array(__t.u64()),
+  sponsorsCounted: __t.array(__t.u64()),
+  day: __t.string(),
+});
+export type PromoBannerViewResult = __Infer<typeof PromoBannerViewResult>;
+
+export const PromoChanceGame = __t.object("PromoChanceGame", {
+  id: __t.u64(),
+  key: __t.string(),
+  kind: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  metadata: __t.string(),
+  prizeType: __t.string(),
+  get prize() {
+    return __t.array(ChanceSlot);
+  },
+  intervalTime: __t.u32(),
+  freePlays: __t.u32(),
+  freePeriod: __t.string(),
+  get price() {
+    return __t.option(ChanceTicketPrice);
+  },
+  dailyLimit: __t.u32(),
+  totalLimit: __t.u32(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type PromoChanceGame = __Infer<typeof PromoChanceGame>;
+
+export const PromoChancePlay = __t.object("PromoChancePlay", {
+  id: __t.u64(),
+  gameId: __t.u64(),
+  gameKey: __t.string(),
+  accountId: __t.u64(),
+  mode: __t.string(),
+  status: __t.string(),
+  requestId: __t.string(),
+  roll: __t.u32(),
+  slot: __t.i32(),
+  prizeId: __t.u64(),
+  prizeGroupId: __t.u64(),
+  spent: __t.string(),
+  rewards: __t.string(),
+  error: __t.string(),
+  at: __t.timestamp(),
+});
+export type PromoChancePlay = __Infer<typeof PromoChancePlay>;
+
+export const PromoChanceState = __t.object("PromoChanceState", {
+  key: __t.string(),
+  gameId: __t.u64(),
+  accountId: __t.u64(),
+  plays: __t.u64(),
+  lastFreeAt: __t.u64(),
+  lastPlayAt: __t.u64(),
+  day: __t.string(),
+  dayPlays: __t.u32(),
+  freeWindow: __t.string(),
+  freeWindowPlays: __t.u32(),
+});
+export type PromoChanceState = __Infer<typeof PromoChanceState>;
+
+export const PromoPlacement = __t.object("PromoPlacement", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  layout: __t.string(),
+  maxItems: __t.u8(),
+  rotateSeconds: __t.u8(),
+  sponsorId: __t.u64(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type PromoPlacement = __Infer<typeof PromoPlacement>;
+
+export const PromoPlacementInfo = __t.object("PromoPlacementInfo", {
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  layout: __t.string(),
+  maxItems: __t.u8(),
+  rotateSeconds: __t.u8(),
+  get sponsor() {
+    return __t.option(PromoSponsorBrief);
+  },
+});
+export type PromoPlacementInfo = __Infer<typeof PromoPlacementInfo>;
+
+export const PromoPreviewLine = __t.object("PromoPreviewLine", {
+  bannerId: __t.u64(),
+  key: __t.string(),
+  shown: __t.bool(),
+  reason: __t.string(),
+});
+export type PromoPreviewLine = __Infer<typeof PromoPreviewLine>;
+
+export const PromoRate = __t.object("PromoRate", {
+  key: __t.string(),
+  minute: __t.u64(),
+  count: __t.u32(),
+});
+export type PromoRate = __Infer<typeof PromoRate>;
+
+export const PromoRequest = __t.object("PromoRequest", {
+  key: __t.string(),
+  accountId: __t.u64(),
+  action: __t.string(),
+  detail: __t.string(),
+  result: __t.string(),
+  expiresAt: __t.u64(),
+});
+export type PromoRequest = __Infer<typeof PromoRequest>;
+
+export const PromoSettings = __t.object("PromoSettings", {
+  id: __t.u8(),
+  listPerMinute: __t.u32(),
+  countPerMinute: __t.u32(),
+  playPerMinute: __t.u32(),
+  newPlayerDays: __t.u32(),
+  requestTtlHours: __t.u32(),
+  keepDays: __t.u32(),
+  clockOffsetSec: __t.i64(),
+  updatedAt: __t.timestamp(),
+});
+export type PromoSettings = __Infer<typeof PromoSettings>;
+
+export const PromoSponsor = __t.object("PromoSponsor", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  logoUrl: __t.string(),
+  color: __t.string(),
+  websiteUrl: __t.string(),
+  tagIds: __t.array(__t.u64()),
+  contactName: __t.string(),
+  contactEmail: __t.string(),
+  contactPhone: __t.string(),
+  notes: __t.string(),
+  startsAt: __t.u64(),
+  endsAt: __t.u64(),
+  budgetToman: __t.i64(),
+  targetViews: __t.u32(),
+  targetClicks: __t.u32(),
+  stopAtTarget: __t.bool(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type PromoSponsor = __Infer<typeof PromoSponsor>;
+
+export const PromoSponsorBrief = __t.object("PromoSponsorBrief", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  logoUrl: __t.string(),
+  color: __t.string(),
+  websiteUrl: __t.string(),
+});
+export type PromoSponsorBrief = __Infer<typeof PromoSponsorBrief>;
+
+export const PromoSponsorClickResult = __t.object("PromoSponsorClickResult", {
+  counted: __t.bool(),
+  sponsorId: __t.u64(),
+  url: __t.string(),
+});
+export type PromoSponsorClickResult = __Infer<typeof PromoSponsorClickResult>;
+
+export const PromoSponsorCsv = __t.object("PromoSponsorCsv", {
+  filename: __t.string(),
+  contentType: __t.string(),
+  header: __t.array(__t.string()),
+  rows: __t.array(__t.array(__t.string())),
+  csv: __t.string(),
+});
+export type PromoSponsorCsv = __Infer<typeof PromoSponsorCsv>;
+
+export const PromoSponsorDay = __t.object("PromoSponsorDay", {
+  key: __t.string(),
+  sponsorId: __t.u64(),
+  day: __t.string(),
+  views: __t.u32(),
+  clicks: __t.u32(),
+  players: __t.u32(),
+});
+export type PromoSponsorDay = __Infer<typeof PromoSponsorDay>;
+
+export const PromoSponsorItem = __t.object("PromoSponsorItem", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  logoUrl: __t.string(),
+  color: __t.string(),
+  websiteUrl: __t.string(),
+  endsAt: __t.u64(),
+});
+export type PromoSponsorItem = __Infer<typeof PromoSponsorItem>;
+
+export const PromoSponsorPlayer = __t.object("PromoSponsorPlayer", {
+  key: __t.string(),
+  sponsorId: __t.u64(),
+  accountId: __t.u64(),
+  firstDay: __t.string(),
+});
+export type PromoSponsorPlayer = __Infer<typeof PromoSponsorPlayer>;
+
+export const PromoSponsorReport = __t.object("PromoSponsorReport", {
+  sponsorId: __t.u64(),
+  key: __t.string(),
+  from: __t.string(),
+  to: __t.string(),
+  live: __t.bool(),
+  get days() {
+    return __t.array(PromoSponsorReportDay);
+  },
+  get totals() {
+    return PromoSponsorReportTotals;
+  },
+  allTimeViews: __t.u64(),
+  allTimeClicks: __t.u64(),
+  allTimePlayers: __t.u32(),
+  targetViews: __t.u32(),
+  targetClicks: __t.u32(),
+  budgetToman: __t.i64(),
+  get banners() {
+    return __t.array(PromoSponsorReportBanner);
+  },
+  placements: __t.array(__t.string()),
+});
+export type PromoSponsorReport = __Infer<typeof PromoSponsorReport>;
+
+export const PromoSponsorReportBanner = __t.object("PromoSponsorReportBanner", {
+  bannerId: __t.u64(),
+  key: __t.string(),
+  name: __t.string(),
+  placementKey: __t.string(),
+  views: __t.u32(),
+  clicks: __t.u32(),
+  ctrPercent: __t.f64(),
+});
+export type PromoSponsorReportBanner = __Infer<typeof PromoSponsorReportBanner>;
+
+export const PromoSponsorReportDay = __t.object("PromoSponsorReportDay", {
+  day: __t.string(),
+  views: __t.u32(),
+  clicks: __t.u32(),
+  players: __t.u32(),
+  ctrPercent: __t.f64(),
+});
+export type PromoSponsorReportDay = __Infer<typeof PromoSponsorReportDay>;
+
+export const PromoSponsorReportTotals = __t.object("PromoSponsorReportTotals", {
+  views: __t.u32(),
+  clicks: __t.u32(),
+  players: __t.u32(),
+  ctrPercent: __t.f64(),
+});
+export type PromoSponsorReportTotals = __Infer<typeof PromoSponsorReportTotals>;
+
+export const PromoSponsorSeen = __t.object("PromoSponsorSeen", {
+  key: __t.string(),
+  sponsorId: __t.u64(),
+  accountId: __t.u64(),
+  day: __t.string(),
+  viewed: __t.bool(),
+  clicked: __t.bool(),
+  at: __t.u64(),
+});
+export type PromoSponsorSeen = __Infer<typeof PromoSponsorSeen>;
+
+export const PromoSponsorTotal = __t.object("PromoSponsorTotal", {
+  sponsorId: __t.u64(),
+  views: __t.u64(),
+  clicks: __t.u64(),
+});
+export type PromoSponsorTotal = __Infer<typeof PromoSponsorTotal>;
+
+export const PromoSponsorViewResult = __t.object("PromoSponsorViewResult", {
+  counted: __t.array(__t.u64()),
+  already: __t.array(__t.u64()),
+  skipped: __t.array(__t.u64()),
+  day: __t.string(),
+});
+export type PromoSponsorViewResult = __Infer<typeof PromoSponsorViewResult>;
+
+export const PromoTickTimer = __t.object("PromoTickTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type PromoTickTimer = __Infer<typeof PromoTickTimer>;
+
 export const PurchaseStartResult = __t.object("PurchaseStartResult", {
   paymentId: __t.u64(),
   status: __t.string(),
@@ -1860,6 +2939,28 @@ export type RewardRow = __Infer<typeof RewardRow>;
 export const Shop = __t.object("Shop", {});
 export type Shop = __Infer<typeof Shop>;
 
+export const ShopFlagRow = __t.object("ShopFlagRow", {
+  productId: __t.u64(),
+  minLevel: __t.u32(),
+  maxLevel: __t.u32(),
+  playerLevel: __t.u32(),
+  isOneTime: __t.bool(),
+  owned: __t.bool(),
+  levelLocked: __t.bool(),
+  aboveMaxLevel: __t.bool(),
+  requiresItem: __t.bool(),
+  bought: __t.bool(),
+  purchaseCount: __t.u32(),
+  get purchaseMessage() {
+    return __t.array(Translation);
+  },
+  itemKeys: __t.array(__t.string()),
+});
+export type ShopFlagRow = __Infer<typeof ShopFlagRow>;
+
+export const ShopFlags = __t.object("ShopFlags", {});
+export type ShopFlags = __Infer<typeof ShopFlags>;
+
 export const ShopProduct = __t.object("ShopProduct", {
   id: __t.u64(),
   key: __t.string(),
@@ -1947,6 +3048,16 @@ export const UserEconomy = __t.object("UserEconomy", {
   },
 });
 export type UserEconomy = __Infer<typeof UserEconomy>;
+
+export const UserItems = __t.object("UserItems", {
+  get inventory() {
+    return __t.array(ItemsInventory);
+  },
+  get uses() {
+    return __t.array(ItemsUseLog);
+  },
+});
+export type UserItems = __Infer<typeof UserItems>;
 
 export const UserMetaLine = __t.object("UserMetaLine", {
   metaKey: __t.string(),
