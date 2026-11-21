@@ -1,6 +1,5 @@
-import { ECONOMY_QUERIES, PLAYER_QUERIES, DB, check, connect, done, errorOf, login, tr, uniquePhone, waitFor, type Client } from './src/lib.ts';
+import { ECONOMY_QUERIES, PLAYER_QUERIES, DB, check, connect, done, loginOwner, panelUser, errorOf, login, tr, uniquePhone, waitFor, type Client } from './src/lib.ts';
 
-const OWNER = '09120000001';
 const BASE = process.env.STG_HTTP ?? 'http://127.0.0.1:7500';
 const PW = process.env.PLAYWRIGHT_CORE ?? '/Users/mazyar/Projects/spacetime-game-backend/platform/node_modules/playwright-core/index.mjs';
 const c = (token?: string) => connect(token, [...PLAYER_QUERIES, ...ECONOMY_QUERIES]);
@@ -73,7 +72,7 @@ async function payInBrowser(url: string, button: 'پرداخت' | 'انصراف'
 
 async function main() {
   const o = await c();
-  await login(o, OWNER);
+  const ownerLogin = await loginOwner(o);
 
   await upsertCurrency(o, 'coin', 'soft', 100n);
   await upsertCurrency(o, 'gem', 'hard', 0n);

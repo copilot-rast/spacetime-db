@@ -12,8 +12,11 @@ import {
 
 export default __t.row({
   accountId: __t.u64().primaryKey().name("account_id"),
-  phone: __t.string(),
+  username: __t.string(),
   displayName: __t.string().name("display_name"),
   role: __t.string(),
+  isActive: __t.bool().name("is_active"),
+  isEnv: __t.bool().name("is_env"),
   createdAt: __t.timestamp().name("created_at"),
+  lastLoginAt: __t.option(__t.timestamp()).name("last_login_at"),
 });

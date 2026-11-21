@@ -36,10 +36,12 @@ import {
 // Import all reducer arg schemas
 import AdminAdjustReducer from "./admin_adjust_reducer";
 import AdminBulkPlayerTagsReducer from "./admin_bulk_player_tags_reducer";
+import AdminChangeMyPasswordReducer from "./admin_change_my_password_reducer";
 import AdminClearLoginLocksReducer from "./admin_clear_login_locks_reducer";
 import AdminClearSandboxSmsReducer from "./admin_clear_sandbox_sms_reducer";
 import AdminCompleteSetupReducer from "./admin_complete_setup_reducer";
 import AdminCompleteTaskReducer from "./admin_complete_task_reducer";
+import AdminCreateUserReducer from "./admin_create_user_reducer";
 import AdminDeleteAchievementReducer from "./admin_delete_achievement_reducer";
 import AdminDeleteAppVersionReducer from "./admin_delete_app_version_reducer";
 import AdminDeleteCategoryReducer from "./admin_delete_category_reducer";
@@ -63,10 +65,10 @@ import AdminDeleteTagReducer from "./admin_delete_tag_reducer";
 import AdminDeleteTaskReducer from "./admin_delete_task_reducer";
 import AdminDeleteTaskGroupReducer from "./admin_delete_task_group_reducer";
 import AdminDeleteTestPhoneReducer from "./admin_delete_test_phone_reducer";
+import AdminDeleteUserReducer from "./admin_delete_user_reducer";
 import AdminForgetRelationReducer from "./admin_forget_relation_reducer";
 import AdminGiveAchievementReducer from "./admin_give_achievement_reducer";
 import AdminLiftRestrictionReducer from "./admin_lift_restriction_reducer";
-import AdminRemoveAdminReducer from "./admin_remove_admin_reducer";
 import AdminReportNoteReducer from "./admin_report_note_reducer";
 import AdminReportStatusReducer from "./admin_report_status_reducer";
 import AdminResetStreakReducer from "./admin_reset_streak_reducer";
@@ -106,12 +108,14 @@ import AdminSaveTaskReducer from "./admin_save_task_reducer";
 import AdminSaveTaskGroupReducer from "./admin_save_task_group_reducer";
 import AdminSaveTestPhoneReducer from "./admin_save_test_phone_reducer";
 import AdminSetAccountStatusReducer from "./admin_set_account_status_reducer";
-import AdminSetAdminReducer from "./admin_set_admin_reducer";
 import AdminSetClockOffsetReducer from "./admin_set_clock_offset_reducer";
 import AdminSetCountryActiveReducer from "./admin_set_country_active_reducer";
 import AdminSetDefaultLanguageReducer from "./admin_set_default_language_reducer";
 import AdminSetPlayerTagsReducer from "./admin_set_player_tags_reducer";
 import AdminSetTagVisibilityReducer from "./admin_set_tag_visibility_reducer";
+import AdminSetUserActiveReducer from "./admin_set_user_active_reducer";
+import AdminSetUserPasswordReducer from "./admin_set_user_password_reducer";
+import AdminSetUserRoleReducer from "./admin_set_user_role_reducer";
 import LogoutReducer from "./logout_reducer";
 import SetMyCountryReducer from "./set_my_country_reducer";
 import SyncEconomyReducer from "./sync_economy_reducer";
@@ -614,10 +618,12 @@ const tablesSchema = __schema({
 const reducersSchema = __reducers(
   __reducerSchema("admin_adjust", AdminAdjustReducer),
   __reducerSchema("admin_bulk_player_tags", AdminBulkPlayerTagsReducer),
+  __reducerSchema("admin_change_my_password", AdminChangeMyPasswordReducer),
   __reducerSchema("admin_clear_login_locks", AdminClearLoginLocksReducer),
   __reducerSchema("admin_clear_sandbox_sms", AdminClearSandboxSmsReducer),
   __reducerSchema("admin_complete_setup", AdminCompleteSetupReducer),
   __reducerSchema("admin_complete_task", AdminCompleteTaskReducer),
+  __reducerSchema("admin_create_user", AdminCreateUserReducer),
   __reducerSchema("admin_delete_achievement", AdminDeleteAchievementReducer),
   __reducerSchema("admin_delete_app_version", AdminDeleteAppVersionReducer),
   __reducerSchema("admin_delete_category", AdminDeleteCategoryReducer),
@@ -641,10 +647,10 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_delete_task", AdminDeleteTaskReducer),
   __reducerSchema("admin_delete_task_group", AdminDeleteTaskGroupReducer),
   __reducerSchema("admin_delete_test_phone", AdminDeleteTestPhoneReducer),
+  __reducerSchema("admin_delete_user", AdminDeleteUserReducer),
   __reducerSchema("admin_forget_relation", AdminForgetRelationReducer),
   __reducerSchema("admin_give_achievement", AdminGiveAchievementReducer),
   __reducerSchema("admin_lift_restriction", AdminLiftRestrictionReducer),
-  __reducerSchema("admin_remove_admin", AdminRemoveAdminReducer),
   __reducerSchema("admin_report_note", AdminReportNoteReducer),
   __reducerSchema("admin_report_status", AdminReportStatusReducer),
   __reducerSchema("admin_reset_streak", AdminResetStreakReducer),
@@ -684,12 +690,14 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_save_task_group", AdminSaveTaskGroupReducer),
   __reducerSchema("admin_save_test_phone", AdminSaveTestPhoneReducer),
   __reducerSchema("admin_set_account_status", AdminSetAccountStatusReducer),
-  __reducerSchema("admin_set_admin", AdminSetAdminReducer),
   __reducerSchema("admin_set_clock_offset", AdminSetClockOffsetReducer),
   __reducerSchema("admin_set_country_active", AdminSetCountryActiveReducer),
   __reducerSchema("admin_set_default_language", AdminSetDefaultLanguageReducer),
   __reducerSchema("admin_set_player_tags", AdminSetPlayerTagsReducer),
   __reducerSchema("admin_set_tag_visibility", AdminSetTagVisibilityReducer),
+  __reducerSchema("admin_set_user_active", AdminSetUserActiveReducer),
+  __reducerSchema("admin_set_user_password", AdminSetUserPasswordReducer),
+  __reducerSchema("admin_set_user_role", AdminSetUserRoleReducer),
   __reducerSchema("logout", LogoutReducer),
   __reducerSchema("set_my_country", SetMyCountryReducer),
   __reducerSchema("sync_economy", SyncEconomyReducer),

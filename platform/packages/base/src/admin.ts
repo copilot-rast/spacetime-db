@@ -2,6 +2,7 @@ import { t } from 'spacetimedb/server';
 import { bytesToHex } from '@noble/hashes/utils.js';
 import { baseRows, Translations, ROLES, type BaseSchema } from './schema';
 import { sendSms, SMS_KINDS, type SmsProviderRow } from './sms';
+import { checkPassword, cleanUsername, hashPassword, verifyPassword } from './passwords';
 import {
   adminOrNull,
   audit,
@@ -11,6 +12,8 @@ import {
   digitsFrom,
   fail,
   hasRole,
+  isPanelAccount,
+  PANEL_PREFIX,
   maskSecret,
   normalizePhone,
   requireRole,
@@ -37,10 +40,13 @@ const SmsProviderView = t.row('SmsProviderView', {
 
 const AdminView = t.row('AdminView', {
   accountId: t.u64().primaryKey(),
-  phone: t.string(),
+  username: t.string(),
   displayName: t.string(),
   role: t.string(),
+  isActive: t.bool(),
+  isEnv: t.bool(),
   createdAt: t.timestamp(),
+  lastLoginAt: t.option(t.timestamp()),
 });
 
 const AccountListRow = t.object('AccountListRow', {
@@ -458,46 +464,119 @@ export function defineAdmin(st: BaseSchema) {
 
   const adminAdmins = st.view({ name: 'admin_admins', public: true }, t.array(AdminView), ctx => {
     if (!adminOrNull(ctx as any)) return [];
-    return [...ctx.db.admin.iter()].map(r => {
+    const envUser = ctx.env.ADMIN_USERNAME ?? '';
+    return [...ctx.db.admin.iter()].flatMap(r => {
       const a = ctx.db.account.id.find(r.accountId);
-      return { accountId: r.accountId, phone: a?.phone ?? '', displayName: a?.displayName ?? '', role: r.role, createdAt: r.createdAt };
+      if (!a || !isPanelAccount(a)) return [];
+      const u = ctx.db.adminUser.accountId.find(r.accountId);
+      const isEnv = !!envUser && a.phone === `${PANEL_PREFIX}${envUser}`;
+      return [
+        {
+          accountId: r.accountId,
+          username: u?.username ?? a.phone.slice(PANEL_PREFIX.length),
+          displayName: a.displayName,
+          role: r.role,
+          isActive: isEnv ? true : (u?.isActive ?? false) && a.status === 'active',
+          isEnv,
+          createdAt: r.createdAt,
+          lastLoginAt: u?.lastLoginAt ?? (isEnv ? a.lastLoginAt : undefined),
+        },
+      ];
     });
   });
 
-  const adminSetAdmin = st.reducer({ phone: t.string(), role: t.string() }, (ctx, a) => {
+  const panelUserOf = (ctx: Tx, accountId: bigint) => {
+    const a = ctx.db.account.id.find(accountId);
+    if (!a || !isPanelAccount(a)) fail('NOT_FOUND');
+    const envUser = ctx.env.ADMIN_USERNAME ?? '';
+    if (envUser && a.phone === `${PANEL_PREFIX}${envUser}`) fail('ENV_ADMIN_LOCKED');
+    const u = ctx.db.adminUser.accountId.find(accountId);
+    if (!u) fail('NOT_FOUND');
+    return { a, u };
+  };
+
+  const ownersLeft = (ctx: Tx, without: bigint) =>
+    [...ctx.db.admin.iter()].filter(x => x.role === 'owner' && x.accountId !== without && isPanelAccount(ctx.db.account.id.find(x.accountId))).length;
+
+  const adminCreateUser = st.reducer({ username: t.string(), password: t.string(), role: t.string() }, (ctx, a) => {
     const me = requireRole(ctx, 'owner');
     if (!(ROLES as readonly string[]).includes(a.role)) fail('INVALID_ROLE');
-    const phone = normalizePhone(a.phone);
-    let acc = ctx.db.account.phone.find(phone);
-    if (!acc) {
-      acc = ctx.db.account.insert({
-        id: 0n,
-        phone,
-        displayName: '',
-        lang: settingsOf(ctx).defaultLang,
-        status: 'active',
-        createdAt: ctx.timestamp,
-        lastLoginAt: ctx.timestamp,
-      });
-    }
-    const old = ctx.db.admin.accountId.find(acc.id);
-    if (old?.role === 'owner' && a.role !== 'owner') {
-      const owners = [...ctx.db.admin.iter()].filter(x => x.role === 'owner').length;
-      if (owners <= 1) fail('LAST_OWNER');
-    }
-    const row = { accountId: acc.id, role: a.role, createdAt: old?.createdAt ?? ctx.timestamp, createdBy: old?.createdBy ?? me.id };
-    if (old) ctx.db.admin.accountId.update(row);
-    else ctx.db.admin.insert(row);
-    audit(ctx, me.id, 'admin.set', String(acc.id), `${phone} ${a.role}`);
+    const username = cleanUsername(a.username);
+    const envUser = (ctx.env.ADMIN_USERNAME ?? '').toLowerCase();
+    if (username === envUser || ctx.db.adminUser.username.find(username) || ctx.db.account.phone.find(`${PANEL_PREFIX}${username}`)) fail('USERNAME_TAKEN');
+    checkPassword(a.password);
+    const acc = ctx.db.account.insert({
+      id: 0n,
+      phone: `${PANEL_PREFIX}${username}`,
+      displayName: username,
+      lang: settingsOf(ctx).defaultLang,
+      status: 'active',
+      createdAt: ctx.timestamp,
+      lastLoginAt: ctx.timestamp,
+    });
+    const seed = `${username}|${ctx.timestamp.microsSinceUnixEpoch}|${ctx.random()}`;
+    ctx.db.adminUser.insert({ accountId: acc.id, username, passwordHash: hashPassword(ctx.env.OTP_SECRET, a.password, seed), isActive: true, createdBy: me.id, createdAt: ctx.timestamp, lastLoginAt: undefined });
+    ctx.db.admin.insert({ accountId: acc.id, role: a.role, createdAt: ctx.timestamp, createdBy: me.id });
+    audit(ctx, me.id, 'admin_user.create', String(acc.id), `${username} ${a.role}`);
   });
 
-  const adminRemoveAdmin = st.reducer({ accountId: t.u64() }, (ctx, { accountId }) => {
+  const adminSetUserRole = st.reducer({ accountId: t.u64(), role: t.string() }, (ctx, a) => {
     const me = requireRole(ctx, 'owner');
-    const old = ctx.db.admin.accountId.find(accountId);
-    if (!old) fail('NOT_FOUND');
-    if (old.role === 'owner' && [...ctx.db.admin.iter()].filter(x => x.role === 'owner').length <= 1) fail('LAST_OWNER');
-    ctx.db.admin.accountId.delete(accountId);
-    audit(ctx, me.id, 'admin.remove', String(accountId));
+    if (!(ROLES as readonly string[]).includes(a.role)) fail('INVALID_ROLE');
+    const { u } = panelUserOf(ctx, a.accountId);
+    const old = ctx.db.admin.accountId.find(a.accountId);
+    if (old?.role === 'owner' && a.role !== 'owner' && ownersLeft(ctx, a.accountId) === 0) fail('LAST_OWNER');
+    const row = { accountId: a.accountId, role: a.role, createdAt: old?.createdAt ?? ctx.timestamp, createdBy: old?.createdBy ?? me.id };
+    if (old) ctx.db.admin.accountId.update(row);
+    else ctx.db.admin.insert(row);
+    audit(ctx, me.id, 'admin_user.role', String(a.accountId), `${u.username} ${a.role}`);
+  });
+
+  const adminSetUserPassword = st.reducer({ accountId: t.u64(), password: t.string() }, (ctx, a) => {
+    const me = requireRole(ctx, 'owner');
+    const { u } = panelUserOf(ctx, a.accountId);
+    checkPassword(a.password);
+    const seed = `${u.username}|${ctx.timestamp.microsSinceUnixEpoch}|${ctx.random()}`;
+    ctx.db.adminUser.accountId.update({ ...u, passwordHash: hashPassword(ctx.env.OTP_SECRET, a.password, seed) });
+    if (a.accountId !== me.id) for (const s of [...ctx.db.session.accountId.filter(a.accountId)]) ctx.db.session.identity.delete(s.identity);
+    ctx.db.loginAttempt.key.delete(`admin|${u.username}`);
+    audit(ctx, me.id, 'admin_user.password', String(a.accountId), u.username);
+  });
+
+  const adminSetUserActive = st.reducer({ accountId: t.u64(), isActive: t.bool() }, (ctx, a) => {
+    const me = requireRole(ctx, 'owner');
+    if (a.accountId === me.id) fail('CANNOT_CHANGE_SELF');
+    const { u } = panelUserOf(ctx, a.accountId);
+    if (!a.isActive && ctx.db.admin.accountId.find(a.accountId)?.role === 'owner' && ownersLeft(ctx, a.accountId) === 0) fail('LAST_OWNER');
+    ctx.db.adminUser.accountId.update({ ...u, isActive: a.isActive });
+    if (!a.isActive) for (const s of [...ctx.db.session.accountId.filter(a.accountId)]) ctx.db.session.identity.delete(s.identity);
+    audit(ctx, me.id, 'admin_user.active', String(a.accountId), `${u.username} ${a.isActive}`);
+  });
+
+  const adminDeleteUser = st.reducer({ accountId: t.u64() }, (ctx, a) => {
+    const me = requireRole(ctx, 'owner');
+    if (a.accountId === me.id) fail('CANNOT_CHANGE_SELF');
+    const { a: acc, u } = panelUserOf(ctx, a.accountId);
+    if (ctx.db.admin.accountId.find(a.accountId)?.role === 'owner' && ownersLeft(ctx, a.accountId) === 0) fail('LAST_OWNER');
+    for (const s of [...ctx.db.session.accountId.filter(a.accountId)]) ctx.db.session.identity.delete(s.identity);
+    ctx.db.admin.accountId.delete(a.accountId);
+    ctx.db.adminUser.accountId.delete(a.accountId);
+    ctx.db.account.id.update({ ...acc, phone: `deleted-admin:${u.username}:${acc.id}`, status: 'blocked' });
+    audit(ctx, me.id, 'admin_user.delete', String(a.accountId), u.username);
+  });
+
+  const adminChangeMyPassword = st.reducer({ oldPassword: t.string(), newPassword: t.string() }, (ctx, a) => {
+    const me = requireRole(ctx, 'operator');
+    const envUser = ctx.env.ADMIN_USERNAME ?? '';
+    if (envUser && me.phone === `${PANEL_PREFIX}${envUser}`) fail('ENV_ADMIN_LOCKED');
+    const u = ctx.db.adminUser.accountId.find(me.id);
+    if (!u) fail('NOT_FOUND');
+    if (!verifyPassword(u.passwordHash, a.oldPassword)) fail('INVALID_CREDENTIALS');
+    checkPassword(a.newPassword);
+    const seed = `${u.username}|${ctx.timestamp.microsSinceUnixEpoch}|${ctx.random()}`;
+    ctx.db.adminUser.accountId.update({ ...u, passwordHash: hashPassword(ctx.env.OTP_SECRET, a.newPassword, seed) });
+    for (const s of [...ctx.db.session.accountId.filter(me.id)]) if (!s.identity.isEqual(ctx.sender)) ctx.db.session.identity.delete(s.identity);
+    audit(ctx, me.id, 'admin_user.own_password', String(me.id), u.username);
   });
 
   const adminSetAccountStatus = st.reducer({ accountId: t.u64(), status: t.string() }, (ctx, a) => {
@@ -614,8 +693,12 @@ export function defineAdmin(st: BaseSchema) {
     adminSaveTag,
     adminDeleteTag,
     adminAdmins,
-    adminSetAdmin,
-    adminRemoveAdmin,
+    adminCreateUser,
+    adminSetUserRole,
+    adminSetUserPassword,
+    adminSetUserActive,
+    adminDeleteUser,
+    adminChangeMyPassword,
     adminSetAccountStatus,
     adminAccounts,
     adminAudit,

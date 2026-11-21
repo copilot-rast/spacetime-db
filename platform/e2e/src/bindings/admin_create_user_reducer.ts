@@ -11,6 +11,7 @@ import {
 } from "spacetimedb";
 
 export default {
-  phone: __t.string(),
+  username: __t.string(),
+  password: __t.string(),
   role: __t.string(),
 };

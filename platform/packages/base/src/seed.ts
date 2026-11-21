@@ -7,6 +7,10 @@ const tr = (fa: string, en: string) => [
 
 export function seedBase(ctx: Tx) {
   const now = ctx.timestamp;
+  for (const r of [...ctx.db.admin.iter()]) {
+    const a = ctx.db.account.id.find(r.accountId);
+    if (!a || !a.phone.startsWith('admin:')) ctx.db.admin.accountId.delete(r.accountId);
+  }
   if (!ctx.db.settings.id.find(0)) {
     ctx.db.settings.insert({
       id: 0,
