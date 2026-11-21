@@ -8,6 +8,7 @@
     "@stg/economy": "*",
     "@stg/gamification": "*",
     "@stg/items": "*",
+    "@stg/promo": "*",
     "spacetimedb": "2.12.0"
   },
   "devDependencies": {

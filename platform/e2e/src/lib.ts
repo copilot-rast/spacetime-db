@@ -94,6 +94,15 @@ export const ITEMS_QUERIES = [
   'SELECT * FROM admin_offer_settings',
 ];
 
+export const PROMO_QUERIES = [
+  'SELECT * FROM promo_placement',
+  'SELECT * FROM promo_chance_game',
+  'SELECT * FROM my_chance_plays',
+  'SELECT * FROM admin_promo_settings',
+  'SELECT * FROM admin_banners',
+  'SELECT * FROM admin_sponsors',
+];
+
 export function connect(token?: string, extra: string[] = []): Promise<Client> {
   return new Promise((resolve, reject) => {
     const b = DbConnection.builder()

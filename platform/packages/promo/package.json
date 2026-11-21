@@ -1,0 +1,16 @@
+{
+  "name": "@stg/promo",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "dependencies": {
+    "@noble/hashes": "^2.0.0",
+    "@stg/base": "*",
+    "@stg/players": "*",
+    "@stg/economy": "*",
+    "@stg/gamification": "*",
+    "@stg/items": "*",
+    "spacetimedb": "2.12.0"
+  }
+}

@@ -3,6 +3,7 @@ import { definePlayers, seedPlayers } from '@stg/players';
 import { defineEconomy, seedEconomy } from '@stg/economy';
 import { defineGamification, seedGamification } from '@stg/gamification';
 import { defineItems, seedItems } from '@stg/items';
+import { definePromo, seedPromo } from '@stg/promo';
 import spacetimedb from './schema';
 import { gameInit } from './game/init';
 
@@ -12,6 +13,7 @@ function seedAll(ctx: unknown) {
   seedEconomy(ctx as never);
   seedGamification(ctx as never);
   seedItems(ctx as never);
+  seedPromo(ctx as never);
 }
 
 export const init = spacetimedb.init(ctx => {
@@ -239,3 +241,37 @@ export const {
   itemUse,
   myPurchases,
 } = defineItems(spacetimedb);
+
+export const {
+  promoTick,
+  adminPromoSettings,
+  adminBanners,
+  adminSavePromoSettings,
+  adminSetPromoClockOffset,
+  adminSavePlacement,
+  adminDeletePlacement,
+  adminSaveBanner,
+  adminDeleteBanner,
+  adminBannerStats,
+  adminBannerPreview,
+  banners,
+  bannerView,
+  bannerClick,
+  adminSponsors,
+  adminSaveSponsor,
+  adminDeleteSponsor,
+  adminSponsorReport,
+  adminSponsorReportCsv,
+  sponsors,
+  sponsorView,
+  sponsorClick,
+  myChancePlays,
+  adminSaveChanceGame,
+  adminDeleteChanceGame,
+  adminChancePlays,
+  chanceGames,
+  chanceCanPlay,
+  chanceNextPlayTime,
+  chancePlay,
+  chancePlayWithTicket,
+} = definePromo(spacetimedb);

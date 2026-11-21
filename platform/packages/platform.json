@@ -54,6 +54,18 @@
         "packages/items/src/offers.ts",
         "packages/items/src/inventory.ts"
       ]
+    },
+    {
+      "name": "@stg/promo",
+      "define": "definePromo",
+      "seed": "seedPromo",
+      "tables": "promoTables",
+      "env": "promoEnv",
+      "files": [
+        "packages/promo/src/banners.ts",
+        "packages/promo/src/sponsors.ts",
+        "packages/promo/src/chance.ts"
+      ]
     }
   ]
 }
