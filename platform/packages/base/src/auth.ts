@@ -60,7 +60,64 @@ function ensureBootstrapOwner(ctx: Tx, accountId: bigint, phone: string) {
   else ctx.db.admin.insert(row);
 }
 
+const AdminLoginResult = t.object('AdminLoginResult', {
+  ok: t.bool(),
+  error: t.string(),
+  accountId: t.u64(),
+  role: t.string(),
+  retryAfterSec: t.u32(),
+});
+
 export function defineAuth(st: BaseSchema) {
+  const adminLogin = st.procedure({ username: t.string(), password: t.string() }, AdminLoginResult, (ctx, a) =>
+    ctx.withTx(tx => {
+      const res = (error: string, retryAfterSec = 0) => ({ ok: false, error, accountId: 0n, role: '', retryAfterSec });
+      const user = tx.env.ADMIN_USERNAME ?? '';
+      const pass = tx.env.ADMIN_PASSWORD ?? '';
+      if (!user || pass.length < 8) return res('PASSWORD_LOGIN_DISABLED');
+      const s = settingsOf(tx);
+      const now = micros(tx.timestamp);
+      const window = BigInt(s.adminLoginLockMinutes) * 60_000_000n;
+      const key = `admin|${user}`;
+      const att = tx.db.loginAttempt.key.find(key);
+      const fresh = att && now - micros(att.windowStart) < window ? att : undefined;
+      if (fresh && fresh.failures >= s.adminLoginMaxAttempts) {
+        return res('TOO_MANY_ATTEMPTS', Number((window - (now - micros(fresh.windowStart))) / 1_000_000n) + 1);
+      }
+      const secret = tx.env.OTP_SECRET;
+      const same = (x: string, y: string) => signHex(secret, `admin-login|${x}`) === signHex(secret, `admin-login|${y}`);
+      const okUser = same(a.username, user);
+      const okPass = same(a.password, pass);
+      if (!okUser || !okPass) {
+        const row = { key, failures: (fresh?.failures ?? 0) + 1, windowStart: fresh?.windowStart ?? tx.timestamp };
+        if (att) tx.db.loginAttempt.key.update(row);
+        else tx.db.loginAttempt.insert(row);
+        return res('INVALID_CREDENTIALS');
+      }
+      if (att) tx.db.loginAttempt.key.delete(key);
+      const phone = `admin:${user}`;
+      let acc = tx.db.account.phone.find(phone);
+      const isNew = !acc;
+      if (!acc) {
+        acc = tx.db.account.insert({ id: 0n, phone, displayName: user, lang: s.defaultLang, status: 'active', createdAt: tx.timestamp, lastLoginAt: tx.timestamp });
+      } else {
+        acc = tx.db.account.id.update({ ...acc, status: 'active', lastLoginAt: tx.timestamp });
+      }
+      const role = tx.db.admin.accountId.find(acc.id);
+      if (role?.role !== 'owner') {
+        const row = { accountId: acc.id, role: 'owner', createdAt: role?.createdAt ?? tx.timestamp, createdBy: 0n };
+        if (role) tx.db.admin.accountId.update(row);
+        else tx.db.admin.insert(row);
+      }
+      const sessionRow = { identity: tx.sender, accountId: acc.id, createdAt: tx.timestamp };
+      if (tx.db.session.identity.find(tx.sender)) tx.db.session.identity.update(sessionRow);
+      else tx.db.session.insert(sessionRow);
+      for (const h of loginHooks) h(tx, acc.id, isNew);
+      tx.db.audit.insert({ id: 0n, accountId: acc.id, action: 'admin.password_login', target: user, detail: '', at: tx.timestamp });
+      return { ok: true, error: '', accountId: acc.id, role: 'owner', retryAfterSec: 0 };
+    })
+  );
+
   const requestOtp = st.procedure({ phone: t.string() }, RequestOtpResult, (ctx, { phone: raw }) => {
     const phone = normalizePhone(raw);
     const secret = ctx.env.OTP_SECRET;
@@ -218,7 +275,7 @@ export function defineAuth(st: BaseSchema) {
     return ctx.db.admin.accountId.find(a.id) ?? undefined;
   });
 
-  return { requestOtp, verifyOtp, logout, updateProfile, me, myRole };
+  return { adminLogin, requestOtp, verifyOtp, logout, updateProfile, me, myRole };
 }
 
 export { sessionAccount };

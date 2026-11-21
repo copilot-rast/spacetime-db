@@ -103,6 +103,8 @@ const settings = table(
     defaultLang: t.string(),
     setupDone: t.bool(),
     updatedAt: t.timestamp(),
+    adminLoginMaxAttempts: t.u32().default(5),
+    adminLoginLockMinutes: t.u32().default(15),
   }
 );
 
@@ -183,6 +185,15 @@ const tag = table(
   }
 );
 
+const loginAttempt = table(
+  { name: 'base_login_attempt' },
+  {
+    key: t.string().primaryKey(),
+    failures: t.u32(),
+    windowStart: t.timestamp(),
+  }
+);
+
 const audit = table(
   { name: 'base_audit' },
   {
@@ -211,11 +222,14 @@ export const baseTables = {
   category,
   tag,
   audit,
+  loginAttempt,
 };
 
 export const baseEnv = {
   OTP_SECRET: t.string(),
   ADMIN_PHONES: t.string().optional(),
+  ADMIN_USERNAME: t.string().optional(),
+  ADMIN_PASSWORD: t.string().optional(),
 };
 
 export const baseRows = {

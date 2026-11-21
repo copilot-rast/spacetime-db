@@ -16,6 +16,7 @@ import * as AdminGamificationSummaryProcedure from "../admin_gamification_summar
 import * as AdminGiftsProcedure from "../admin_gifts_procedure";
 import * as AdminGrantPrizeProcedure from "../admin_grant_prize_procedure";
 import * as AdminInquirePaymentProcedure from "../admin_inquire_payment_procedure";
+import * as AdminLoginProcedure from "../admin_login_procedure";
 import * as AdminModerationSummaryProcedure from "../admin_moderation_summary_procedure";
 import * as AdminPaymentProcedure from "../admin_payment_procedure";
 import * as AdminPaymentsProcedure from "../admin_payments_procedure";
@@ -70,6 +71,8 @@ export type AdminGrantPrizeArgs = __Infer<typeof AdminGrantPrizeProcedure.params
 export type AdminGrantPrizeResult = __Infer<typeof AdminGrantPrizeProcedure.returnType>;
 export type AdminInquirePaymentArgs = __Infer<typeof AdminInquirePaymentProcedure.params>;
 export type AdminInquirePaymentResult = __Infer<typeof AdminInquirePaymentProcedure.returnType>;
+export type AdminLoginArgs = __Infer<typeof AdminLoginProcedure.params>;
+export type AdminLoginResult = __Infer<typeof AdminLoginProcedure.returnType>;
 export type AdminModerationSummaryArgs = __Infer<typeof AdminModerationSummaryProcedure.params>;
 export type AdminModerationSummaryResult = __Infer<typeof AdminModerationSummaryProcedure.returnType>;
 export type AdminPaymentArgs = __Infer<typeof AdminPaymentProcedure.params>;

@@ -20,4 +20,6 @@ export default __t.row({
   defaultLang: __t.string().name("default_lang"),
   setupDone: __t.bool().name("setup_done"),
   updatedAt: __t.timestamp().name("updated_at"),
+  adminLoginMaxAttempts: __t.u32().name("admin_login_max_attempts"),
+  adminLoginLockMinutes: __t.u32().name("admin_login_lock_minutes"),
 });

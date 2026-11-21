@@ -48,6 +48,15 @@ export type AdminGamificationSettings = __Infer<typeof AdminGamificationSettings
 export const AdminLevelTables = __t.object("AdminLevelTables", {});
 export type AdminLevelTables = __Infer<typeof AdminLevelTables>;
 
+export const AdminLoginResult = __t.object("AdminLoginResult", {
+  ok: __t.bool(),
+  error: __t.string(),
+  accountId: __t.u64(),
+  role: __t.string(),
+  retryAfterSec: __t.u32(),
+});
+export type AdminLoginResult = __Infer<typeof AdminLoginResult>;
+
 export const AdminMetaRelations = __t.object("AdminMetaRelations", {});
 export type AdminMetaRelations = __Infer<typeof AdminMetaRelations>;
 
@@ -226,6 +235,13 @@ export const BaseLanguage = __t.object("BaseLanguage", {
 });
 export type BaseLanguage = __Infer<typeof BaseLanguage>;
 
+export const BaseLoginAttempt = __t.object("BaseLoginAttempt", {
+  key: __t.string(),
+  failures: __t.u32(),
+  windowStart: __t.timestamp(),
+});
+export type BaseLoginAttempt = __Infer<typeof BaseLoginAttempt>;
+
 export const BaseOtp = __t.object("BaseOtp", {
   phone: __t.string(),
   codeHash: __t.string(),
@@ -266,6 +282,8 @@ export const BaseSettings = __t.object("BaseSettings", {
   defaultLang: __t.string(),
   setupDone: __t.bool(),
   updatedAt: __t.timestamp(),
+  adminLoginMaxAttempts: __t.u32(),
+  adminLoginLockMinutes: __t.u32(),
 });
 export type BaseSettings = __Infer<typeof BaseSettings>;
 

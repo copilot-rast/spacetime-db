@@ -1,6 +1,10 @@
-import { check, connect, done, errorOf, lastSandboxCode, login, tr, uniquePhone, waitFor } from './src/lib.ts';
+import { sql, check, connect, done, errorOf, lastSandboxCode, login, tr, uniquePhone, waitFor } from './src/lib.ts';
+
+import { existsSync, readFileSync } from 'node:fs';
 
 const OWNER = '09120000001';
+const PW_FILE = new URL('../.local/admin_password', import.meta.url);
+const ADMIN_PASSWORD = process.env.STG_ADMIN_PASSWORD ?? (existsSync(PW_FILE) ? readFileSync(PW_FILE, 'utf8').trim() : '');
 
 async function main() {
   const anon = await connect();
@@ -9,8 +13,37 @@ async function main() {
   check('admin views are empty for guests', [...anon.conn.db.adminSettings.iter()].length === 0 && [...anon.conn.db.adminSmsProviders.iter()].length === 0);
   check('guest cannot save brand', (await errorOf(anon.conn.reducers.adminSaveBrand({ name: tr('x'), shortName: '', logoUrl: '', iconUrl: '', primaryColor: '', supportPhone: '', supportEmail: '', website: '' }))).includes('NOT_LOGGED_IN'));
 
+  let envAdminId = 0n;
+  sql('DELETE FROM base_login_attempt');
+  if (ADMIN_PASSWORD) {
+    const pw = await connect();
+    const bad = await pw.conn.procedures.adminLogin({ username: 'admin', password: 'wrong-password' });
+    check('wrong admin password refused', !bad.ok && bad.error === 'INVALID_CREDENTIALS', bad);
+    const badUser = await pw.conn.procedures.adminLogin({ username: 'root', password: ADMIN_PASSWORD });
+    check('wrong admin username refused', !badUser.ok && badUser.error === 'INVALID_CREDENTIALS', badUser);
+    const good = await pw.conn.procedures.adminLogin({ username: 'admin', password: ADMIN_PASSWORD });
+    check('env admin logs in as owner', good.ok && good.role === 'owner', good);
+    envAdminId = good.accountId;
+    check('env admin sees owner role live', await waitFor(() => [...pw.conn.db.myRole.iter()][0]?.role === 'owner'));
+    check('env admin can read admin views', await waitFor(() => [...pw.conn.db.adminSettings.iter()].length === 1));
+    const fail = await connect();
+    let last = { ok: true, error: '', retryAfterSec: 0 };
+    const max = [...pw.conn.db.adminSettings.iter()][0].adminLoginMaxAttempts;
+    for (let i = 0; i < max + 1; i++) last = await fail.conn.procedures.adminLogin({ username: 'admin', password: `nope-${i}` });
+    check('admin login locks after too many failures', !last.ok && last.error === 'TOO_MANY_ATTEMPTS' && last.retryAfterSec > 0, last);
+    const locked = await fail.conn.procedures.adminLogin({ username: 'admin', password: ADMIN_PASSWORD });
+    check('lock holds even for the right password', !locked.ok && locked.error === 'TOO_MANY_ATTEMPTS');
+    check('only owner changes login rules', (await errorOf(fail.conn.reducers.adminSaveLoginRules({ adminLoginMaxAttempts: 5, adminLoginLockMinutes: 15 }))).includes('NOT_LOGGED_IN'));
+    check('sms code cannot reach the env admin', (await errorOf(fail.conn.procedures.requestOtp({ phone: 'admin:admin' }))).includes('INVALID_PHONE'));
+  }
+
   const owner = await connect();
   const ownerLogin = await login(owner, OWNER);
+  if (ADMIN_PASSWORD) {
+    await owner.conn.reducers.adminSaveLoginRules({ adminLoginMaxAttempts: 5, adminLoginLockMinutes: 1 });
+    check('owner changes login rules', await waitFor(() => [...owner.conn.db.adminSettings.iter()][0]?.adminLoginLockMinutes === 1));
+    await owner.conn.reducers.adminSaveLoginRules({ adminLoginMaxAttempts: 5, adminLoginLockMinutes: 15 });
+  }
   check('bootstrap phone becomes owner', ownerLogin.role === 'owner', ownerLogin);
   check('my_role view shows owner', await waitFor(() => [...owner.conn.db.myRole.iter()][0]?.role === 'owner'));
   check('owner sees settings', await waitFor(() => [...owner.conn.db.adminSettings.iter()].length === 1));
@@ -127,10 +160,21 @@ async function main() {
   check('operator cannot see provider settings', [...op.conn.db.adminSmsProviders.iter()].length === 0);
   check('admin cannot make admins', (await errorOf(op.conn.reducers.adminSetAdmin({ phone: uniquePhone(), role: 'owner' }))).includes('FORBIDDEN'));
   const ownerRow = [...owner.conn.db.adminAdmins.iter()].find(a => a.phone === OWNER)!;
+  for (const other of [...owner.conn.db.adminAdmins.iter()].filter(a => a.role === 'owner' && a.phone !== OWNER)) {
+    await owner.conn.reducers.adminRemoveAdmin({ accountId: other.accountId });
+  }
+  await waitFor(() => [...owner.conn.db.adminAdmins.iter()].filter(a => a.role === 'owner').length === 1);
   check('last owner cannot be removed', (await errorOf(owner.conn.reducers.adminRemoveAdmin({ accountId: ownerRow.accountId }))).includes('LAST_OWNER'));
   const opRow = [...owner.conn.db.adminAdmins.iter()].find(a => a.phone === opPhone)!;
   await owner.conn.reducers.adminRemoveAdmin({ accountId: opRow.accountId });
   check('role removal reaches the operator live', await waitFor(() => [...op.conn.db.myRole.iter()].length === 0));
+
+  if (ADMIN_PASSWORD) {
+    await owner.conn.reducers.adminClearLoginLocks({});
+    const back = await connect();
+    const again = await back.conn.procedures.adminLogin({ username: 'admin', password: ADMIN_PASSWORD });
+    check('env admin is owner again after its role was removed', again.ok && again.role === 'owner' && again.accountId === envAdminId, again);
+  }
 
   const page = await owner.conn.procedures.adminAccounts({ query: userPhone.slice(-6), status: '', page: 1, pageSize: 10 });
   check('account search by phone', page.total === 1 && page.rows[0].phone === userPhone, page);
