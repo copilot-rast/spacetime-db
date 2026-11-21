@@ -1,0 +1,67 @@
+.gx-flat {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+a.gx-pcard,
+a.gx-list-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+a.gx-pcard:hover,
+a.gx-list-link:hover {
+  background: var(--hover);
+}
+
+a.gx-name-link {
+  display: block;
+  color: inherit;
+}
+
+.gx-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 28px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--well-2);
+  color: var(--ink-2);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+
+.gx-rank .ic {
+  width: 12px;
+  height: 12px;
+}
+
+.gx-rank-1 {
+  background: var(--tint-warn-bg);
+  color: var(--tint-warn-fg);
+}
+
+.gx-rank-2 {
+  background: var(--tint-info-bg);
+  color: var(--tint-info-fg);
+}
+
+.gx-rank-3 {
+  background: var(--tint-violet-bg);
+  color: var(--tint-violet-fg);
+}
+
+.gx-below td {
+  opacity: 0.6;
+}
+
+.gx-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-sm);
+  object-fit: cover;
+}

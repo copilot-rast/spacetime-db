@@ -1,0 +1,161 @@
+.gcl-form {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.gcl-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.gcl-name:hover .primary {
+  text-decoration: underline;
+}
+
+.gcl-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--tint-violet-bg);
+  color: var(--tint-violet-fg);
+}
+
+.gcl-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gcl-icon .ic {
+  width: 55%;
+  height: 55%;
+}
+
+.gcl-tabs {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.gcl-fieldset {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin: 0;
+  padding: 12px 14px 14px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gcl-fieldset > legend {
+  padding: 0 6px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.gcl-key {
+  font-weight: 400;
+}
+
+.gcl-json {
+  min-height: 180px;
+}
+
+.gcl-chip-x {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-inline-end: -4px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+
+.gcl-chip-x:hover {
+  background: var(--hover);
+  color: var(--ink-1);
+}
+
+.gcl-maint.on {
+  border-color: color-mix(in srgb, var(--neg) 45%, transparent);
+  background: var(--tint-bad-bg);
+}
+
+.gcl-maint-ic {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--tint-warn-bg);
+  color: var(--tint-warn-fg);
+}
+
+.gcl-maint.on .gcl-maint-ic {
+  background: var(--surface);
+  color: var(--neg);
+}
+
+.gcl-maint-ic .ic {
+  width: 22px;
+  height: 22px;
+}
+
+.gcl-band {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gcl-band-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.gcl-savebar {
+  position: sticky;
+  bottom: 12px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 16px;
+  box-shadow: var(--thick-shadow);
+}
+
+.gcl-warn-text {
+  color: var(--tint-warn-fg);
+}
+
+.gcl-rooms .table-wrap {
+  border: 0;
+  border-radius: 0;
+}
+
+.gcl-hex {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+@media (max-width: 767px) {
+  .gcl-band {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
