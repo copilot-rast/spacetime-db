@@ -6,6 +6,7 @@ import { itemsTables, itemsEnv } from '@stg/items';
 import { promoTables, promoEnv } from '@stg/promo';
 import { publicationTables, publicationEnv } from '@stg/publication';
 import { supportTables, supportEnv } from '@stg/support';
+import { socialTables, socialEnv } from '@stg/social';
 
-export const platformTables = { ...baseTables, ...playersTables, ...economyTables, ...gamificationTables, ...itemsTables, ...promoTables, ...publicationTables, ...supportTables };
-export const platformEnv = { ...baseEnv, ...playersEnv, ...economyEnv, ...gamificationEnv, ...itemsEnv, ...promoEnv, ...publicationEnv, ...supportEnv };
+export const platformTables = { ...baseTables, ...playersTables, ...economyTables, ...gamificationTables, ...itemsTables, ...promoTables, ...publicationTables, ...supportTables, ...socialTables };
+export const platformEnv = { ...baseEnv, ...playersEnv, ...economyEnv, ...gamificationEnv, ...itemsEnv, ...promoEnv, ...publicationEnv, ...supportEnv, ...socialEnv };

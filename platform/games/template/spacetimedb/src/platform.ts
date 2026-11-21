@@ -6,6 +6,7 @@ import { defineItems, seedItems } from '@stg/items';
 import { definePromo, seedPromo } from '@stg/promo';
 import { definePublication, seedPublication } from '@stg/publication';
 import { defineSupport, seedSupport } from '@stg/support';
+import { defineSocial, seedSocial } from '@stg/social';
 import spacetimedb from './schema';
 import { gameInit } from './game/init';
 
@@ -18,6 +19,7 @@ function seedAll(ctx: unknown) {
   seedPromo(ctx as never);
   seedPublication(ctx as never);
   seedSupport(ctx as never);
+  seedSocial(ctx as never);
 }
 
 export const init = spacetimedb.init(ctx => {
@@ -428,3 +430,86 @@ export const {
   adminActivity,
   adminActivitySummary,
 } = defineSupport(spacetimedb);
+
+export const {
+  friendRequest,
+  friendAccept,
+  friendDecline,
+  friendCancel,
+  friendRemove,
+  friendBlock,
+  friendUnblock,
+  friendRules,
+  myFriends,
+  myFriendRequestsIn,
+  myFriendRequestsOut,
+  myBlocked,
+  adminFriendSettings,
+  adminSaveFriendSettings,
+  adminFriendRules,
+  adminSaveFriendRule,
+  adminDeleteFriendRule,
+  adminPlayerFriends,
+  adminRemoveFriendship,
+  chatSend,
+  chatJoinRoom,
+  chatLeave,
+  chatMarkRead,
+  chatCreateGroup,
+  chatGroupAdd,
+  chatGroupRemove,
+  chatGroupRename,
+  chatDeleteMessage,
+  chatHistory,
+  chatReport,
+  chatRooms,
+  myChannels,
+  myChatLive,
+  adminChatSettings,
+  adminSaveChatSettings,
+  adminSetSocialClockOffset,
+  adminChatWords,
+  adminSaveChatWord,
+  adminDeleteChatWord,
+  adminTestChatFilter,
+  adminRooms,
+  adminSaveRoom,
+  adminDeleteRoom,
+  adminSocialMessages,
+  adminSocialMessage,
+  adminDeleteChatMessage,
+  adminRestoreChatMessage,
+  adminChatGroups,
+  adminCloseGroup,
+  chatQuota,
+  adminQuotaSettings,
+  adminSaveQuotaSettings,
+  adminQuotaRules,
+  adminSaveQuotaRule,
+  adminDeleteQuotaRule,
+  adminPlayerQuota,
+  adminQuotaGrant,
+  adminQuotaReset,
+  adminQuotaRevokeLot,
+  adminQuotaReport,
+  giftOptions,
+  giftSend,
+  giftAccept,
+  giftDecline,
+  giftCancel,
+  myGiftsReceived,
+  myGiftsSent,
+  adminGiftSettings,
+  adminSaveGiftSettings,
+  adminGiftRules,
+  adminSaveGiftRule,
+  adminDeleteGiftRule,
+  adminGiftables,
+  adminSetGiftable,
+  adminFriendGifts,
+  adminFriendGift,
+  adminReverseFriendGift,
+  adminFriendGiftReport,
+  socialTick,
+  adminSocialRun,
+} = defineSocial(spacetimedb);
