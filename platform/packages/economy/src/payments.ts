@@ -287,7 +287,12 @@ export function grantPayment(ctx: { withTx: EProc['withTx'] }, paymentId: bigint
         tx.db.payment.id.update({ ...p, status: 'refused', error: refused, rewardError: refused, updatedAt: tx.timestamp });
         return '[]';
       }
-      const rewards = JSON.stringify(grantPrize(tx, p.accountId, product.prizeId, 'payment', String(p.id)));
+      let rewards: string | undefined;
+      for (const h of grantOverrides) {
+        rewards = h(tx, p, product);
+        if (rewards !== undefined) break;
+      }
+      if (rewards === undefined) rewards = JSON.stringify(grantPrize(tx, p.accountId, product.prizeId, 'payment', String(p.id)));
       tx.db.payment.id.update({ ...p, rewardGranted: true, rewardError: '', rewards, updatedAt: tx.timestamp });
       for (const h of paymentHooks) h(tx, p.accountId, p.id, p.productId);
       return rewards;
@@ -311,6 +316,16 @@ export type PurchaseQuote = { available: boolean; originalToman: bigint; priceTo
 export const purchaseChecks: ((ctx: ETx, req: PurchaseRequest, quote: PurchaseQuote) => PurchaseQuote | void)[] = [];
 export const purchaseCreatedHooks: ((ctx: ETx, paymentId: bigint, req: PurchaseRequest) => void)[] = [];
 export const settleChecks: ((ctx: ETx, payment: PaymentRow, product: ProductRow) => string | undefined)[] = [];
+export const grantOverrides: ((ctx: ETx, payment: PaymentRow, product: ProductRow) => string | undefined)[] = [];
+export const payeeHooks: ((ctx: { db: ETx['db'] }, payment: PaymentRow) => bigint | undefined)[] = [];
+
+export function payeeOf(ctx: { db: ETx['db'] }, payment: PaymentRow) {
+  for (const h of payeeHooks) {
+    const id = h(ctx, payment);
+    if (id !== undefined) return id;
+  }
+  return payment.accountId;
+}
 
 function verifyAndSettle(ctx: Http & { withTx: EProc['withTx'] }, paymentId: bigint, action: string) {
   const p = ctx.withTx(tx => {

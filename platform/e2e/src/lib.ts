@@ -121,6 +121,28 @@ export const PUBLICATION_QUERIES = [
   'SELECT * FROM admin_faqs',
 ];
 
+export const SOCIAL_QUERIES = [
+  'SELECT * FROM my_friends',
+  'SELECT * FROM my_friend_requests_in',
+  'SELECT * FROM my_friend_requests_out',
+  'SELECT * FROM my_blocked',
+  'SELECT * FROM chat_rooms',
+  'SELECT * FROM my_channels',
+  'SELECT * FROM my_chat_messages',
+  'SELECT * FROM my_gifts_received',
+  'SELECT * FROM my_gifts_sent',
+  'SELECT * FROM admin_friend_settings',
+  'SELECT * FROM admin_friend_rules',
+  'SELECT * FROM admin_chat_settings',
+  'SELECT * FROM admin_chat_words',
+  'SELECT * FROM admin_rooms',
+  'SELECT * FROM admin_quota_settings',
+  'SELECT * FROM admin_quota_rules',
+  'SELECT * FROM admin_gift_settings',
+  'SELECT * FROM admin_gift_rules',
+  'SELECT * FROM admin_giftables',
+];
+
 export function connect(token?: string, extra: string[] = []): Promise<Client> {
   return new Promise((resolve, reject) => {
     const b = DbConnection.builder()

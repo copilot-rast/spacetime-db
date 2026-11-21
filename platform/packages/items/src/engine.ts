@@ -1,6 +1,6 @@
 import type { InferSchema, ProcedureCtx, ReducerCtx } from 'spacetimedb/server';
 import { fail, sign, type Tx } from '@stg/base';
-import { changeBalance, type ETx } from '@stg/economy';
+import { changeBalance, payeeOf, type ETx } from '@stg/economy';
 import { playerLevel, recordEvent } from '@stg/gamification';
 import type { ItemsSchema } from './schema';
 
@@ -163,11 +163,11 @@ export function ruleOf(ctx: IDb, productId: bigint) {
 }
 
 export function deliveredCount(ctx: IDb, accountId: bigint, productId: bigint) {
-  return [...ctx.db.payment.accountId.filter(accountId)].filter(p => p.productId === productId && p.status === 'success' && p.rewardGranted).length;
+  return [...ctx.db.payment.accountId.filter(accountId)].filter(p => p.productId === productId && p.status === 'success' && p.rewardGranted && payeeOf(ctx, p) === accountId).length;
 }
 
 export function boughtOnce(ctx: IDb, accountId: bigint, productId: bigint, exceptId = 0n) {
-  return [...ctx.db.payment.accountId.filter(accountId)].some(p => p.productId === productId && p.id !== exceptId && p.status === 'success' && (p.rewardGranted || exceptId === 0n || p.id < exceptId));
+  return [...ctx.db.payment.accountId.filter(accountId)].some(p => p.productId === productId && p.id !== exceptId && p.status === 'success' && (p.rewardGranted || exceptId === 0n || p.id < exceptId) && payeeOf(ctx, p) === accountId);
 }
 
 export function productBlock(ctx: IDb, accountId: bigint, product: ProductRow, prizeOnce = false) {

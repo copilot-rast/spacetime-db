@@ -1,6 +1,6 @@
 import { t } from 'spacetimedb/server';
 import { Translations, adminOrNull, audit, cleanKey, cleanTranslations, fail, loginHooks, requireAccount, requireRole, toLatinDigits, type Tr } from '@stg/base';
-import { extraItemTypes, grantPrize, itemHandlers, itemValidators, purchaseChecks, settleChecks, shopFilters, type Reward } from '@stg/economy';
+import { extraItemTypes, grantPrize, itemHandlers, itemValidators, payeeOf, purchaseChecks, settleChecks, shopFilters, type Reward } from '@stg/economy';
 import { ItemService, Price, itemsRows, itemsTables, type ItemsSchema } from './schema';
 import {
   RARITIES,
@@ -216,8 +216,9 @@ export function defineInventory(st: ItemsSchema) {
   settleChecks.push((ctx, p, product) => {
     const tx = ctx as unknown as ITx;
     const r = ruleOf(tx, product.id);
-    if (r.isOneTime && boughtOnce(tx, p.accountId, product.id, p.id)) return 'PRODUCT_ALREADY_BOUGHT';
-    if (r.checkContents && contentsOwned(tx, p.accountId, product.prizeId)) return 'PRIZE_ALREADY_OWNED';
+    const payee = payeeOf(tx, p);
+    if (r.isOneTime && boughtOnce(tx, payee, product.id, p.id)) return 'PRODUCT_ALREADY_BOUGHT';
+    if (r.checkContents && contentsOwned(tx, payee, product.prizeId)) return 'PRIZE_ALREADY_OWNED';
     return undefined;
   });
   shopFilters.push((ctx, accountId, productId) => {
@@ -651,7 +652,7 @@ export function defineInventory(st: ItemsSchema) {
       const me = requireAccount(base(tx));
       const by = new Map<bigint, { count: number; last: bigint }>();
       for (const p of tx.db.payment.accountId.filter(me.id)) {
-        if (p.status !== 'success' || !p.rewardGranted) continue;
+        if (p.status !== 'success' || !p.rewardGranted || payeeOf(tx, p) !== me.id) continue;
         const v = by.get(p.productId) ?? { count: 0, last: 0n };
         v.count++;
         if (p.updatedAt.microsSinceUnixEpoch > v.last) v.last = p.updatedAt.microsSinceUnixEpoch;

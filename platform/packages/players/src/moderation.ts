@@ -252,6 +252,63 @@ function reportListRow(ctx: PTx, r: ReportRow) {
   };
 }
 
+export function fileReport(
+  raw: unknown,
+  me: { id: bigint; createdAt: Timestamp },
+  a: { targetId: bigint; titleKey: string; note: string; matchId: string; contentId: string; gameKey: string },
+  system = false
+) {
+  const ctx = raw as PTx;
+  if (a.targetId === me.id) fail('CANNOT_REPORT_SELF');
+  if (!ctx.db.account.id.find(a.targetId)) fail('USER_NOT_FOUND');
+  const title = ctx.db.reportTitle.key.find(a.titleKey);
+  if (!title || !title.isActive) fail('REPORT_TITLE_NOT_FOUND');
+  const note = a.note.trim();
+  if ([...note].length > 1000) fail('NOTE_TOO_LONG');
+  const matchId = cleanContext(a.matchId, 128);
+  const contentId = cleanContext(a.contentId, 128);
+  const gameKey = cleanContext(a.gameKey, 64);
+  if (!system) {
+    const lim = reportLimit(ctx, me.id);
+    if (lim.rules.noteRequired && !note) fail('NOTE_REQUIRED');
+    if (lim.rules.minAccountHours && nowMicros(ctx) - me.createdAt.microsSinceUnixEpoch < BigInt(lim.rules.minAccountHours) * HOUR) fail('ACCOUNT_TOO_NEW');
+    if (lim.rules.duplicateHours) {
+      const since = nowMicros(ctx) - BigInt(lim.rules.duplicateHours) * HOUR;
+      const dup = [...ctx.db.report.reporterId.filter(me.id)].find(
+        r => r.targetId === a.targetId && r.titleId === title.id && isActiveReport(r.status) && r.createdAt.microsSinceUnixEpoch >= since
+      );
+      if (dup) return { reportId: dup.id, duplicate: true };
+    }
+    if (lim.limit && lim.used >= lim.limit) fail('TOO_MANY_REPORTS');
+    const key = `${me.id}|${hourKey(ctx)}`;
+    if (ctx.db.reportRate.key.find(key)) ctx.db.reportRate.key.update({ key, count: lim.used + 1 });
+    else ctx.db.reportRate.insert({ key, count: 1 });
+  }
+  const r = ctx.db.report.insert({
+    id: 0n,
+    reporterId: me.id,
+    targetId: a.targetId,
+    titleId: title.id,
+    titleKey: title.key,
+    titleName: title.name,
+    note,
+    matchId,
+    contentId,
+    gameKey,
+    status: 'open',
+    reviewerId: 0n,
+    reviewStartedAt: undefined,
+    notes: [],
+    action: '',
+    restrictionId: 0n,
+    resolvedBy: 0n,
+    resolvedAt: undefined,
+    resolutionNote: '',
+    createdAt: ctx.timestamp,
+  });
+  return { reportId: r.id, duplicate: false };
+}
+
 export function defineModeration(st: PlayersSchema) {
   accountGuards.push((raw, accountId) => {
     const ctx = raw as unknown as PTx;
@@ -510,52 +567,7 @@ export function defineModeration(st: PlayersSchema) {
     (ctx, a) =>
       ctx.withTx(tx => {
         const me = requireAccount(asBase(tx));
-        if (a.targetId === me.id) fail('CANNOT_REPORT_SELF');
-        if (!tx.db.account.id.find(a.targetId)) fail('USER_NOT_FOUND');
-        const title = tx.db.reportTitle.key.find(a.titleKey);
-        if (!title || !title.isActive) fail('REPORT_TITLE_NOT_FOUND');
-        const note = a.note.trim();
-        if ([...note].length > 1000) fail('NOTE_TOO_LONG');
-        const matchId = cleanContext(a.matchId, 128);
-        const contentId = cleanContext(a.contentId, 128);
-        const gameKey = cleanContext(a.gameKey, 64);
-        const lim = reportLimit(tx, me.id);
-        if (lim.rules.noteRequired && !note) fail('NOTE_REQUIRED');
-        if (lim.rules.minAccountHours && nowMicros(tx) - me.createdAt.microsSinceUnixEpoch < BigInt(lim.rules.minAccountHours) * HOUR) fail('ACCOUNT_TOO_NEW');
-        if (lim.rules.duplicateHours) {
-          const since = nowMicros(tx) - BigInt(lim.rules.duplicateHours) * HOUR;
-          const dup = [...tx.db.report.reporterId.filter(me.id)].find(
-            r => r.targetId === a.targetId && r.titleId === title.id && isActiveReport(r.status) && r.createdAt.microsSinceUnixEpoch >= since
-          );
-          if (dup) return { reportId: dup.id, duplicate: true };
-        }
-        if (lim.limit && lim.used >= lim.limit) fail('TOO_MANY_REPORTS');
-        const key = `${me.id}|${hourKey(tx)}`;
-        if (tx.db.reportRate.key.find(key)) tx.db.reportRate.key.update({ key, count: lim.used + 1 });
-        else tx.db.reportRate.insert({ key, count: 1 });
-        const r = tx.db.report.insert({
-          id: 0n,
-          reporterId: me.id,
-          targetId: a.targetId,
-          titleId: title.id,
-          titleKey: title.key,
-          titleName: title.name,
-          note,
-          matchId,
-          contentId,
-          gameKey,
-          status: 'open',
-          reviewerId: 0n,
-          reviewStartedAt: undefined,
-          notes: [],
-          action: '',
-          restrictionId: 0n,
-          resolvedBy: 0n,
-          resolvedAt: undefined,
-          resolutionNote: '',
-          createdAt: tx.timestamp,
-        });
-        return { reportId: r.id, duplicate: false };
+        return fileReport(tx, me, a);
       })
   );
 
