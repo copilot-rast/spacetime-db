@@ -5,7 +5,7 @@ import { getConn, useRows } from './conn.ts';
 import { date, digits, errorText, latin, num, numeric, phone as fmtPhone, t, useLocale } from './i18n.ts';
 import { closeSettings, openSettings, run, runToast, trText, useLanguages, useRoute, useSession, type Tr } from './app.ts';
 import { GROUPS, SECTIONS } from './nav.tsx';
-import { Empty, ErrBox, Field, ListSkeleton, Notice, NumInput, SaveButton, Skel, TrInputs, confirmAsk, trMissingDefault, useEscape } from './ui.tsx';
+import { Empty, ErrBox, Field, ListSkeleton, Notice, NumInput, SaveButton, Skel, Switch, TrInputs, confirmAsk, trMissingDefault, useEscape } from './ui.tsx';
 import {
   CategoryDialog,
   KeyTypeDialog,
@@ -24,6 +24,7 @@ import {
   type TestPhoneRow,
 } from './dialogs.tsx';
 import { openWizard } from './shell.tsx';
+import { AdminLoginSection, AccountRulesSection, AppVersionsSection, CountriesSection, EconomySettingsSection, PaymentMethodsSection, ReportRulesSection, ReportTitlesSection } from './settings2.tsx';
 
 export function SettingsWindow() {
   const route = useRoute();
@@ -36,7 +37,7 @@ export function SettingsWindow() {
   useEffect(() => {
     if (route.settings && !allowed.some(s => s.id === route.settings) && allowed[0]) openSettings(allowed[0].id);
   }, [route.settings, allowed.length]);
-  const ro = section ? section.need === 'operator' && !can('admin') : false;
+  const ro = section ? !can('admin') : false;
   return createPortal(
     <div className="layer" data-testid="settings">
       <div className="scrim" onClick={closeSettings} />
@@ -89,6 +90,14 @@ export function SettingsWindow() {
             {section?.id === 'test-phones' && <TestPhonesSection />}
             {section?.id === 'sandbox' && <SandboxSection />}
             {section?.id === 'otp' && <OtpSection ro={ro} />}
+            {section?.id === 'admin-login' && <AdminLoginSection />}
+            {section?.id === 'account-rules' && <AccountRulesSection ro={ro} />}
+            {section?.id === 'app-versions' && <AppVersionsSection ro={ro} />}
+            {section?.id === 'countries' && <CountriesSection ro={ro} />}
+            {section?.id === 'report-titles' && <ReportTitlesSection ro={ro} />}
+            {section?.id === 'report-rules' && <ReportRulesSection ro={ro} />}
+            {section?.id === 'payment-methods' && <PaymentMethodsSection />}
+            {section?.id === 'economy-settings' && <EconomySettingsSection />}
           </div>
         </div>
       </div>
@@ -490,6 +499,7 @@ function CategoriesSection(props: { ro: boolean }) {
 
 function TagsSection(props: { ro: boolean }) {
   const all = useRows('tag');
+  const metas = useRows('tagMeta');
   const { def } = useLanguages();
   const f = useKeyTypeFilter('tag');
   const [edit, setEdit] = useState<TagRow | 'new' | null>(null);
@@ -523,6 +533,18 @@ function TagsSection(props: { ro: boolean }) {
                   </span>
                 </div>
                 {!x.isActive && <span className="badge">{t('inactive')}</span>}
+                {x.keyType === 'user' && (
+                  <label className="check small" title={t('tgVisibleOn')}>
+                    <Switch
+                      checked={!!metas.find(m => m.tagId === x.id)?.isPublic}
+                      disabled={props.ro}
+                      label={t('tgVisible')}
+                      testId={`tg-public-${x.key}`}
+                      onChange={v => runToast(c => c.reducers.adminSetTagVisibility({ tagId: x.id, isPublic: v }), t('saved'))}
+                    />
+                    {t('tgVisible')}
+                  </label>
+                )}
                 {!props.ro && (
                   <div className="row-actions">
                     <RowBtn label={t('edit')} icon={<PencilSimple className="ic" />} onClick={() => setEdit(x)} testId={`tg-edit-${x.key}`} />

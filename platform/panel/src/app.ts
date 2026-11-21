@@ -10,9 +10,13 @@ export function useSession() {
   const me = useRows('me')[0];
   const roleRow = useRows('myRole')[0];
   const role = roleRow?.role ?? '';
+  const admins = useRows('adminAdmins');
+  const self = me ? admins.find(a => a.accountId === me.id) : undefined;
   return {
     me,
     role,
+    username: self?.username ?? '',
+    isEnv: !!self?.isEnv,
     can: (need: 'operator' | 'admin' | 'owner') => (RANK[role] ?? 0) >= RANK[need],
   };
 }
@@ -145,6 +149,10 @@ export function setTheme(t: Theme) {
   applyTheme();
   themeListeners.forEach(f => f());
 }
+
+window.addEventListener('storage', e => {
+  if (e.key === 'stg.theme' && (e.newValue === 'light' || e.newValue === 'dark') && e.newValue !== theme) setTheme(e.newValue);
+});
 
 export function useTheme() {
   return useSyncExternalStore(

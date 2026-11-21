@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { ArrowsClockwise, Database, LockKey, Moon, PlugsConnected, SignOut, Sun, Translate } from '@phosphor-icons/react';
+import { ArrowsClockwise, Database, Eye, EyeSlash, LockKey, Moon, PlugsConnected, SignOut, Sun, Translate } from '@phosphor-icons/react';
 import { connect, defaultServer, forgetCfg, resetToken, saveCfg, useSnap } from './conn.ts';
-import { digits, errorText, latin, parseError, phone as fmtPhone, setLocale, t, useLocale, type ErrInfo } from './i18n.ts';
+import { errorText, parseError, phone as fmtPhone, setLocale, t, useLocale, type ErrInfo } from './i18n.ts';
 import { runToast, setTheme, useBrand, useCountdown, useSession, useTheme } from './app.ts';
 import { ErrBox, Field, SaveButton, Skel, Spinner } from './ui.tsx';
 
@@ -140,51 +140,24 @@ function BrandHead(props: { title: string; sub?: string }) {
   );
 }
 
-type Sent = { phone: string; codeLength: number; expiresAt: number; resendAt: number };
-
-export function LoginScreen() {
-  const [phone, setPhone] = useState('');
-  const [sent, setSent] = useState<Sent | null>(null);
-  const [code, setCode] = useState('');
+function PasswordLogin() {
+  const snap = useSnap();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<ErrInfo | null>(null);
-  const [retryUntil, setRetryUntil] = useState(0);
-  const [attempts, setAttempts] = useState<number | null>(null);
-  const retryLeft = useCountdown(retryUntil);
-  const resendLeft = useCountdown(sent?.resendAt ?? 0);
-  const expiresLeft = useCountdown(sent?.expiresAt ?? 0);
-  const snap = useSnap();
-
-  async function request(p: string) {
+  const [lockUntil, setLockUntil] = useState(0);
+  const lockLeft = useCountdown(lockUntil);
+  async function submit() {
     if (!snap.conn) return;
     setBusy(true);
     setErr(null);
     try {
-      const r = await snap.conn.procedures.requestOtp({ phone: latin(p) });
-      const now = Date.now();
-      setSent({ phone: r.phone, codeLength: r.codeLength, expiresAt: now + r.expiresInSec * 1000, resendAt: now + r.retryAfterSec * 1000 });
-      setCode('');
-      setAttempts(null);
-    } catch (e) {
-      const info = parseError(e);
-      if (info.code === 'RETRY_LATER' && info.seconds) setRetryUntil(Date.now() + info.seconds * 1000);
-      setErr(info);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function verify() {
-    if (!snap.conn || !sent) return;
-    setBusy(true);
-    setErr(null);
-    try {
-      const r = await snap.conn.procedures.verifyOtp({ phone: sent.phone, code: latin(code) });
+      const r = await snap.conn.procedures.adminLogin({ username: username.trim(), password });
       if (!r.ok) {
+        if (r.error === 'TOO_MANY_ATTEMPTS') setLockUntil(Date.now() + r.retryAfterSec * 1000);
         setErr({ code: r.error, raw: r.error });
-        if (r.error === 'WRONG_CODE') setAttempts(r.attemptsLeft);
-        else setAttempts(null);
-        if (r.error !== 'WRONG_CODE') setCode('');
       }
     } catch (e) {
       setErr(parseError(e));
@@ -192,93 +165,51 @@ export function LoginScreen() {
       setBusy(false);
     }
   }
+  const msg = err ? (err.code === 'TOO_MANY_ATTEMPTS' ? (lockLeft > 0 ? t('lgLocked', { s: lockLeft }) : null) : errorText(err)) : null;
+  return (
+    <form
+      className="auth-card"
+      data-testid="login-password"
+      onSubmit={e => {
+        e.preventDefault();
+        submit();
+      }}
+    >
+      <BrandHead title={t('loginTitle')} />
+      <Field label={t('lgUsername')} htmlFor="l-user">
+        <input id="l-user" name="username" className="input ltr" style={{ height: 44 }} value={username} onChange={e => setUsername(e.target.value)} autoComplete="username" autoFocus />
+      </Field>
+      <Field label={t('lgPassword')} htmlFor="l-pass">
+        <div className="input-group">
+          <input
+            id="l-pass"
+            name="password"
+            className="input ltr grow"
+            style={{ height: 44 }}
+            type={show ? 'text' : 'password'}
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+          <button type="button" className="btn btn-outline btn-icon" style={{ height: 44, width: 44 }} onClick={() => setShow(!show)} aria-label={show ? t('lgHide') : t('lgShow')} aria-pressed={show} data-testid="login-pass-toggle">
+            {show ? <EyeSlash className="ic" /> : <Eye className="ic" />}
+          </button>
+        </div>
+      </Field>
+      <ErrBox text={msg} />
+      <button type="submit" className="btn btn-primary btn-block" disabled={busy || !username.trim() || !password || lockLeft > 0} data-testid="login-pass-go">
+        {busy && <Spinner />}
+        {lockLeft > 0 ? t('lgLocked', { s: lockLeft }) : t('lgSignIn')}
+      </button>
+    </form>
+  );
+}
 
-  const errMsg = err ? (err.code === 'RETRY_LATER' ? (retryLeft > 0 ? errorText(err, retryLeft) : null) : errorText(err)) : null;
-  const needNewCode = err && ['NO_CODE', 'EXPIRED', 'TOO_MANY_ATTEMPTS'].includes(err.code);
-
+export function LoginScreen() {
   return (
     <div className="auth">
       <Corner />
-      {!sent ? (
-        <form
-          className="auth-card"
-          data-testid="login-phone"
-          onSubmit={e => {
-            e.preventDefault();
-            request(phone);
-          }}
-        >
-          <BrandHead title={t('loginTitle')} sub={t('loginPhoneHint')} />
-          <Field label={t('loginPhone')} htmlFor="l-phone">
-            <input
-              id="l-phone"
-              name="phone"
-              className="input ltr"
-              style={{ height: 44, fontSize: 16 }}
-              value={phone}
-              onChange={e => setPhone(e.target.value)}
-              inputMode="tel"
-              autoComplete="tel"
-              placeholder={digits('09123456789')}
-              autoFocus
-            />
-          </Field>
-          <ErrBox text={errMsg} />
-          <button type="submit" className="btn btn-primary btn-block" disabled={busy || !phone.trim() || retryLeft > 0} data-testid="login-send">
-            {busy && <Spinner />}
-            {retryLeft > 0 ? t('loginResendIn', { s: retryLeft }) : t('loginSend')}
-          </button>
-        </form>
-      ) : (
-        <form
-          className="auth-card"
-          data-testid="login-code"
-          onSubmit={e => {
-            e.preventDefault();
-            verify();
-          }}
-        >
-          <BrandHead title={t('loginCode', { n: sent.codeLength })} sub={t('loginCodeSent', { phone: fmtPhone(sent.phone) })} />
-          <div className="field">
-            <input
-              name="code"
-              className="input otp-input"
-              value={code}
-              onChange={e => setCode(e.target.value.replace(/[^0-9۰-۹٠-٩]/g, '').slice(0, sent.codeLength))}
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              aria-label={t('loginCode', { n: sent.codeLength })}
-              maxLength={sent.codeLength}
-              autoFocus
-            />
-            <div className="row small muted">
-              <span className="grow">{expiresLeft > 0 ? t('loginExpiresIn', { s: expiresLeft }) : ''}</span>
-              {attempts !== null && <span data-testid="attempts-left">{t('loginAttemptsLeft', { n: attempts })}</span>}
-            </div>
-          </div>
-          <ErrBox text={errMsg} />
-          <button type="submit" className="btn btn-primary btn-block" disabled={busy || latin(code).length !== sent.codeLength || !!needNewCode} data-testid="login-verify">
-            {busy && <Spinner />}
-            {t('loginVerify')}
-          </button>
-          <div className="row">
-            <button
-              type="button"
-              className="btn"
-              onClick={() => {
-                setSent(null);
-                setErr(null);
-              }}
-            >
-              {t('loginChangePhone')}
-            </button>
-            <span className="grow" />
-            <button type="button" className="btn" disabled={busy || resendLeft > 0 || retryLeft > 0} onClick={() => request(sent.phone)} data-testid="login-resend">
-              {resendLeft > 0 ? t('loginResendIn', { s: resendLeft }) : retryLeft > 0 ? t('loginResendIn', { s: retryLeft }) : t('loginResend')}
-            </button>
-          </div>
-        </form>
-      )}
+      <PasswordLogin />
     </div>
   );
 }

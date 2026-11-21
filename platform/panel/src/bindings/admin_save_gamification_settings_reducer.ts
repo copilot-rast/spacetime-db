@@ -11,6 +11,8 @@ import {
 } from "spacetimedb";
 
 export default {
-  phone: __t.string(),
-  role: __t.string(),
+  weekStart: __t.u8(),
+  playerRateLimit: __t.u32(),
+  retentionDays: __t.u32(),
+  chainDepth: __t.u8(),
 };
