@@ -199,6 +199,9 @@ function bumpCounter(ctx: GTx, accountId: bigint, typeKey: string, window: strin
   else ctx.db.eventCounter.insert({ key, accountId, typeKey, window, count: 1, sum: value, max: value });
 }
 
+export type EventHook = (ctx: GTx, accountId: bigint, key: string, value: number, metadata: string, eventId: bigint, source: string) => void;
+export const eventHooks: EventHook[] = [];
+
 export function recordEvent(raw: unknown, accountId: bigint, key: string, value = 1, metadata = '', source = 'server', depth = 0): Outcome | undefined {
   const ctx = raw as GTx;
   const s = gamSettings(ctx);
@@ -232,6 +235,7 @@ export function recordEvent(raw: unknown, accountId: bigint, key: string, value 
   applyTasks(ctx, accountId, key, value, now, depth, out);
   applyAchievements(ctx, accountId, key, value, depth, out);
   applyStreaks(ctx, accountId, key, now, depth, out);
+  for (const h of eventHooks) h(ctx, accountId, key, value, metadata, ev.id, source);
   return out;
 }
 
