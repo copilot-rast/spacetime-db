@@ -534,7 +534,9 @@ test('english locale shows publication pages in English with Latin digits', asyn
   await open(page, 'news-sources');
   await expect(page.locator('.page-title')).toHaveText('Webhook sources');
   await open(page, 'messages');
-  await expect(page.getByTestId('page-messages')).not.toContainText(/[۰-۹]/);
+  await expect(page.locator('.page-sub')).toContainText(/^\d+ messages in the outbox$/);
+  await expect(page.locator('.page-sub')).not.toContainText(/[۰-۹]/);
+  await expect(page.getByTestId('msg-table').locator('tbody tr td').first()).not.toContainText(/[۰-۹]/);
 });
 
 test('support role sees only the dashboard and can change its own password', async ({ page }) => {
