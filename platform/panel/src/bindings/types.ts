@@ -179,6 +179,18 @@ export type AdminFriendRules = __Infer<typeof AdminFriendRules>;
 export const AdminFriendSettings = __t.object("AdminFriendSettings", {});
 export type AdminFriendSettings = __Infer<typeof AdminFriendSettings>;
 
+export const AdminGameRooms = __t.object("AdminGameRooms", {});
+export type AdminGameRooms = __Infer<typeof AdminGameRooms>;
+
+export const AdminGameServers = __t.object("AdminGameServers", {});
+export type AdminGameServers = __Infer<typeof AdminGameServers>;
+
+export const AdminGames = __t.object("AdminGames", {});
+export type AdminGames = __Infer<typeof AdminGames>;
+
+export const AdminGamesSettings = __t.object("AdminGamesSettings", {});
+export type AdminGamesSettings = __Infer<typeof AdminGamesSettings>;
+
 export const AdminGamificationSettings = __t.object("AdminGamificationSettings", {});
 export type AdminGamificationSettings = __Infer<typeof AdminGamificationSettings>;
 
@@ -220,6 +232,9 @@ export type AdminGiftables = __Infer<typeof AdminGiftables>;
 
 export const AdminItemsSettings = __t.object("AdminItemsSettings", {});
 export type AdminItemsSettings = __Infer<typeof AdminItemsSettings>;
+
+export const AdminLeaderboards = __t.object("AdminLeaderboards", {});
+export type AdminLeaderboards = __Infer<typeof AdminLeaderboards>;
 
 export const AdminLevelTables = __t.object("AdminLevelTables", {});
 export type AdminLevelTables = __Infer<typeof AdminLevelTables>;
@@ -2043,6 +2058,514 @@ export const GamUserTaskgroup = __t.object("GamUserTaskgroup", {
 });
 export type GamUserTaskgroup = __Infer<typeof GamUserTaskgroup>;
 
+export const GameCheckResult = __t.object("GameCheckResult", {
+  eligible: __t.bool(),
+  error: __t.string(),
+  get missing() {
+    return __t.array(GameMissing);
+  },
+  get products() {
+    return __t.array(GameOffer);
+  },
+  message: __t.string(),
+});
+export type GameCheckResult = __Infer<typeof GameCheckResult>;
+
+export const GameJoinResult = __t.object("GameJoinResult", {
+  ticketId: __t.u64(),
+  matchId: __t.u64(),
+  status: __t.string(),
+  existing: __t.bool(),
+  code: __t.string(),
+  feeCurrency: __t.string(),
+  fee: __t.i64(),
+  consumedItems: __t.array(__t.string()),
+  consumedMetas: __t.array(__t.string()),
+});
+export type GameJoinResult = __Infer<typeof GameJoinResult>;
+
+export const GameListEntry = __t.object("GameListEntry", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  realtime: __t.bool(),
+  maintenance: __t.bool(),
+  get maintenanceMessage() {
+    return __t.array(Translation);
+  },
+  sort: __t.i32(),
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  minPlayers: __t.u8(),
+  maxPlayers: __t.u8(),
+  turnSeconds: __t.u32(),
+  matchSeconds: __t.u32(),
+  botsAllowed: __t.bool(),
+  friendAllowed: __t.bool(),
+  platforms: __t.array(__t.string()),
+  get minVersions() {
+    return __t.array(GameMinVersion);
+  },
+  settings: __t.string(),
+  get requirements() {
+    return GameRequirements;
+  },
+  eligible: __t.bool(),
+  get paths() {
+    return __t.array(GamePathState);
+  },
+  get rooms() {
+    return __t.array(GameRoomEntry);
+  },
+});
+export type GameListEntry = __Infer<typeof GameListEntry>;
+
+export const GameMatchDetail = __t.object("GameMatchDetail", {
+  get match() {
+    return GamesMatch;
+  },
+  get tickets() {
+    return __t.array(GamesTicket);
+  },
+  get payouts() {
+    return __t.array(GamesPayout);
+  },
+});
+export type GameMatchDetail = __Infer<typeof GameMatchDetail>;
+
+export const GameMatchLine = __t.object("GameMatchLine", {
+  id: __t.u64(),
+  gameKey: __t.string(),
+  roomKey: __t.string(),
+  path: __t.string(),
+  state: __t.string(),
+  bots: __t.u8(),
+  get players() {
+    return __t.array(GameMatchPlayer);
+  },
+  myRank: __t.u32(),
+  myOutcome: __t.string(),
+  reason: __t.string(),
+  createdAt: __t.u64(),
+  startedAt: __t.u64(),
+  endedAt: __t.u64(),
+});
+export type GameMatchLine = __Infer<typeof GameMatchLine>;
+
+export const GameMatchPage = __t.object("GameMatchPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(GamesMatch);
+  },
+});
+export type GameMatchPage = __Infer<typeof GameMatchPage>;
+
+export const GameMatchPlayer = __t.object("GameMatchPlayer", {
+  name: __t.string(),
+  me: __t.bool(),
+  ready: __t.bool(),
+  left: __t.bool(),
+  rank: __t.u32(),
+  score: __t.f64(),
+  outcome: __t.string(),
+});
+export type GameMatchPlayer = __Infer<typeof GameMatchPlayer>;
+
+export const GameMatchResult = __t.object("GameMatchResult", {
+  accountId: __t.u64(),
+  rank: __t.u32(),
+  score: __t.f64(),
+});
+export type GameMatchResult = __Infer<typeof GameMatchResult>;
+
+export const GameMetaRequirement = __t.object("GameMetaRequirement", {
+  metaKey: __t.string(),
+  operator: __t.string(),
+  value: __t.f64(),
+  consume: __t.f64(),
+});
+export type GameMetaRequirement = __Infer<typeof GameMetaRequirement>;
+
+export const GameMinVersion = __t.object("GameMinVersion", {
+  platform: __t.string(),
+  version: __t.string(),
+});
+export type GameMinVersion = __Infer<typeof GameMinVersion>;
+
+export const GameMissing = __t.object("GameMissing", {
+  type: __t.string(),
+  mode: __t.string(),
+  keys: __t.array(__t.string()),
+  key: __t.string(),
+  operator: __t.string(),
+  value: __t.f64(),
+  have: __t.f64(),
+  consume: __t.f64(),
+  minLevel: __t.u32(),
+  level: __t.u32(),
+});
+export type GameMissing = __Infer<typeof GameMissing>;
+
+export const GameOffer = __t.object("GameOffer", {
+  productId: __t.u64(),
+  key: __t.string(),
+  satisfies: __t.array(__t.string()),
+});
+export type GameOffer = __Infer<typeof GameOffer>;
+
+export const GamePathState = __t.object("GamePathState", {
+  path: __t.string(),
+  available: __t.bool(),
+  eligible: __t.bool(),
+  get missing() {
+    return __t.array(GameMissing);
+  },
+  get products() {
+    return __t.array(GameOffer);
+  },
+});
+export type GamePathState = __Infer<typeof GamePathState>;
+
+export const GamePayoutPage = __t.object("GamePayoutPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(GamesPayout);
+  },
+});
+export type GamePayoutPage = __Infer<typeof GamePayoutPage>;
+
+export const GamePlayerHistory = __t.object("GamePlayerHistory", {
+  get tickets() {
+    return __t.array(GamesTicket);
+  },
+  get payouts() {
+    return __t.array(GamesPayout);
+  },
+});
+export type GamePlayerHistory = __Infer<typeof GamePlayerHistory>;
+
+export const GameRequirements = __t.object("GameRequirements", {
+  itemKeys: __t.array(__t.string()),
+  itemsMode: __t.string(),
+  consumeItems: __t.bool(),
+  tagIds: __t.array(__t.u64()),
+  tagsMode: __t.string(),
+  excludeTagIds: __t.array(__t.u64()),
+  minLevel: __t.u32(),
+  get metas() {
+    return __t.array(GameMetaRequirement);
+  },
+  productIds: __t.array(__t.u64()),
+  paths: __t.array(__t.string()),
+  refund: __t.string(),
+  lock: __t.string(),
+  get message() {
+    return __t.array(Translation);
+  },
+});
+export type GameRequirements = __Infer<typeof GameRequirements>;
+
+export const GameRoomEntry = __t.object("GameRoomEntry", {
+  roomId: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  entryCurrency: __t.string(),
+  entryFee: __t.i64(),
+  prizeId: __t.u64(),
+  prizeGroupId: __t.u64(),
+  minLevel: __t.u32(),
+  levelLocked: __t.bool(),
+  isLocked: __t.bool(),
+  inheritsGame: __t.bool(),
+  get requirements() {
+    return GameRequirements;
+  },
+  consumes: __t.bool(),
+  eligible: __t.bool(),
+  get paths() {
+    return __t.array(GamePathState);
+  },
+  get message() {
+    return __t.array(Translation);
+  },
+  sort: __t.i32(),
+});
+export type GameRoomEntry = __Infer<typeof GameRoomEntry>;
+
+export const GameTicketLine = __t.object("GameTicketLine", {
+  id: __t.u64(),
+  gameKey: __t.string(),
+  roomKey: __t.string(),
+  path: __t.string(),
+  code: __t.string(),
+  host: __t.bool(),
+  status: __t.string(),
+  matchId: __t.u64(),
+  feeCurrency: __t.string(),
+  fee: __t.i64(),
+  createdAt: __t.u64(),
+});
+export type GameTicketLine = __Infer<typeof GameTicketLine>;
+
+export const GamesGame = __t.object("GamesGame", {
+  id: __t.u64(),
+  key: __t.string(),
+  registered: __t.bool(),
+  realtime: __t.bool(),
+  codeName: __t.string(),
+  settingsSchema: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  isActive: __t.bool(),
+  maintenance: __t.bool(),
+  get maintenanceMessage() {
+    return __t.array(Translation);
+  },
+  sort: __t.i32(),
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  minPlayers: __t.u8(),
+  maxPlayers: __t.u8(),
+  turnSeconds: __t.u32(),
+  matchSeconds: __t.u32(),
+  botsAllowed: __t.bool(),
+  botAfterSeconds: __t.u32(),
+  friendAllowed: __t.bool(),
+  platforms: __t.array(__t.string()),
+  get minVersions() {
+    return __t.array(GameMinVersion);
+  },
+  skillMetaKey: __t.string(),
+  bandSize: __t.u32(),
+  widenEverySeconds: __t.u32(),
+  widenStep: __t.u32(),
+  maxBand: __t.u32(),
+  fillAfterSeconds: __t.u32(),
+  settings: __t.string(),
+  get requirements() {
+    return GameRequirements;
+  },
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type GamesGame = __Infer<typeof GamesGame>;
+
+export const GamesLbPeriod = __t.object("GamesLbPeriod", {
+  id: __t.u64(),
+  uniq: __t.string(),
+  boardId: __t.u64(),
+  period: __t.string(),
+  reason: __t.string(),
+  paid: __t.bool(),
+  players: __t.u32(),
+  rewarded: __t.u32(),
+  startedAt: __t.u64(),
+  endedAt: __t.u64(),
+});
+export type GamesLbPeriod = __Infer<typeof GamesLbPeriod>;
+
+export const GamesLbResult = __t.object("GamesLbResult", {
+  id: __t.u64(),
+  periodId: __t.u64(),
+  boardId: __t.u64(),
+  accountId: __t.u64(),
+  rank: __t.u32(),
+  score: __t.f64(),
+  prizeId: __t.u64(),
+  prizeGroupId: __t.u64(),
+});
+export type GamesLbResult = __Infer<typeof GamesLbResult>;
+
+export const GamesLbScore = __t.object("GamesLbScore", {
+  id: __t.u64(),
+  uniq: __t.string(),
+  boardId: __t.u64(),
+  period: __t.string(),
+  accountId: __t.u64(),
+  score: __t.f64(),
+  rank: __t.u32(),
+  writes: __t.u32(),
+  updatedAt: __t.u64(),
+});
+export type GamesLbScore = __Infer<typeof GamesLbScore>;
+
+export const GamesLeaderboard = __t.object("GamesLeaderboard", {
+  id: __t.u64(),
+  key: __t.string(),
+  gameId: __t.u64(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  period: __t.string(),
+  scoreMode: __t.string(),
+  order: __t.string(),
+  source: __t.string(),
+  topN: __t.u32(),
+  get rewards() {
+    return __t.array(LeaderboardReward);
+  },
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  currentPeriod: __t.string(),
+  periodStartedAt: __t.u64(),
+  resets: __t.u32(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type GamesLeaderboard = __Infer<typeof GamesLeaderboard>;
+
+export const GamesList = __t.object("GamesList", {});
+export type GamesList = __Infer<typeof GamesList>;
+
+export const GamesMatch = __t.object("GamesMatch", {
+  id: __t.u64(),
+  gameId: __t.u64(),
+  roomId: __t.u64(),
+  gameKey: __t.string(),
+  roomKey: __t.string(),
+  path: __t.string(),
+  state: __t.string(),
+  players: __t.array(__t.u64()),
+  bots: __t.u8(),
+  skillMin: __t.f64(),
+  skillMax: __t.f64(),
+  reason: __t.string(),
+  createdAt: __t.u64(),
+  startedAt: __t.u64(),
+  endedAt: __t.u64(),
+});
+export type GamesMatch = __Infer<typeof GamesMatch>;
+
+export const GamesPayout = __t.object("GamesPayout", {
+  id: __t.u64(),
+  uniq: __t.string(),
+  kind: __t.string(),
+  refId: __t.u64(),
+  accountId: __t.u64(),
+  prizeId: __t.u64(),
+  prizeGroupId: __t.u64(),
+  status: __t.string(),
+  attempts: __t.u8(),
+  error: __t.string(),
+  rewards: __t.string(),
+  createdAt: __t.timestamp(),
+  grantedAt: __t.option(__t.timestamp()),
+});
+export type GamesPayout = __Infer<typeof GamesPayout>;
+
+export const GamesPayoutTimer = __t.object("GamesPayoutTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type GamesPayoutTimer = __Infer<typeof GamesPayoutTimer>;
+
+export const GamesRoom = __t.object("GamesRoom", {
+  id: __t.u64(),
+  gameId: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  entryCurrency: __t.string(),
+  entryFee: __t.i64(),
+  prizeId: __t.u64(),
+  prizeGroupId: __t.u64(),
+  minLevel: __t.u32(),
+  isLocked: __t.bool(),
+  isHidden: __t.bool(),
+  isActive: __t.bool(),
+  inheritGame: __t.bool(),
+  get requirements() {
+    return GameRequirements;
+  },
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type GamesRoom = __Infer<typeof GamesRoom>;
+
+export const GamesRunResult = __t.object("GamesRunResult", {
+  matches: __t.u32(),
+  expired: __t.u32(),
+  cancelled: __t.u32(),
+  boards: __t.u32(),
+  paid: __t.u32(),
+});
+export type GamesRunResult = __Infer<typeof GamesRunResult>;
+
+export const GamesServer = __t.object("GamesServer", {
+  identity: __t.identity(),
+  note: __t.string(),
+  isActive: __t.bool(),
+  createdBy: __t.u64(),
+  createdAt: __t.timestamp(),
+});
+export type GamesServer = __Infer<typeof GamesServer>;
+
+export const GamesSettings = __t.object("GamesSettings", {
+  id: __t.u8(),
+  ticketTtlSeconds: __t.u32(),
+  startTimeoutSeconds: __t.u32(),
+  playTimeoutSeconds: __t.u32(),
+  maxTicketsPerPlayer: __t.u8(),
+  payoutMaxTries: __t.u8(),
+  weekStart: __t.u8(),
+  monthCalendar: __t.string(),
+  historyDays: __t.u32(),
+  clockOffsetSec: __t.i64(),
+  updatedAt: __t.timestamp(),
+});
+export type GamesSettings = __Infer<typeof GamesSettings>;
+
+export const GamesTickTimer = __t.object("GamesTickTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type GamesTickTimer = __Infer<typeof GamesTickTimer>;
+
+export const GamesTicket = __t.object("GamesTicket", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  gameId: __t.u64(),
+  roomId: __t.u64(),
+  path: __t.string(),
+  code: __t.string(),
+  host: __t.bool(),
+  status: __t.string(),
+  skill: __t.f64(),
+  matchId: __t.u64(),
+  feeCurrency: __t.string(),
+  fee: __t.i64(),
+  feeRefunded: __t.bool(),
+  consumed: __t.string(),
+  refund: __t.string(),
+  ticketsReturned: __t.bool(),
+  ready: __t.bool(),
+  rank: __t.u32(),
+  score: __t.f64(),
+  outcome: __t.string(),
+  createdAt: __t.u64(),
+  updatedAt: __t.u64(),
+});
+export type GamesTicket = __Infer<typeof GamesTicket>;
+
 export const GiftCount = __t.object("GiftCount", {
   key: __t.string(),
   count: __t.u32(),
@@ -2679,6 +3202,124 @@ export const ItemsUserOffer = __t.object("ItemsUserOffer", {
 });
 export type ItemsUserOffer = __Infer<typeof ItemsUserOffer>;
 
+export const LeaderboardHistoryLine = __t.object("LeaderboardHistoryLine", {
+  boardKey: __t.string(),
+  period: __t.string(),
+  endedAt: __t.u64(),
+  players: __t.u32(),
+  rank: __t.u32(),
+  score: __t.f64(),
+  prizeId: __t.u64(),
+  prizeGroupId: __t.u64(),
+  payoutStatus: __t.string(),
+});
+export type LeaderboardHistoryLine = __Infer<typeof LeaderboardHistoryLine>;
+
+export const LeaderboardLine = __t.object("LeaderboardLine", {
+  id: __t.u64(),
+  key: __t.string(),
+  gameKey: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  period: __t.string(),
+  currentPeriod: __t.string(),
+  scoreMode: __t.string(),
+  order: __t.string(),
+  topN: __t.u32(),
+  players: __t.u32(),
+  myRank: __t.u32(),
+  myScore: __t.f64(),
+  get rewards() {
+    return __t.array(LeaderboardReward);
+  },
+  sort: __t.i32(),
+});
+export type LeaderboardLine = __Infer<typeof LeaderboardLine>;
+
+export const LeaderboardPeriodPage = __t.object("LeaderboardPeriodPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(GamesLbPeriod);
+  },
+});
+export type LeaderboardPeriodPage = __Infer<typeof LeaderboardPeriodPage>;
+
+export const LeaderboardResultLine = __t.object("LeaderboardResultLine", {
+  get result() {
+    return GamesLbResult;
+  },
+  displayName: __t.string(),
+  payoutStatus: __t.string(),
+  payoutId: __t.u64(),
+});
+export type LeaderboardResultLine = __Infer<typeof LeaderboardResultLine>;
+
+export const LeaderboardReward = __t.object("LeaderboardReward", {
+  fromRank: __t.u32(),
+  toRank: __t.u32(),
+  prizeId: __t.u64(),
+  prizeGroupId: __t.u64(),
+});
+export type LeaderboardReward = __Infer<typeof LeaderboardReward>;
+
+export const LeaderboardStanding = __t.object("LeaderboardStanding", {
+  accountId: __t.u64(),
+  displayName: __t.string(),
+  rank: __t.u32(),
+  score: __t.f64(),
+  writes: __t.u32(),
+});
+export type LeaderboardStanding = __Infer<typeof LeaderboardStanding>;
+
+export const LeaderboardStandingPage = __t.object("LeaderboardStandingPage", {
+  period: __t.string(),
+  total: __t.u32(),
+  get rows() {
+    return __t.array(LeaderboardStanding);
+  },
+});
+export type LeaderboardStandingPage = __Infer<typeof LeaderboardStandingPage>;
+
+export const LeaderboardTop = __t.object("LeaderboardTop", {});
+export type LeaderboardTop = __Infer<typeof LeaderboardTop>;
+
+export const LeaderboardTopLine = __t.object("LeaderboardTopLine", {
+  id: __t.u64(),
+  boardKey: __t.string(),
+  rank: __t.u32(),
+  name: __t.string(),
+  score: __t.f64(),
+  me: __t.bool(),
+});
+export type LeaderboardTopLine = __Infer<typeof LeaderboardTopLine>;
+
+export const LeaderboardWinnerLine = __t.object("LeaderboardWinnerLine", {
+  rank: __t.u32(),
+  name: __t.string(),
+  score: __t.f64(),
+  me: __t.bool(),
+});
+export type LeaderboardWinnerLine = __Infer<typeof LeaderboardWinnerLine>;
+
+export const LeaderboardWinners = __t.object("LeaderboardWinners", {
+  boardKey: __t.string(),
+  period: __t.string(),
+  endedAt: __t.u64(),
+  players: __t.u32(),
+  get winners() {
+    return __t.array(LeaderboardWinnerLine);
+  },
+});
+export type LeaderboardWinners = __Infer<typeof LeaderboardWinners>;
+
+export const Leaderboards = __t.object("Leaderboards", {});
+export type Leaderboards = __Infer<typeof Leaderboards>;
+
 export const Me = __t.object("Me", {});
 export type Me = __Infer<typeof Me>;
 
@@ -2730,6 +3371,9 @@ export type MyFriendRequestsOut = __Infer<typeof MyFriendRequestsOut>;
 export const MyFriends = __t.object("MyFriends", {});
 export type MyFriends = __Infer<typeof MyFriends>;
 
+export const MyGameTickets = __t.object("MyGameTickets", {});
+export type MyGameTickets = __Infer<typeof MyGameTickets>;
+
 export const MyGiftsReceived = __t.object("MyGiftsReceived", {});
 export type MyGiftsReceived = __Infer<typeof MyGiftsReceived>;
 
@@ -2744,6 +3388,9 @@ export type MyInventory = __Infer<typeof MyInventory>;
 
 export const MyLevels = __t.object("MyLevels", {});
 export type MyLevels = __Infer<typeof MyLevels>;
+
+export const MyMatches = __t.object("MyMatches", {});
+export type MyMatches = __Infer<typeof MyMatches>;
 
 export const MyMetaRelations = __t.object("MyMetaRelations", {});
 export type MyMetaRelations = __Infer<typeof MyMetaRelations>;
