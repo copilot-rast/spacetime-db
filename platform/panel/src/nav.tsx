@@ -58,12 +58,24 @@ import {
   Ticket as TicketIc,
   ClipboardText,
   SlidersHorizontal as Sliders2,
+  Broadcast,
+  Tray as TrayIc,
+  Folders,
+  BellRinging,
+  MegaphoneSimple,
+  Robot,
+  Newspaper,
+  ChatsCircle,
+  WebhooksLogo,
+  Question,
+  Rss,
+  Gauge,
 } from '@phosphor-icons/react';
 import { t } from './i18n.ts';
 
-export type Need = 'operator' | 'admin' | 'owner';
+export type Need = 'support' | 'operator' | 'admin' | 'owner';
 
-export type ModeId = 'overview' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'access' | 'settings';
+export type ModeId = 'overview' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication' | 'access' | 'settings';
 
 export type PageDef = { id: string; path: string; mode: ModeId; label: () => string; icon: Icon; need: Need };
 
@@ -74,12 +86,13 @@ export const MODES: { id: ModeId; label: () => string; icon: Icon }[] = [
   { id: 'progress', label: () => t('navProgress'), icon: Trophy },
   { id: 'items', label: () => t('navItemsMode'), icon: Backpack },
   { id: 'promo', label: () => t('navPromo'), icon: Megaphone },
+  { id: 'publication', label: () => t('navPublication'), icon: Broadcast },
   { id: 'access', label: () => t('navAccess'), icon: ShieldCheck },
   { id: 'settings', label: () => t('navSettings'), icon: GearSix },
 ];
 
 export const PAGES: PageDef[] = [
-  { id: 'dashboard', path: 'dashboard', mode: 'overview', label: () => t('navDashboard'), icon: ChartPieSlice, need: 'operator' },
+  { id: 'dashboard', path: 'dashboard', mode: 'overview', label: () => t('navDashboard'), icon: ChartPieSlice, need: 'support' },
   { id: 'players', path: 'players', mode: 'players', label: () => t('navPlayersList'), icon: Users, need: 'operator' },
   { id: 'restrictions', path: 'restrictions', mode: 'players', label: () => t('navRestrictions'), icon: Prohibit, need: 'operator' },
   { id: 'reports', path: 'reports', mode: 'players', label: () => t('navReports'), icon: Flag, need: 'operator' },
@@ -109,11 +122,20 @@ export const PAGES: PageDef[] = [
   { id: 'sponsors', path: 'sponsors', mode: 'promo', label: () => t('navSponsors'), icon: Handshake, need: 'operator' },
   { id: 'chance-games', path: 'chance-games', mode: 'promo', label: () => t('navChanceGames'), icon: TicketIc, need: 'operator' },
   { id: 'chance-plays', path: 'chance-plays', mode: 'promo', label: () => t('navChancePlays'), icon: ReceiptIc, need: 'operator' },
+  { id: 'messages', path: 'messages', mode: 'publication', label: () => t('navMessages'), icon: TrayIc, need: 'operator' },
+  { id: 'campaigns', path: 'campaigns', mode: 'publication', label: () => t('navCampaigns'), icon: MegaphoneSimple, need: 'operator' },
+  { id: 'auto-rules', path: 'auto-rules', mode: 'publication', label: () => t('navAutoRules'), icon: Robot, need: 'operator' },
+  { id: 'notify-categories', path: 'notify-categories', mode: 'publication', label: () => t('navNotifyCategories'), icon: Folders, need: 'operator' },
+  { id: 'push', path: 'push', mode: 'publication', label: () => t('navPush'), icon: BellRinging, need: 'operator' },
+  { id: 'news', path: 'news', mode: 'publication', label: () => t('navNews'), icon: Newspaper, need: 'operator' },
+  { id: 'news-comments', path: 'news-comments', mode: 'publication', label: () => t('navNewsComments'), icon: ChatsCircle, need: 'operator' },
+  { id: 'news-sources', path: 'news-sources', mode: 'publication', label: () => t('navNewsSources'), icon: WebhooksLogo, need: 'operator' },
+  { id: 'faq', path: 'faq', mode: 'publication', label: () => t('navFaq'), icon: Question, need: 'operator' },
   { id: 'admins', path: 'admins', mode: 'access', label: () => t('navAdmins'), icon: IdentificationBadge, need: 'operator' },
   { id: 'audit', path: 'audit', mode: 'access', label: () => t('navAudit'), icon: ClockCounterClockwise, need: 'admin' },
 ];
 
-export type SectionDef = { id: string; group: 'project' | 'content' | 'login' | 'players' | 'economy' | 'progress' | 'items' | 'promo'; label: () => string; icon: Icon; need: Need };
+export type SectionDef = { id: string; group: 'project' | 'content' | 'login' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication'; label: () => string; icon: Icon; need: Need };
 
 export const SECTIONS: SectionDef[] = [
   { id: 'brand', group: 'project', label: () => t('stBrand'), icon: Palette, need: 'operator' },
@@ -138,6 +160,9 @@ export const SECTIONS: SectionDef[] = [
   { id: 'items-settings', group: 'items', label: () => t('stItemsSettings'), icon: Backpack, need: 'operator' },
   { id: 'offer-settings', group: 'items', label: () => t('stOfferSettings'), icon: Sparkle, need: 'operator' },
   { id: 'promo-settings', group: 'promo', label: () => t('stPromoSettings'), icon: Megaphone, need: 'operator' },
+  { id: 'pub-settings', group: 'publication', label: () => t('stPubSettings'), icon: Gauge, need: 'operator' },
+  { id: 'news-settings', group: 'publication', label: () => t('stNewsSettings'), icon: Newspaper, need: 'operator' },
+  { id: 'public-feeds', group: 'publication', label: () => t('stPublicFeeds'), icon: Rss, need: 'operator' },
 ];
 
 export const GROUPS: { id: SectionDef['group']; label: () => string }[] = [
@@ -149,6 +174,7 @@ export const GROUPS: { id: SectionDef['group']; label: () => string }[] = [
   { id: 'progress', label: () => t('navProgress') },
   { id: 'items', label: () => t('navItemsMode') },
   { id: 'promo', label: () => t('navPromo') },
+  { id: 'publication', label: () => t('navPublication') },
 ];
 
 export function pageMode(page: string): ModeId {

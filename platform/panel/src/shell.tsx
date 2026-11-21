@@ -26,7 +26,8 @@ export function Shell(props: { children: ReactNode; crumbs: string[] }) {
   const { brand, name, mark } = useBrand();
   const snap = useSnap();
   const settings = useRows('adminSettings')[0];
-  const modSum = useFetch(() => getConn().procedures.adminModerationSummary({}), [route.page]);
+  const staff = can('operator');
+  const modSum = useFetch(() => (staff ? getConn().procedures.adminModerationSummary({}) : Promise.resolve(null)), [route.page, staff]);
   const openReports = modSum.data ? modSum.data.reportsOpen : 0;
   const [drawer, setDrawer] = useState(false);
   const [mode, setMode] = useState<ModeId>(pageMode(route.page));
@@ -38,7 +39,11 @@ export function Shell(props: { children: ReactNode; crumbs: string[] }) {
   useLocale();
 
   useEffect(() => setMode(route.settings !== null ? 'settings' : pageMode(route.page)), [route.page, route.settings]);
-  useEffect(() => setDrawer(false), [route.page, route.settings, route.query.toString()]);
+  const keepDrawer = useRef(false);
+  useEffect(() => {
+    if (keepDrawer.current) keepDrawer.current = false;
+    else setDrawer(false);
+  }, [route.page, route.settings, route.query.toString()]);
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
@@ -62,7 +67,7 @@ export function Shell(props: { children: ReactNode; crumbs: string[] }) {
         <div className="rail-brand" title={name}>
           {brand?.iconUrl || brand?.logoUrl ? <img src={brand.iconUrl || brand.logoUrl} alt="" /> : mark}
         </div>
-        {MODES.map(m => {
+        {MODES.filter(m => (m.id === 'settings' ? sections.length > 0 : PAGES.some(p => p.mode === m.id && can(p.need)))).map(m => {
           const Icon = m.icon;
           return (
             <button
@@ -77,8 +82,10 @@ export function Shell(props: { children: ReactNode; crumbs: string[] }) {
                 setMode(m.id);
                 if (m.id === 'settings') return;
                 const first = PAGES.find(p => p.mode === m.id && can(p.need));
-                if (first && pageMode(route.page) !== m.id) go(first.path);
-                if (route.settings !== null && first) go(first.path);
+                if (first && (pageMode(route.page) !== m.id || route.settings !== null)) {
+                  keepDrawer.current = drawer;
+                  go(first.path);
+                }
               }}
             >
               <Icon className="ic" weight="duotone" />
@@ -145,7 +152,7 @@ export function Shell(props: { children: ReactNode; crumbs: string[] }) {
               const Icon = p.icon;
               const cur = route.settings === null && isCurrent(p.path, route.page, route.query);
               return (
-                <button key={p.id} type="button" className="nav" aria-current={cur ? 'page' : undefined} onClick={() => go(p.path)} data-testid={`side-${p.id}`}>
+                <button key={p.id} type="button" className="nav" aria-current={cur ? 'page' : undefined} onClick={() => { setDrawer(false); go(p.path); }} data-testid={`side-${p.id}`}>
                   <Icon className="ic" weight={cur ? 'duotone' : 'regular'} />
                   <span className="nav-label">{p.label()}</span>
                   {p.id === 'reports' && openReports > 0 && (

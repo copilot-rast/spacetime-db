@@ -12,6 +12,8 @@ import { PlayerPage, PlayersList, Reports, Restrictions } from './moderation.tsx
 import { Achievements, Claims, EventLog, EventRules, EventTypes, LevelTables, MetaRelations, Streaks, TaskGroups, Tasks } from './progress.tsx';
 import { ItemTypes, Items, Offers } from './itemsui.tsx';
 import { Banners, ChanceGames, ChancePlays, Placements, SponsorReport, Sponsors } from './promo.tsx';
+import { AutoRules, Campaigns, Messages, NotifyCategories, PushPage } from './pubnotify.tsx';
+import { Faq, News, NewsComments, NewsSources } from './pubnews.tsx';
 import { Currencies, EconomyOverview, Gifts, Metas, Payments, PrizeGroups, Prizes, Products } from './economy.tsx';
 import { SettingsWindow } from './settings.tsx';
 import { Wizard } from './wizard.tsx';
@@ -73,6 +75,15 @@ function Panel() {
     'sponsor-report': () => <SponsorReport key={route.query.get('id') ?? ''} />,
     'chance-games': () => <ChanceGames />,
     'chance-plays': () => <ChancePlays />,
+    messages: () => <Messages />,
+    campaigns: () => <Campaigns />,
+    'auto-rules': () => <AutoRules />,
+    'notify-categories': () => <NotifyCategories />,
+    push: () => <PushPage />,
+    news: () => <News />,
+    'news-comments': () => <NewsComments />,
+    'news-sources': () => <NewsSources />,
+    faq: () => <Faq />,
     admins: () => <Admins />,
     audit: () => <Audit />,
   };

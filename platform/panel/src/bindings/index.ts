@@ -38,8 +38,14 @@ import AdminAdjustReducer from "./admin_adjust_reducer";
 import AdminBulkPlayerTagsReducer from "./admin_bulk_player_tags_reducer";
 import AdminCancelCampaignReducer from "./admin_cancel_campaign_reducer";
 import AdminChangeMyPasswordReducer from "./admin_change_my_password_reducer";
+import AdminChatReadReducer from "./admin_chat_read_reducer";
+import AdminChatSendReducer from "./admin_chat_send_reducer";
+import AdminChatTakeReducer from "./admin_chat_take_reducer";
+import AdminChatTransferReducer from "./admin_chat_transfer_reducer";
+import AdminChatTypingReducer from "./admin_chat_typing_reducer";
 import AdminClearLoginLocksReducer from "./admin_clear_login_locks_reducer";
 import AdminClearSandboxSmsReducer from "./admin_clear_sandbox_sms_reducer";
+import AdminCloseGroupReducer from "./admin_close_group_reducer";
 import AdminCompleteSetupReducer from "./admin_complete_setup_reducer";
 import AdminCompleteTaskReducer from "./admin_complete_task_reducer";
 import AdminCreateUserReducer from "./admin_create_user_reducer";
@@ -50,13 +56,18 @@ import AdminDeleteBannerReducer from "./admin_delete_banner_reducer";
 import AdminDeleteCampaignReducer from "./admin_delete_campaign_reducer";
 import AdminDeleteCategoryReducer from "./admin_delete_category_reducer";
 import AdminDeleteChanceGameReducer from "./admin_delete_chance_game_reducer";
+import AdminDeleteChatMessageReducer from "./admin_delete_chat_message_reducer";
+import AdminDeleteChatWordReducer from "./admin_delete_chat_word_reducer";
 import AdminDeleteCommentReducer from "./admin_delete_comment_reducer";
+import AdminDeleteConfigKeyReducer from "./admin_delete_config_key_reducer";
 import AdminDeleteCountryReducer from "./admin_delete_country_reducer";
 import AdminDeleteCurrencyReducer from "./admin_delete_currency_reducer";
 import AdminDeleteEventRuleReducer from "./admin_delete_event_rule_reducer";
 import AdminDeleteEventTypeReducer from "./admin_delete_event_type_reducer";
 import AdminDeleteFaqReducer from "./admin_delete_faq_reducer";
+import AdminDeleteFriendRuleReducer from "./admin_delete_friend_rule_reducer";
 import AdminDeleteGiftReducer from "./admin_delete_gift_reducer";
+import AdminDeleteGiftRuleReducer from "./admin_delete_gift_rule_reducer";
 import AdminDeleteItemReducer from "./admin_delete_item_reducer";
 import AdminDeleteItemTypeReducer from "./admin_delete_item_type_reducer";
 import AdminDeleteKeyTypeReducer from "./admin_delete_key_type_reducer";
@@ -73,11 +84,15 @@ import AdminDeletePrizeReducer from "./admin_delete_prize_reducer";
 import AdminDeletePrizeGroupReducer from "./admin_delete_prize_group_reducer";
 import AdminDeleteProductReducer from "./admin_delete_product_reducer";
 import AdminDeleteProductRuleReducer from "./admin_delete_product_rule_reducer";
+import AdminDeleteQuotaRuleReducer from "./admin_delete_quota_rule_reducer";
 import AdminDeleteReactionTypeReducer from "./admin_delete_reaction_type_reducer";
 import AdminDeleteReportTitleReducer from "./admin_delete_report_title_reducer";
+import AdminDeleteRoomReducer from "./admin_delete_room_reducer";
 import AdminDeleteSmsProviderReducer from "./admin_delete_sms_provider_reducer";
 import AdminDeleteSponsorReducer from "./admin_delete_sponsor_reducer";
 import AdminDeleteStreakReducer from "./admin_delete_streak_reducer";
+import AdminDeleteSupportCannedReducer from "./admin_delete_support_canned_reducer";
+import AdminDeleteSupportDepartmentReducer from "./admin_delete_support_department_reducer";
 import AdminDeleteTagReducer from "./admin_delete_tag_reducer";
 import AdminDeleteTaskReducer from "./admin_delete_task_reducer";
 import AdminDeleteTaskGroupReducer from "./admin_delete_task_group_reducer";
@@ -89,6 +104,11 @@ import AdminGiveAchievementReducer from "./admin_give_achievement_reducer";
 import AdminGiveItemReducer from "./admin_give_item_reducer";
 import AdminLiftRestrictionReducer from "./admin_lift_restriction_reducer";
 import AdminModerateCommentReducer from "./admin_moderate_comment_reducer";
+import AdminQuotaGrantReducer from "./admin_quota_grant_reducer";
+import AdminQuotaResetReducer from "./admin_quota_reset_reducer";
+import AdminQuotaRevokeLotReducer from "./admin_quota_revoke_lot_reducer";
+import AdminRejectReferralReducer from "./admin_reject_referral_reducer";
+import AdminRemoveFriendshipReducer from "./admin_remove_friendship_reducer";
 import AdminReportNoteReducer from "./admin_report_note_reducer";
 import AdminReportStatusReducer from "./admin_report_status_reducer";
 import AdminResetDailyOffersReducer from "./admin_reset_daily_offers_reducer";
@@ -96,9 +116,12 @@ import AdminResetEntryOfferReducer from "./admin_reset_entry_offer_reducer";
 import AdminResetStreakReducer from "./admin_reset_streak_reducer";
 import AdminResetTaskReducer from "./admin_reset_task_reducer";
 import AdminResolveReportReducer from "./admin_resolve_report_reducer";
+import AdminRestoreChatMessageReducer from "./admin_restore_chat_message_reducer";
 import AdminRestrictReducer from "./admin_restrict_reducer";
+import AdminReverseFriendGiftReducer from "./admin_reverse_friend_gift_reducer";
 import AdminReviewNewsReducer from "./admin_review_news_reducer";
 import AdminRevokeAchievementReducer from "./admin_revoke_achievement_reducer";
+import AdminRollbackConfigReducer from "./admin_rollback_config_reducer";
 import AdminSaveAccountRulesReducer from "./admin_save_account_rules_reducer";
 import AdminSaveAchievementReducer from "./admin_save_achievement_reducer";
 import AdminSaveAppVersionReducer from "./admin_save_app_version_reducer";
@@ -108,14 +131,21 @@ import AdminSaveBrandReducer from "./admin_save_brand_reducer";
 import AdminSaveCampaignReducer from "./admin_save_campaign_reducer";
 import AdminSaveCategoryReducer from "./admin_save_category_reducer";
 import AdminSaveChanceGameReducer from "./admin_save_chance_game_reducer";
+import AdminSaveChatSettingsReducer from "./admin_save_chat_settings_reducer";
+import AdminSaveChatWordReducer from "./admin_save_chat_word_reducer";
+import AdminSaveConfigKeyReducer from "./admin_save_config_key_reducer";
 import AdminSaveCountryReducer from "./admin_save_country_reducer";
 import AdminSaveCurrencyReducer from "./admin_save_currency_reducer";
 import AdminSaveEconomySettingsReducer from "./admin_save_economy_settings_reducer";
 import AdminSaveEventRuleReducer from "./admin_save_event_rule_reducer";
 import AdminSaveEventTypeReducer from "./admin_save_event_type_reducer";
 import AdminSaveFaqReducer from "./admin_save_faq_reducer";
+import AdminSaveFriendRuleReducer from "./admin_save_friend_rule_reducer";
+import AdminSaveFriendSettingsReducer from "./admin_save_friend_settings_reducer";
 import AdminSaveGamificationSettingsReducer from "./admin_save_gamification_settings_reducer";
 import AdminSaveGiftReducer from "./admin_save_gift_reducer";
+import AdminSaveGiftRuleReducer from "./admin_save_gift_rule_reducer";
+import AdminSaveGiftSettingsReducer from "./admin_save_gift_settings_reducer";
 import AdminSaveItemReducer from "./admin_save_item_reducer";
 import AdminSaveItemTypeReducer from "./admin_save_item_type_reducer";
 import AdminSaveItemsSettingsReducer from "./admin_save_items_settings_reducer";
@@ -140,13 +170,20 @@ import AdminSaveProductRuleReducer from "./admin_save_product_rule_reducer";
 import AdminSavePromoSettingsReducer from "./admin_save_promo_settings_reducer";
 import AdminSavePublicationSettingsReducer from "./admin_save_publication_settings_reducer";
 import AdminSavePushConfigReducer from "./admin_save_push_config_reducer";
+import AdminSaveQuotaRuleReducer from "./admin_save_quota_rule_reducer";
+import AdminSaveQuotaSettingsReducer from "./admin_save_quota_settings_reducer";
 import AdminSaveReactionTypeReducer from "./admin_save_reaction_type_reducer";
+import AdminSaveReferralSettingsReducer from "./admin_save_referral_settings_reducer";
 import AdminSaveReportRulesReducer from "./admin_save_report_rules_reducer";
 import AdminSaveReportTitleReducer from "./admin_save_report_title_reducer";
+import AdminSaveRoomReducer from "./admin_save_room_reducer";
 import AdminSaveSettingsReducer from "./admin_save_settings_reducer";
 import AdminSaveSmsProviderReducer from "./admin_save_sms_provider_reducer";
 import AdminSaveSponsorReducer from "./admin_save_sponsor_reducer";
 import AdminSaveStreakReducer from "./admin_save_streak_reducer";
+import AdminSaveSupportCannedReducer from "./admin_save_support_canned_reducer";
+import AdminSaveSupportDepartmentReducer from "./admin_save_support_department_reducer";
+import AdminSaveSupportSettingsReducer from "./admin_save_support_settings_reducer";
 import AdminSaveTagReducer from "./admin_save_tag_reducer";
 import AdminSaveTaskReducer from "./admin_save_task_reducer";
 import AdminSaveTaskGroupReducer from "./admin_save_task_group_reducer";
@@ -156,28 +193,68 @@ import AdminSetAccountStatusReducer from "./admin_set_account_status_reducer";
 import AdminSetClockOffsetReducer from "./admin_set_clock_offset_reducer";
 import AdminSetCountryActiveReducer from "./admin_set_country_active_reducer";
 import AdminSetDefaultLanguageReducer from "./admin_set_default_language_reducer";
+import AdminSetGiftableReducer from "./admin_set_giftable_reducer";
 import AdminSetItemsClockOffsetReducer from "./admin_set_items_clock_offset_reducer";
 import AdminSetPlayerTagsReducer from "./admin_set_player_tags_reducer";
 import AdminSetPromoClockOffsetReducer from "./admin_set_promo_clock_offset_reducer";
 import AdminSetPublicationClockOffsetReducer from "./admin_set_publication_clock_offset_reducer";
+import AdminSetSocialClockOffsetReducer from "./admin_set_social_clock_offset_reducer";
+import AdminSetSupportClockOffsetReducer from "./admin_set_support_clock_offset_reducer";
 import AdminSetTagVisibilityReducer from "./admin_set_tag_visibility_reducer";
 import AdminSetUserActiveReducer from "./admin_set_user_active_reducer";
 import AdminSetUserPasswordReducer from "./admin_set_user_password_reducer";
 import AdminSetUserRoleReducer from "./admin_set_user_role_reducer";
+import AdminSocialRunReducer from "./admin_social_run_reducer";
+import AdminSupportAssignReducer from "./admin_support_assign_reducer";
+import AdminSupportFocusReducer from "./admin_support_focus_reducer";
+import AdminSupportHeartbeatReducer from "./admin_support_heartbeat_reducer";
+import AdminSupportReplyReducer from "./admin_support_reply_reducer";
+import AdminSupportStatusReducer from "./admin_support_status_reducer";
+import AdminSupportTakeReducer from "./admin_support_take_reducer";
 import AdminTakeItemReducer from "./admin_take_item_reducer";
+import ChatDeleteMessageReducer from "./chat_delete_message_reducer";
+import ChatGroupAddReducer from "./chat_group_add_reducer";
+import ChatGroupRemoveReducer from "./chat_group_remove_reducer";
+import ChatGroupRenameReducer from "./chat_group_rename_reducer";
+import ChatJoinRoomReducer from "./chat_join_room_reducer";
+import ChatLeaveReducer from "./chat_leave_reducer";
+import ChatMarkReadReducer from "./chat_mark_read_reducer";
+import FriendAcceptReducer from "./friend_accept_reducer";
+import FriendBlockReducer from "./friend_block_reducer";
+import FriendCancelReducer from "./friend_cancel_reducer";
+import FriendDeclineReducer from "./friend_decline_reducer";
+import FriendRemoveReducer from "./friend_remove_reducer";
+import FriendUnblockReducer from "./friend_unblock_reducer";
+import GiftAcceptReducer from "./gift_accept_reducer";
+import GiftCancelReducer from "./gift_cancel_reducer";
+import GiftDeclineReducer from "./gift_decline_reducer";
 import InboxDeleteReducer from "./inbox_delete_reducer";
 import InboxReadReducer from "./inbox_read_reducer";
 import LogoutReducer from "./logout_reducer";
 import NewsCommentDeleteReducer from "./news_comment_delete_reducer";
 import NotifyPrefsSetReducer from "./notify_prefs_set_reducer";
 import PushUnregisterReducer from "./push_unregister_reducer";
+import SetMyClientReducer from "./set_my_client_reducer";
 import SetMyCountryReducer from "./set_my_country_reducer";
+import SupportChatCloseReducer from "./support_chat_close_reducer";
+import SupportChatRateReducer from "./support_chat_rate_reducer";
+import SupportChatSeenReducer from "./support_chat_seen_reducer";
+import SupportChatSendReducer from "./support_chat_send_reducer";
+import SupportChatTypingReducer from "./support_chat_typing_reducer";
+import SupportTicketRateReducer from "./support_ticket_rate_reducer";
+import SupportTicketReplyReducer from "./support_ticket_reply_reducer";
+import SupportTicketResolveReducer from "./support_ticket_resolve_reducer";
+import SupportTicketSeenReducer from "./support_ticket_seen_reducer";
 import SyncEconomyReducer from "./sync_economy_reducer";
 import SyncItemsReducer from "./sync_items_reducer";
 import UpdateProfileReducer from "./update_profile_reducer";
 
 // Import all procedure arg schemas
+import * as ActivityMineProcedure from "./activity_mine_procedure";
 import * as AdminAccountsProcedure from "./admin_accounts_procedure";
+import * as AdminActivityProcedure from "./admin_activity_procedure";
+import * as AdminActivitySummaryProcedure from "./admin_activity_summary_procedure";
+import * as AdminApproveReferralProcedure from "./admin_approve_referral_procedure";
 import * as AdminAuditProcedure from "./admin_audit_procedure";
 import * as AdminAutoFiresProcedure from "./admin_auto_fires_procedure";
 import * as AdminBannerPreviewProcedure from "./admin_banner_preview_procedure";
@@ -185,10 +262,18 @@ import * as AdminBannerStatsProcedure from "./admin_banner_stats_procedure";
 import * as AdminCampaignDeliveriesProcedure from "./admin_campaign_deliveries_procedure";
 import * as AdminCampaignPreviewProcedure from "./admin_campaign_preview_procedure";
 import * as AdminChancePlaysProcedure from "./admin_chance_plays_procedure";
+import * as AdminChatCloseProcedure from "./admin_chat_close_procedure";
+import * as AdminChatGroupsProcedure from "./admin_chat_groups_procedure";
+import * as AdminChatsProcedure from "./admin_chats_procedure";
 import * as AdminClaimsProcedure from "./admin_claims_procedure";
+import * as AdminConfigHistoryProcedure from "./admin_config_history_procedure";
+import * as AdminConfigPreviewProcedure from "./admin_config_preview_procedure";
 import * as AdminDashboardProcedure from "./admin_dashboard_procedure";
 import * as AdminEconomySummaryProcedure from "./admin_economy_summary_procedure";
 import * as AdminEventLogProcedure from "./admin_event_log_procedure";
+import * as AdminFriendGiftProcedure from "./admin_friend_gift_procedure";
+import * as AdminFriendGiftReportProcedure from "./admin_friend_gift_report_procedure";
+import * as AdminFriendGiftsProcedure from "./admin_friend_gifts_procedure";
 import * as AdminGamificationSummaryProcedure from "./admin_gamification_summary_procedure";
 import * as AdminGiftsProcedure from "./admin_gifts_procedure";
 import * as AdminGrantPrizeProcedure from "./admin_grant_prize_procedure";
@@ -202,24 +287,38 @@ import * as AdminOutboxProcedure from "./admin_outbox_procedure";
 import * as AdminPaymentProcedure from "./admin_payment_procedure";
 import * as AdminPaymentsProcedure from "./admin_payments_procedure";
 import * as AdminPlayerProcedure from "./admin_player_procedure";
+import * as AdminPlayerFriendsProcedure from "./admin_player_friends_procedure";
 import * as AdminPlayerOffersProcedure from "./admin_player_offers_procedure";
 import * as AdminPlayerProgressProcedure from "./admin_player_progress_procedure";
+import * as AdminPlayerQuotaProcedure from "./admin_player_quota_procedure";
 import * as AdminPlayersProcedure from "./admin_players_procedure";
 import * as AdminProductsProcedure from "./admin_products_procedure";
 import * as AdminPublicationRunProcedure from "./admin_publication_run_procedure";
 import * as AdminPushDevicesProcedure from "./admin_push_devices_procedure";
 import * as AdminPushJwtPreviewProcedure from "./admin_push_jwt_preview_procedure";
 import * as AdminPushLogProcedure from "./admin_push_log_procedure";
+import * as AdminQuotaReportProcedure from "./admin_quota_report_procedure";
 import * as AdminRecordEventProcedure from "./admin_record_event_procedure";
+import * as AdminReferralSummaryProcedure from "./admin_referral_summary_procedure";
+import * as AdminReferralTreeProcedure from "./admin_referral_tree_procedure";
+import * as AdminReferralsProcedure from "./admin_referrals_procedure";
 import * as AdminReportProcedure from "./admin_report_procedure";
 import * as AdminReportsProcedure from "./admin_reports_procedure";
 import * as AdminRestrictionsProcedure from "./admin_restrictions_procedure";
 import * as AdminRetryClaimProcedure from "./admin_retry_claim_procedure";
 import * as AdminRetryGrantProcedure from "./admin_retry_grant_procedure";
+import * as AdminSocialMessageProcedure from "./admin_social_message_procedure";
+import * as AdminSocialMessagesProcedure from "./admin_social_messages_procedure";
 import * as AdminSponsorReportProcedure from "./admin_sponsor_report_procedure";
 import * as AdminSponsorReportCsvProcedure from "./admin_sponsor_report_csv_procedure";
+import * as AdminSupportCreateTicketProcedure from "./admin_support_create_ticket_procedure";
+import * as AdminSupportRunProcedure from "./admin_support_run_procedure";
+import * as AdminSupportSummaryProcedure from "./admin_support_summary_procedure";
+import * as AdminTestChatFilterProcedure from "./admin_test_chat_filter_procedure";
 import * as AdminTestNotificationProcedure from "./admin_test_notification_procedure";
 import * as AdminTestSmsProcedure from "./admin_test_sms_procedure";
+import * as AdminTicketProcedure from "./admin_ticket_procedure";
+import * as AdminTicketsProcedure from "./admin_tickets_procedure";
 import * as AdminUserEconomyProcedure from "./admin_user_economy_procedure";
 import * as AdminUserItemsProcedure from "./admin_user_items_procedure";
 import * as BannerClickProcedure from "./banner_click_procedure";
@@ -230,11 +329,20 @@ import * as ChanceGamesProcedure from "./chance_games_procedure";
 import * as ChanceNextPlayTimeProcedure from "./chance_next_play_time_procedure";
 import * as ChancePlayProcedure from "./chance_play_procedure";
 import * as ChancePlayWithTicketProcedure from "./chance_play_with_ticket_procedure";
+import * as ChatCreateGroupProcedure from "./chat_create_group_procedure";
+import * as ChatHistoryProcedure from "./chat_history_procedure";
+import * as ChatQuotaProcedure from "./chat_quota_procedure";
+import * as ChatReportProcedure from "./chat_report_procedure";
+import * as ChatSendProcedure from "./chat_send_procedure";
 import * as CheckAppVersionProcedure from "./check_app_version_procedure";
 import * as ClaimAchievementProcedure from "./claim_achievement_procedure";
 import * as ClaimRewardProcedure from "./claim_reward_procedure";
 import * as ClaimTaskProcedure from "./claim_task_procedure";
 import * as FaqListProcedure from "./faq_list_procedure";
+import * as FriendRequestProcedure from "./friend_request_procedure";
+import * as FriendRulesProcedure from "./friend_rules_procedure";
+import * as GiftOptionsProcedure from "./gift_options_procedure";
+import * as GiftSendProcedure from "./gift_send_procedure";
 import * as InboxClaimProcedure from "./inbox_claim_procedure";
 import * as ItemBuyProcedure from "./item_buy_procedure";
 import * as ItemEquipProcedure from "./item_equip_procedure";
@@ -268,11 +376,17 @@ import * as PurchaseSubmitProcedure from "./purchase_submit_procedure";
 import * as PushRegisterProcedure from "./push_register_procedure";
 import * as RecordEventProcedure from "./record_event_procedure";
 import * as RedeemGiftProcedure from "./redeem_gift_procedure";
+import * as ReferralEnterProcedure from "./referral_enter_procedure";
+import * as ReferralMeProcedure from "./referral_me_procedure";
+import * as RemoteConfigProcedure from "./remote_config_procedure";
 import * as ReportPlayerProcedure from "./report_player_procedure";
 import * as RequestOtpProcedure from "./request_otp_procedure";
 import * as SponsorClickProcedure from "./sponsor_click_procedure";
 import * as SponsorViewProcedure from "./sponsor_view_procedure";
 import * as SponsorsProcedure from "./sponsors_procedure";
+import * as SupportChatOpenProcedure from "./support_chat_open_procedure";
+import * as SupportInfoProcedure from "./support_info_procedure";
+import * as SupportTicketCreateProcedure from "./support_ticket_create_procedure";
 import * as TaskGroupNextProcedure from "./task_group_next_procedure";
 import * as VerifyOtpProcedure from "./verify_otp_procedure";
 
@@ -283,10 +397,20 @@ import AdminAdminsRow from "./admin_admins_table";
 import AdminAutoRulesRow from "./admin_auto_rules_table";
 import AdminBannersRow from "./admin_banners_table";
 import AdminCampaignsRow from "./admin_campaigns_table";
+import AdminChatMessagesRow from "./admin_chat_messages_table";
+import AdminChatQueueRow from "./admin_chat_queue_table";
+import AdminChatSettingsRow from "./admin_chat_settings_table";
+import AdminChatWordsRow from "./admin_chat_words_table";
+import AdminConfigKeysRow from "./admin_config_keys_table";
 import AdminEconomySettingsRow from "./admin_economy_settings_table";
 import AdminEventRulesRow from "./admin_event_rules_table";
 import AdminFaqsRow from "./admin_faqs_table";
+import AdminFriendRulesRow from "./admin_friend_rules_table";
+import AdminFriendSettingsRow from "./admin_friend_settings_table";
 import AdminGamificationSettingsRow from "./admin_gamification_settings_table";
+import AdminGiftRulesRow from "./admin_gift_rules_table";
+import AdminGiftSettingsRow from "./admin_gift_settings_table";
+import AdminGiftablesRow from "./admin_giftables_table";
 import AdminItemsSettingsRow from "./admin_items_settings_table";
 import AdminLevelTablesRow from "./admin_level_tables_table";
 import AdminMetaRelationsRow from "./admin_meta_relations_table";
@@ -299,19 +423,29 @@ import AdminPaymentMethodsRow from "./admin_payment_methods_table";
 import AdminPromoSettingsRow from "./admin_promo_settings_table";
 import AdminPublicationSettingsRow from "./admin_publication_settings_table";
 import AdminPushConfigRow from "./admin_push_config_table";
+import AdminQuotaRulesRow from "./admin_quota_rules_table";
+import AdminQuotaSettingsRow from "./admin_quota_settings_table";
+import AdminReferralSettingsRow from "./admin_referral_settings_table";
 import AdminReportRulesRow from "./admin_report_rules_table";
+import AdminRoomsRow from "./admin_rooms_table";
 import AdminSandboxSmsRow from "./admin_sandbox_sms_table";
 import AdminSettingsRow from "./admin_settings_table";
 import AdminSmsProvidersRow from "./admin_sms_providers_table";
 import AdminSponsorsRow from "./admin_sponsors_table";
 import AdminStreaksRow from "./admin_streaks_table";
+import AdminSupportAgentsRow from "./admin_support_agents_table";
+import AdminSupportCannedRow from "./admin_support_canned_table";
+import AdminSupportDepartmentsRow from "./admin_support_departments_table";
+import AdminSupportSettingsRow from "./admin_support_settings_table";
 import AdminTaskGroupsRow from "./admin_task_groups_table";
 import AdminTasksRow from "./admin_tasks_table";
 import AdminTestPhonesRow from "./admin_test_phones_table";
+import AdminTicketThreadRow from "./admin_ticket_thread_table";
 import AppVersionRow from "./app_version_table";
 import BrandRow from "./brand_table";
 import CategoryRow from "./category_table";
 import ChanceGameRow from "./chance_game_table";
+import ChatRoomsRow from "./chat_rooms_table";
 import CountryRow from "./country_table";
 import CurrencyRow from "./currency_table";
 import EventTypeRow from "./event_type_table";
@@ -324,7 +458,18 @@ import LiveNoticeRow from "./live_notice_table";
 import MeRow from "./me_table";
 import MetaRow from "./meta_table";
 import MyAchievementsRow from "./my_achievements_table";
+import MyActivityRow from "./my_activity_table";
+import MyBlockedRow from "./my_blocked_table";
 import MyChancePlaysRow from "./my_chance_plays_table";
+import MyChannelsRow from "./my_channels_table";
+import MyChatLiveRow from "./my_chat_live_table";
+import MyChatMessagesRow from "./my_chat_messages_table";
+import MyChatsRow from "./my_chats_table";
+import MyFriendRequestsInRow from "./my_friend_requests_in_table";
+import MyFriendRequestsOutRow from "./my_friend_requests_out_table";
+import MyFriendsRow from "./my_friends_table";
+import MyGiftsReceivedRow from "./my_gifts_received_table";
+import MyGiftsSentRow from "./my_gifts_sent_table";
 import MyInboxRow from "./my_inbox_table";
 import MyInventoryRow from "./my_inventory_table";
 import MyLevelsRow from "./my_levels_table";
@@ -333,10 +478,15 @@ import MyMetasRow from "./my_metas_table";
 import MyNotifyPrefsRow from "./my_notify_prefs_table";
 import MyProfileRow from "./my_profile_table";
 import MyPushDevicesRow from "./my_push_devices_table";
+import MyReferralRow from "./my_referral_table";
+import MyReferralsRow from "./my_referrals_table";
+import MyRemoteConfigRow from "./my_remote_config_table";
 import MyRewardsRow from "./my_rewards_table";
 import MyRoleRow from "./my_role_table";
 import MyStatusRow from "./my_status_table";
 import MyTagsRow from "./my_tags_table";
+import MyTicketMessagesRow from "./my_ticket_messages_table";
+import MyTicketsRow from "./my_tickets_table";
 import MyWalletRow from "./my_wallet_table";
 import NotifyCategoryRow from "./notify_category_table";
 import PlacementRow from "./placement_table";
@@ -347,6 +497,7 @@ import ReactionTypeRow from "./reaction_type_table";
 import ReportTitleRow from "./report_title_table";
 import ShopRow from "./shop_table";
 import ShopFlagsRow from "./shop_flags_table";
+import SupportDepartmentsRow from "./support_departments_table";
 import TagRow from "./tag_table";
 import TagMetaRow from "./tag_meta_table";
 
@@ -700,6 +851,41 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, AdminCampaignsRow),
+  adminChatMessages: __table({
+    name: 'admin_chat_messages',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminChatMessagesRow),
+  adminChatQueue: __table({
+    name: 'admin_chat_queue',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminChatQueueRow),
+  adminChatSettings: __table({
+    name: 'admin_chat_settings',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminChatSettingsRow),
+  adminChatWords: __table({
+    name: 'admin_chat_words',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminChatWordsRow),
+  adminConfigKeys: __table({
+    name: 'admin_config_keys',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminConfigKeysRow),
   adminEconomySettings: __table({
     name: 'admin_economy_settings',
     indexes: [
@@ -721,6 +907,20 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, AdminFaqsRow),
+  adminFriendRules: __table({
+    name: 'admin_friend_rules',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminFriendRulesRow),
+  adminFriendSettings: __table({
+    name: 'admin_friend_settings',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminFriendSettingsRow),
   adminGamificationSettings: __table({
     name: 'admin_gamification_settings',
     indexes: [
@@ -728,6 +928,27 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, AdminGamificationSettingsRow),
+  adminGiftRules: __table({
+    name: 'admin_gift_rules',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminGiftRulesRow),
+  adminGiftSettings: __table({
+    name: 'admin_gift_settings',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminGiftSettingsRow),
+  adminGiftables: __table({
+    name: 'admin_giftables',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminGiftablesRow),
   adminItemsSettings: __table({
     name: 'admin_items_settings',
     indexes: [
@@ -812,6 +1033,27 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, AdminPushConfigRow),
+  adminQuotaRules: __table({
+    name: 'admin_quota_rules',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminQuotaRulesRow),
+  adminQuotaSettings: __table({
+    name: 'admin_quota_settings',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminQuotaSettingsRow),
+  adminReferralSettings: __table({
+    name: 'admin_referral_settings',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminReferralSettingsRow),
   adminReportRules: __table({
     name: 'admin_report_rules',
     indexes: [
@@ -819,6 +1061,13 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, AdminReportRulesRow),
+  adminRooms: __table({
+    name: 'admin_rooms',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminRoomsRow),
   adminSandboxSms: __table({
     name: 'admin_sandbox_sms',
     indexes: [
@@ -854,6 +1103,34 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, AdminStreaksRow),
+  adminSupportAgents: __table({
+    name: 'admin_support_agents',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminSupportAgentsRow),
+  adminSupportCanned: __table({
+    name: 'admin_support_canned',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminSupportCannedRow),
+  adminSupportDepartments: __table({
+    name: 'admin_support_departments',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminSupportDepartmentsRow),
+  adminSupportSettings: __table({
+    name: 'admin_support_settings',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminSupportSettingsRow),
   adminTaskGroups: __table({
     name: 'admin_task_groups',
     indexes: [
@@ -875,6 +1152,20 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, AdminTestPhonesRow),
+  adminTicketThread: __table({
+    name: 'admin_ticket_thread',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, AdminTicketThreadRow),
+  chatRooms: __table({
+    name: 'chat_rooms',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, ChatRoomsRow),
   faqEntries: __table({
     name: 'faq_entries',
     indexes: [
@@ -896,6 +1187,20 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, MyAchievementsRow),
+  myActivity: __table({
+    name: 'my_activity',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyActivityRow),
+  myBlocked: __table({
+    name: 'my_blocked',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyBlockedRow),
   myChancePlays: __table({
     name: 'my_chance_plays',
     indexes: [
@@ -903,6 +1208,69 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, MyChancePlaysRow),
+  myChannels: __table({
+    name: 'my_channels',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyChannelsRow),
+  myChatLive: __table({
+    name: 'my_chat_live',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyChatLiveRow),
+  myChatMessages: __table({
+    name: 'my_chat_messages',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyChatMessagesRow),
+  myChats: __table({
+    name: 'my_chats',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyChatsRow),
+  myFriendRequestsIn: __table({
+    name: 'my_friend_requests_in',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyFriendRequestsInRow),
+  myFriendRequestsOut: __table({
+    name: 'my_friend_requests_out',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyFriendRequestsOutRow),
+  myFriends: __table({
+    name: 'my_friends',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyFriendsRow),
+  myGiftsReceived: __table({
+    name: 'my_gifts_received',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyGiftsReceivedRow),
+  myGiftsSent: __table({
+    name: 'my_gifts_sent',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyGiftsSentRow),
   myInbox: __table({
     name: 'my_inbox',
     indexes: [
@@ -959,6 +1327,27 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, MyPushDevicesRow),
+  myReferral: __table({
+    name: 'my_referral',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyReferralRow),
+  myReferrals: __table({
+    name: 'my_referrals',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyReferralsRow),
+  myRemoteConfig: __table({
+    name: 'my_remote_config',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyRemoteConfigRow),
   myRewards: __table({
     name: 'my_rewards',
     indexes: [
@@ -987,6 +1376,20 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, MyTagsRow),
+  myTicketMessages: __table({
+    name: 'my_ticket_messages',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyTicketMessagesRow),
+  myTickets: __table({
+    name: 'my_tickets',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, MyTicketsRow),
   myWallet: __table({
     name: 'my_wallet',
     indexes: [
@@ -1008,6 +1411,13 @@ const tablesSchema = __schema({
     constraints: [
     ],
   }, ShopFlagsRow),
+  supportDepartments: __table({
+    name: 'support_departments',
+    indexes: [
+    ],
+    constraints: [
+    ],
+  }, SupportDepartmentsRow),
 });
 
 /** The schema information for all reducers in this module. This is defined the same way as the reducers would have been defined in the server, except the body of the reducer is omitted in code generation. */
@@ -1016,8 +1426,14 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_bulk_player_tags", AdminBulkPlayerTagsReducer),
   __reducerSchema("admin_cancel_campaign", AdminCancelCampaignReducer),
   __reducerSchema("admin_change_my_password", AdminChangeMyPasswordReducer),
+  __reducerSchema("admin_chat_read", AdminChatReadReducer),
+  __reducerSchema("admin_chat_send", AdminChatSendReducer),
+  __reducerSchema("admin_chat_take", AdminChatTakeReducer),
+  __reducerSchema("admin_chat_transfer", AdminChatTransferReducer),
+  __reducerSchema("admin_chat_typing", AdminChatTypingReducer),
   __reducerSchema("admin_clear_login_locks", AdminClearLoginLocksReducer),
   __reducerSchema("admin_clear_sandbox_sms", AdminClearSandboxSmsReducer),
+  __reducerSchema("admin_close_group", AdminCloseGroupReducer),
   __reducerSchema("admin_complete_setup", AdminCompleteSetupReducer),
   __reducerSchema("admin_complete_task", AdminCompleteTaskReducer),
   __reducerSchema("admin_create_user", AdminCreateUserReducer),
@@ -1028,13 +1444,18 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_delete_campaign", AdminDeleteCampaignReducer),
   __reducerSchema("admin_delete_category", AdminDeleteCategoryReducer),
   __reducerSchema("admin_delete_chance_game", AdminDeleteChanceGameReducer),
+  __reducerSchema("admin_delete_chat_message", AdminDeleteChatMessageReducer),
+  __reducerSchema("admin_delete_chat_word", AdminDeleteChatWordReducer),
   __reducerSchema("admin_delete_comment", AdminDeleteCommentReducer),
+  __reducerSchema("admin_delete_config_key", AdminDeleteConfigKeyReducer),
   __reducerSchema("admin_delete_country", AdminDeleteCountryReducer),
   __reducerSchema("admin_delete_currency", AdminDeleteCurrencyReducer),
   __reducerSchema("admin_delete_event_rule", AdminDeleteEventRuleReducer),
   __reducerSchema("admin_delete_event_type", AdminDeleteEventTypeReducer),
   __reducerSchema("admin_delete_faq", AdminDeleteFaqReducer),
+  __reducerSchema("admin_delete_friend_rule", AdminDeleteFriendRuleReducer),
   __reducerSchema("admin_delete_gift", AdminDeleteGiftReducer),
+  __reducerSchema("admin_delete_gift_rule", AdminDeleteGiftRuleReducer),
   __reducerSchema("admin_delete_item", AdminDeleteItemReducer),
   __reducerSchema("admin_delete_item_type", AdminDeleteItemTypeReducer),
   __reducerSchema("admin_delete_key_type", AdminDeleteKeyTypeReducer),
@@ -1051,11 +1472,15 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_delete_prize_group", AdminDeletePrizeGroupReducer),
   __reducerSchema("admin_delete_product", AdminDeleteProductReducer),
   __reducerSchema("admin_delete_product_rule", AdminDeleteProductRuleReducer),
+  __reducerSchema("admin_delete_quota_rule", AdminDeleteQuotaRuleReducer),
   __reducerSchema("admin_delete_reaction_type", AdminDeleteReactionTypeReducer),
   __reducerSchema("admin_delete_report_title", AdminDeleteReportTitleReducer),
+  __reducerSchema("admin_delete_room", AdminDeleteRoomReducer),
   __reducerSchema("admin_delete_sms_provider", AdminDeleteSmsProviderReducer),
   __reducerSchema("admin_delete_sponsor", AdminDeleteSponsorReducer),
   __reducerSchema("admin_delete_streak", AdminDeleteStreakReducer),
+  __reducerSchema("admin_delete_support_canned", AdminDeleteSupportCannedReducer),
+  __reducerSchema("admin_delete_support_department", AdminDeleteSupportDepartmentReducer),
   __reducerSchema("admin_delete_tag", AdminDeleteTagReducer),
   __reducerSchema("admin_delete_task", AdminDeleteTaskReducer),
   __reducerSchema("admin_delete_task_group", AdminDeleteTaskGroupReducer),
@@ -1067,6 +1492,11 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_give_item", AdminGiveItemReducer),
   __reducerSchema("admin_lift_restriction", AdminLiftRestrictionReducer),
   __reducerSchema("admin_moderate_comment", AdminModerateCommentReducer),
+  __reducerSchema("admin_quota_grant", AdminQuotaGrantReducer),
+  __reducerSchema("admin_quota_reset", AdminQuotaResetReducer),
+  __reducerSchema("admin_quota_revoke_lot", AdminQuotaRevokeLotReducer),
+  __reducerSchema("admin_reject_referral", AdminRejectReferralReducer),
+  __reducerSchema("admin_remove_friendship", AdminRemoveFriendshipReducer),
   __reducerSchema("admin_report_note", AdminReportNoteReducer),
   __reducerSchema("admin_report_status", AdminReportStatusReducer),
   __reducerSchema("admin_reset_daily_offers", AdminResetDailyOffersReducer),
@@ -1074,9 +1504,12 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_reset_streak", AdminResetStreakReducer),
   __reducerSchema("admin_reset_task", AdminResetTaskReducer),
   __reducerSchema("admin_resolve_report", AdminResolveReportReducer),
+  __reducerSchema("admin_restore_chat_message", AdminRestoreChatMessageReducer),
   __reducerSchema("admin_restrict", AdminRestrictReducer),
+  __reducerSchema("admin_reverse_friend_gift", AdminReverseFriendGiftReducer),
   __reducerSchema("admin_review_news", AdminReviewNewsReducer),
   __reducerSchema("admin_revoke_achievement", AdminRevokeAchievementReducer),
+  __reducerSchema("admin_rollback_config", AdminRollbackConfigReducer),
   __reducerSchema("admin_save_account_rules", AdminSaveAccountRulesReducer),
   __reducerSchema("admin_save_achievement", AdminSaveAchievementReducer),
   __reducerSchema("admin_save_app_version", AdminSaveAppVersionReducer),
@@ -1086,14 +1519,21 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_save_campaign", AdminSaveCampaignReducer),
   __reducerSchema("admin_save_category", AdminSaveCategoryReducer),
   __reducerSchema("admin_save_chance_game", AdminSaveChanceGameReducer),
+  __reducerSchema("admin_save_chat_settings", AdminSaveChatSettingsReducer),
+  __reducerSchema("admin_save_chat_word", AdminSaveChatWordReducer),
+  __reducerSchema("admin_save_config_key", AdminSaveConfigKeyReducer),
   __reducerSchema("admin_save_country", AdminSaveCountryReducer),
   __reducerSchema("admin_save_currency", AdminSaveCurrencyReducer),
   __reducerSchema("admin_save_economy_settings", AdminSaveEconomySettingsReducer),
   __reducerSchema("admin_save_event_rule", AdminSaveEventRuleReducer),
   __reducerSchema("admin_save_event_type", AdminSaveEventTypeReducer),
   __reducerSchema("admin_save_faq", AdminSaveFaqReducer),
+  __reducerSchema("admin_save_friend_rule", AdminSaveFriendRuleReducer),
+  __reducerSchema("admin_save_friend_settings", AdminSaveFriendSettingsReducer),
   __reducerSchema("admin_save_gamification_settings", AdminSaveGamificationSettingsReducer),
   __reducerSchema("admin_save_gift", AdminSaveGiftReducer),
+  __reducerSchema("admin_save_gift_rule", AdminSaveGiftRuleReducer),
+  __reducerSchema("admin_save_gift_settings", AdminSaveGiftSettingsReducer),
   __reducerSchema("admin_save_item", AdminSaveItemReducer),
   __reducerSchema("admin_save_item_type", AdminSaveItemTypeReducer),
   __reducerSchema("admin_save_items_settings", AdminSaveItemsSettingsReducer),
@@ -1118,13 +1558,20 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_save_promo_settings", AdminSavePromoSettingsReducer),
   __reducerSchema("admin_save_publication_settings", AdminSavePublicationSettingsReducer),
   __reducerSchema("admin_save_push_config", AdminSavePushConfigReducer),
+  __reducerSchema("admin_save_quota_rule", AdminSaveQuotaRuleReducer),
+  __reducerSchema("admin_save_quota_settings", AdminSaveQuotaSettingsReducer),
   __reducerSchema("admin_save_reaction_type", AdminSaveReactionTypeReducer),
+  __reducerSchema("admin_save_referral_settings", AdminSaveReferralSettingsReducer),
   __reducerSchema("admin_save_report_rules", AdminSaveReportRulesReducer),
   __reducerSchema("admin_save_report_title", AdminSaveReportTitleReducer),
+  __reducerSchema("admin_save_room", AdminSaveRoomReducer),
   __reducerSchema("admin_save_settings", AdminSaveSettingsReducer),
   __reducerSchema("admin_save_sms_provider", AdminSaveSmsProviderReducer),
   __reducerSchema("admin_save_sponsor", AdminSaveSponsorReducer),
   __reducerSchema("admin_save_streak", AdminSaveStreakReducer),
+  __reducerSchema("admin_save_support_canned", AdminSaveSupportCannedReducer),
+  __reducerSchema("admin_save_support_department", AdminSaveSupportDepartmentReducer),
+  __reducerSchema("admin_save_support_settings", AdminSaveSupportSettingsReducer),
   __reducerSchema("admin_save_tag", AdminSaveTagReducer),
   __reducerSchema("admin_save_task", AdminSaveTaskReducer),
   __reducerSchema("admin_save_task_group", AdminSaveTaskGroupReducer),
@@ -1134,22 +1581,58 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_set_clock_offset", AdminSetClockOffsetReducer),
   __reducerSchema("admin_set_country_active", AdminSetCountryActiveReducer),
   __reducerSchema("admin_set_default_language", AdminSetDefaultLanguageReducer),
+  __reducerSchema("admin_set_giftable", AdminSetGiftableReducer),
   __reducerSchema("admin_set_items_clock_offset", AdminSetItemsClockOffsetReducer),
   __reducerSchema("admin_set_player_tags", AdminSetPlayerTagsReducer),
   __reducerSchema("admin_set_promo_clock_offset", AdminSetPromoClockOffsetReducer),
   __reducerSchema("admin_set_publication_clock_offset", AdminSetPublicationClockOffsetReducer),
+  __reducerSchema("admin_set_social_clock_offset", AdminSetSocialClockOffsetReducer),
+  __reducerSchema("admin_set_support_clock_offset", AdminSetSupportClockOffsetReducer),
   __reducerSchema("admin_set_tag_visibility", AdminSetTagVisibilityReducer),
   __reducerSchema("admin_set_user_active", AdminSetUserActiveReducer),
   __reducerSchema("admin_set_user_password", AdminSetUserPasswordReducer),
   __reducerSchema("admin_set_user_role", AdminSetUserRoleReducer),
+  __reducerSchema("admin_social_run", AdminSocialRunReducer),
+  __reducerSchema("admin_support_assign", AdminSupportAssignReducer),
+  __reducerSchema("admin_support_focus", AdminSupportFocusReducer),
+  __reducerSchema("admin_support_heartbeat", AdminSupportHeartbeatReducer),
+  __reducerSchema("admin_support_reply", AdminSupportReplyReducer),
+  __reducerSchema("admin_support_status", AdminSupportStatusReducer),
+  __reducerSchema("admin_support_take", AdminSupportTakeReducer),
   __reducerSchema("admin_take_item", AdminTakeItemReducer),
+  __reducerSchema("chat_delete_message", ChatDeleteMessageReducer),
+  __reducerSchema("chat_group_add", ChatGroupAddReducer),
+  __reducerSchema("chat_group_remove", ChatGroupRemoveReducer),
+  __reducerSchema("chat_group_rename", ChatGroupRenameReducer),
+  __reducerSchema("chat_join_room", ChatJoinRoomReducer),
+  __reducerSchema("chat_leave", ChatLeaveReducer),
+  __reducerSchema("chat_mark_read", ChatMarkReadReducer),
+  __reducerSchema("friend_accept", FriendAcceptReducer),
+  __reducerSchema("friend_block", FriendBlockReducer),
+  __reducerSchema("friend_cancel", FriendCancelReducer),
+  __reducerSchema("friend_decline", FriendDeclineReducer),
+  __reducerSchema("friend_remove", FriendRemoveReducer),
+  __reducerSchema("friend_unblock", FriendUnblockReducer),
+  __reducerSchema("gift_accept", GiftAcceptReducer),
+  __reducerSchema("gift_cancel", GiftCancelReducer),
+  __reducerSchema("gift_decline", GiftDeclineReducer),
   __reducerSchema("inbox_delete", InboxDeleteReducer),
   __reducerSchema("inbox_read", InboxReadReducer),
   __reducerSchema("logout", LogoutReducer),
   __reducerSchema("news_comment_delete", NewsCommentDeleteReducer),
   __reducerSchema("notify_prefs_set", NotifyPrefsSetReducer),
   __reducerSchema("push_unregister", PushUnregisterReducer),
+  __reducerSchema("set_my_client", SetMyClientReducer),
   __reducerSchema("set_my_country", SetMyCountryReducer),
+  __reducerSchema("support_chat_close", SupportChatCloseReducer),
+  __reducerSchema("support_chat_rate", SupportChatRateReducer),
+  __reducerSchema("support_chat_seen", SupportChatSeenReducer),
+  __reducerSchema("support_chat_send", SupportChatSendReducer),
+  __reducerSchema("support_chat_typing", SupportChatTypingReducer),
+  __reducerSchema("support_ticket_rate", SupportTicketRateReducer),
+  __reducerSchema("support_ticket_reply", SupportTicketReplyReducer),
+  __reducerSchema("support_ticket_resolve", SupportTicketResolveReducer),
+  __reducerSchema("support_ticket_seen", SupportTicketSeenReducer),
   __reducerSchema("sync_economy", SyncEconomyReducer),
   __reducerSchema("sync_items", SyncItemsReducer),
   __reducerSchema("update_profile", UpdateProfileReducer),
@@ -1157,7 +1640,11 @@ const reducersSchema = __reducers(
 
 /** The schema information for all procedures in this module. This is defined the same way as the procedures would have been defined in the server. */
 const proceduresSchema = __procedures(
+  __procedureSchema("activity_mine", ActivityMineProcedure.params, ActivityMineProcedure.returnType),
   __procedureSchema("admin_accounts", AdminAccountsProcedure.params, AdminAccountsProcedure.returnType),
+  __procedureSchema("admin_activity", AdminActivityProcedure.params, AdminActivityProcedure.returnType),
+  __procedureSchema("admin_activity_summary", AdminActivitySummaryProcedure.params, AdminActivitySummaryProcedure.returnType),
+  __procedureSchema("admin_approve_referral", AdminApproveReferralProcedure.params, AdminApproveReferralProcedure.returnType),
   __procedureSchema("admin_audit", AdminAuditProcedure.params, AdminAuditProcedure.returnType),
   __procedureSchema("admin_auto_fires", AdminAutoFiresProcedure.params, AdminAutoFiresProcedure.returnType),
   __procedureSchema("admin_banner_preview", AdminBannerPreviewProcedure.params, AdminBannerPreviewProcedure.returnType),
@@ -1165,10 +1652,18 @@ const proceduresSchema = __procedures(
   __procedureSchema("admin_campaign_deliveries", AdminCampaignDeliveriesProcedure.params, AdminCampaignDeliveriesProcedure.returnType),
   __procedureSchema("admin_campaign_preview", AdminCampaignPreviewProcedure.params, AdminCampaignPreviewProcedure.returnType),
   __procedureSchema("admin_chance_plays", AdminChancePlaysProcedure.params, AdminChancePlaysProcedure.returnType),
+  __procedureSchema("admin_chat_close", AdminChatCloseProcedure.params, AdminChatCloseProcedure.returnType),
+  __procedureSchema("admin_chat_groups", AdminChatGroupsProcedure.params, AdminChatGroupsProcedure.returnType),
+  __procedureSchema("admin_chats", AdminChatsProcedure.params, AdminChatsProcedure.returnType),
   __procedureSchema("admin_claims", AdminClaimsProcedure.params, AdminClaimsProcedure.returnType),
+  __procedureSchema("admin_config_history", AdminConfigHistoryProcedure.params, AdminConfigHistoryProcedure.returnType),
+  __procedureSchema("admin_config_preview", AdminConfigPreviewProcedure.params, AdminConfigPreviewProcedure.returnType),
   __procedureSchema("admin_dashboard", AdminDashboardProcedure.params, AdminDashboardProcedure.returnType),
   __procedureSchema("admin_economy_summary", AdminEconomySummaryProcedure.params, AdminEconomySummaryProcedure.returnType),
   __procedureSchema("admin_event_log", AdminEventLogProcedure.params, AdminEventLogProcedure.returnType),
+  __procedureSchema("admin_friend_gift", AdminFriendGiftProcedure.params, AdminFriendGiftProcedure.returnType),
+  __procedureSchema("admin_friend_gift_report", AdminFriendGiftReportProcedure.params, AdminFriendGiftReportProcedure.returnType),
+  __procedureSchema("admin_friend_gifts", AdminFriendGiftsProcedure.params, AdminFriendGiftsProcedure.returnType),
   __procedureSchema("admin_gamification_summary", AdminGamificationSummaryProcedure.params, AdminGamificationSummaryProcedure.returnType),
   __procedureSchema("admin_gifts", AdminGiftsProcedure.params, AdminGiftsProcedure.returnType),
   __procedureSchema("admin_grant_prize", AdminGrantPrizeProcedure.params, AdminGrantPrizeProcedure.returnType),
@@ -1182,24 +1677,38 @@ const proceduresSchema = __procedures(
   __procedureSchema("admin_payment", AdminPaymentProcedure.params, AdminPaymentProcedure.returnType),
   __procedureSchema("admin_payments", AdminPaymentsProcedure.params, AdminPaymentsProcedure.returnType),
   __procedureSchema("admin_player", AdminPlayerProcedure.params, AdminPlayerProcedure.returnType),
+  __procedureSchema("admin_player_friends", AdminPlayerFriendsProcedure.params, AdminPlayerFriendsProcedure.returnType),
   __procedureSchema("admin_player_offers", AdminPlayerOffersProcedure.params, AdminPlayerOffersProcedure.returnType),
   __procedureSchema("admin_player_progress", AdminPlayerProgressProcedure.params, AdminPlayerProgressProcedure.returnType),
+  __procedureSchema("admin_player_quota", AdminPlayerQuotaProcedure.params, AdminPlayerQuotaProcedure.returnType),
   __procedureSchema("admin_players", AdminPlayersProcedure.params, AdminPlayersProcedure.returnType),
   __procedureSchema("admin_products", AdminProductsProcedure.params, AdminProductsProcedure.returnType),
   __procedureSchema("admin_publication_run", AdminPublicationRunProcedure.params, AdminPublicationRunProcedure.returnType),
   __procedureSchema("admin_push_devices", AdminPushDevicesProcedure.params, AdminPushDevicesProcedure.returnType),
   __procedureSchema("admin_push_jwt_preview", AdminPushJwtPreviewProcedure.params, AdminPushJwtPreviewProcedure.returnType),
   __procedureSchema("admin_push_log", AdminPushLogProcedure.params, AdminPushLogProcedure.returnType),
+  __procedureSchema("admin_quota_report", AdminQuotaReportProcedure.params, AdminQuotaReportProcedure.returnType),
   __procedureSchema("admin_record_event", AdminRecordEventProcedure.params, AdminRecordEventProcedure.returnType),
+  __procedureSchema("admin_referral_summary", AdminReferralSummaryProcedure.params, AdminReferralSummaryProcedure.returnType),
+  __procedureSchema("admin_referral_tree", AdminReferralTreeProcedure.params, AdminReferralTreeProcedure.returnType),
+  __procedureSchema("admin_referrals", AdminReferralsProcedure.params, AdminReferralsProcedure.returnType),
   __procedureSchema("admin_report", AdminReportProcedure.params, AdminReportProcedure.returnType),
   __procedureSchema("admin_reports", AdminReportsProcedure.params, AdminReportsProcedure.returnType),
   __procedureSchema("admin_restrictions", AdminRestrictionsProcedure.params, AdminRestrictionsProcedure.returnType),
   __procedureSchema("admin_retry_claim", AdminRetryClaimProcedure.params, AdminRetryClaimProcedure.returnType),
   __procedureSchema("admin_retry_grant", AdminRetryGrantProcedure.params, AdminRetryGrantProcedure.returnType),
+  __procedureSchema("admin_social_message", AdminSocialMessageProcedure.params, AdminSocialMessageProcedure.returnType),
+  __procedureSchema("admin_social_messages", AdminSocialMessagesProcedure.params, AdminSocialMessagesProcedure.returnType),
   __procedureSchema("admin_sponsor_report", AdminSponsorReportProcedure.params, AdminSponsorReportProcedure.returnType),
   __procedureSchema("admin_sponsor_report_csv", AdminSponsorReportCsvProcedure.params, AdminSponsorReportCsvProcedure.returnType),
+  __procedureSchema("admin_support_create_ticket", AdminSupportCreateTicketProcedure.params, AdminSupportCreateTicketProcedure.returnType),
+  __procedureSchema("admin_support_run", AdminSupportRunProcedure.params, AdminSupportRunProcedure.returnType),
+  __procedureSchema("admin_support_summary", AdminSupportSummaryProcedure.params, AdminSupportSummaryProcedure.returnType),
+  __procedureSchema("admin_test_chat_filter", AdminTestChatFilterProcedure.params, AdminTestChatFilterProcedure.returnType),
   __procedureSchema("admin_test_notification", AdminTestNotificationProcedure.params, AdminTestNotificationProcedure.returnType),
   __procedureSchema("admin_test_sms", AdminTestSmsProcedure.params, AdminTestSmsProcedure.returnType),
+  __procedureSchema("admin_ticket", AdminTicketProcedure.params, AdminTicketProcedure.returnType),
+  __procedureSchema("admin_tickets", AdminTicketsProcedure.params, AdminTicketsProcedure.returnType),
   __procedureSchema("admin_user_economy", AdminUserEconomyProcedure.params, AdminUserEconomyProcedure.returnType),
   __procedureSchema("admin_user_items", AdminUserItemsProcedure.params, AdminUserItemsProcedure.returnType),
   __procedureSchema("banner_click", BannerClickProcedure.params, BannerClickProcedure.returnType),
@@ -1210,11 +1719,20 @@ const proceduresSchema = __procedures(
   __procedureSchema("chance_next_play_time", ChanceNextPlayTimeProcedure.params, ChanceNextPlayTimeProcedure.returnType),
   __procedureSchema("chance_play", ChancePlayProcedure.params, ChancePlayProcedure.returnType),
   __procedureSchema("chance_play_with_ticket", ChancePlayWithTicketProcedure.params, ChancePlayWithTicketProcedure.returnType),
+  __procedureSchema("chat_create_group", ChatCreateGroupProcedure.params, ChatCreateGroupProcedure.returnType),
+  __procedureSchema("chat_history", ChatHistoryProcedure.params, ChatHistoryProcedure.returnType),
+  __procedureSchema("chat_quota", ChatQuotaProcedure.params, ChatQuotaProcedure.returnType),
+  __procedureSchema("chat_report", ChatReportProcedure.params, ChatReportProcedure.returnType),
+  __procedureSchema("chat_send", ChatSendProcedure.params, ChatSendProcedure.returnType),
   __procedureSchema("check_app_version", CheckAppVersionProcedure.params, CheckAppVersionProcedure.returnType),
   __procedureSchema("claim_achievement", ClaimAchievementProcedure.params, ClaimAchievementProcedure.returnType),
   __procedureSchema("claim_reward", ClaimRewardProcedure.params, ClaimRewardProcedure.returnType),
   __procedureSchema("claim_task", ClaimTaskProcedure.params, ClaimTaskProcedure.returnType),
   __procedureSchema("faq_list", FaqListProcedure.params, FaqListProcedure.returnType),
+  __procedureSchema("friend_request", FriendRequestProcedure.params, FriendRequestProcedure.returnType),
+  __procedureSchema("friend_rules", FriendRulesProcedure.params, FriendRulesProcedure.returnType),
+  __procedureSchema("gift_options", GiftOptionsProcedure.params, GiftOptionsProcedure.returnType),
+  __procedureSchema("gift_send", GiftSendProcedure.params, GiftSendProcedure.returnType),
   __procedureSchema("inbox_claim", InboxClaimProcedure.params, InboxClaimProcedure.returnType),
   __procedureSchema("item_buy", ItemBuyProcedure.params, ItemBuyProcedure.returnType),
   __procedureSchema("item_equip", ItemEquipProcedure.params, ItemEquipProcedure.returnType),
@@ -1248,11 +1766,17 @@ const proceduresSchema = __procedures(
   __procedureSchema("push_register", PushRegisterProcedure.params, PushRegisterProcedure.returnType),
   __procedureSchema("record_event", RecordEventProcedure.params, RecordEventProcedure.returnType),
   __procedureSchema("redeem_gift", RedeemGiftProcedure.params, RedeemGiftProcedure.returnType),
+  __procedureSchema("referral_enter", ReferralEnterProcedure.params, ReferralEnterProcedure.returnType),
+  __procedureSchema("referral_me", ReferralMeProcedure.params, ReferralMeProcedure.returnType),
+  __procedureSchema("remote_config", RemoteConfigProcedure.params, RemoteConfigProcedure.returnType),
   __procedureSchema("report_player", ReportPlayerProcedure.params, ReportPlayerProcedure.returnType),
   __procedureSchema("request_otp", RequestOtpProcedure.params, RequestOtpProcedure.returnType),
   __procedureSchema("sponsor_click", SponsorClickProcedure.params, SponsorClickProcedure.returnType),
   __procedureSchema("sponsor_view", SponsorViewProcedure.params, SponsorViewProcedure.returnType),
   __procedureSchema("sponsors", SponsorsProcedure.params, SponsorsProcedure.returnType),
+  __procedureSchema("support_chat_open", SupportChatOpenProcedure.params, SupportChatOpenProcedure.returnType),
+  __procedureSchema("support_info", SupportInfoProcedure.params, SupportInfoProcedure.returnType),
+  __procedureSchema("support_ticket_create", SupportTicketCreateProcedure.params, SupportTicketCreateProcedure.returnType),
   __procedureSchema("task_group_next", TaskGroupNextProcedure.params, TaskGroupNextProcedure.returnType),
   __procedureSchema("verify_otp", VerifyOtpProcedure.params, VerifyOtpProcedure.returnType),
 );

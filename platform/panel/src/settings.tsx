@@ -25,6 +25,7 @@ import {
 } from './dialogs.tsx';
 import { openWizard } from './shell.tsx';
 import { GamSettingsSection, ItemsSettingsSection, OfferSettingsSection, PromoSettingsSection } from './settings3.tsx';
+import { NewsSettingsSection, PubSettingsSection, PublicFeedsSection } from './settings4.tsx';
 import { AdminLoginSection, AccountRulesSection, AppVersionsSection, CountriesSection, EconomySettingsSection, PaymentMethodsSection, ReportRulesSection, ReportTitlesSection } from './settings2.tsx';
 
 export function SettingsWindow() {
@@ -103,6 +104,9 @@ export function SettingsWindow() {
             {section?.id === 'items-settings' && <ItemsSettingsSection ro={ro} />}
             {section?.id === 'offer-settings' && <OfferSettingsSection ro={ro} />}
             {section?.id === 'promo-settings' && <PromoSettingsSection ro={ro} />}
+            {section?.id === 'pub-settings' && <PubSettingsSection ro={ro} />}
+            {section?.id === 'news-settings' && <NewsSettingsSection ro={ro} />}
+            {section?.id === 'public-feeds' && <PublicFeedsSection ro={ro} />}
           </div>
         </div>
       </div>

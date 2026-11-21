@@ -597,12 +597,12 @@ export function PasswordInput(props: { value: string; onChange: (v: string) => v
 function RoleRadios(props: { value: string; onChange: (v: string) => void }) {
   return (
     <div className="stack stack-sm">
-      {(['operator', 'admin', 'owner'] as const).map(r => (
+      {(['support', 'operator', 'admin', 'owner'] as const).map(r => (
         <label key={r} className="check" style={{ alignItems: 'flex-start' }}>
           <input type="radio" name="role" value={r} checked={props.value === r} onChange={() => props.onChange(r)} style={{ marginTop: 3 }} />
           <span className="stack" style={{ gap: 0 }}>
-            <span>{r === 'owner' ? t('roleOwner') : r === 'admin' ? t('roleAdmin') : t('roleOperator')}</span>
-            <span className="hint">{r === 'owner' ? t('adRoleHelpOwner') : r === 'admin' ? t('adRoleHelpAdmin') : t('adRoleHelpOperator')}</span>
+            <span>{r === 'owner' ? t('roleOwner') : r === 'admin' ? t('roleAdmin') : r === 'support' ? t('roleSupport') : t('roleOperator')}</span>
+            <span className="hint">{r === 'owner' ? t('adRoleHelpOwner') : r === 'admin' ? t('adRoleHelpAdmin') : r === 'support' ? t('adRoleHelpSupport') : t('adRoleHelpOperator')}</span>
           </span>
         </label>
       ))}

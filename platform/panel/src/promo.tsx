@@ -140,7 +140,7 @@ const ACTIONS: [string, StrKey][] = [
 
 type BannerRow = RowOf<'adminBanners'>;
 
-function CountriesPick(props: { value: string[]; onChange: (v: string[]) => void }) {
+export function CountriesPick(props: { value: string[]; onChange: (v: string[]) => void }) {
   const all = useRows('country');
   const { def } = useLanguages();
   const [add, setAdd] = useState('');

@@ -4,7 +4,7 @@ import { errorText, getLocale, parseError, type ErrInfo } from './i18n.ts';
 
 export type Tr = { lang: string; text: string };
 
-const RANK: Record<string, number> = { operator: 1, admin: 2, owner: 3 };
+const RANK: Record<string, number> = { support: 1, operator: 2, admin: 3, owner: 4 };
 
 export function useSession() {
   const me = useRows('me')[0];
@@ -17,7 +17,7 @@ export function useSession() {
     role,
     username: self?.username ?? '',
     isEnv: !!self?.isEnv,
-    can: (need: 'operator' | 'admin' | 'owner') => (RANK[role] ?? 0) >= RANK[need],
+    can: (need: 'support' | 'operator' | 'admin' | 'owner') => (RANK[role] ?? 0) >= RANK[need],
   };
 }
 

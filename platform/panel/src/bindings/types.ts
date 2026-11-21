@@ -30,6 +30,53 @@ export const AccountPage = __t.object("AccountPage", {
 });
 export type AccountPage = __Infer<typeof AccountPage>;
 
+export const ActivityAdminPage = __t.object("ActivityAdminPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(PlayerActivity);
+  },
+});
+export type ActivityAdminPage = __Infer<typeof ActivityAdminPage>;
+
+export const ActivityKindCount = __t.object("ActivityKindCount", {
+  kind: __t.string(),
+  total: __t.u32(),
+  today: __t.u32(),
+});
+export type ActivityKindCount = __Infer<typeof ActivityKindCount>;
+
+export const ActivityLine = __t.object("ActivityLine", {
+  id: __t.u64(),
+  kind: __t.string(),
+  action: __t.string(),
+  refId: __t.string(),
+  data: __t.string(),
+  actor: __t.string(),
+  platform: __t.string(),
+  country: __t.string(),
+  at: __t.u64(),
+});
+export type ActivityLine = __Infer<typeof ActivityLine>;
+
+export const ActivityMinePage = __t.object("ActivityMinePage", {
+  get rows() {
+    return __t.array(PlayerActivity);
+  },
+  next: __t.u64(),
+});
+export type ActivityMinePage = __Infer<typeof ActivityMinePage>;
+
+export const ActivitySummary = __t.object("ActivitySummary", {
+  total: __t.u32(),
+  today: __t.u32(),
+  players: __t.u32(),
+  get kinds() {
+    return __t.array(ActivityKindCount);
+  },
+  retentionDays: __t.u32(),
+});
+export type ActivitySummary = __Infer<typeof ActivitySummary>;
+
 export const AdminAchievements = __t.object("AdminAchievements", {});
 export type AdminAchievements = __Infer<typeof AdminAchievements>;
 
@@ -45,6 +92,69 @@ export type AdminBanners = __Infer<typeof AdminBanners>;
 export const AdminCampaigns = __t.object("AdminCampaigns", {});
 export type AdminCampaigns = __Infer<typeof AdminCampaigns>;
 
+export const AdminChatGroupPage = __t.object("AdminChatGroupPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(AdminChatGroupRow);
+  },
+});
+export type AdminChatGroupPage = __Infer<typeof AdminChatGroupPage>;
+
+export const AdminChatGroupRow = __t.object("AdminChatGroupRow", {
+  get channel() {
+    return SocialChannel;
+  },
+  ownerName: __t.string(),
+});
+export type AdminChatGroupRow = __Infer<typeof AdminChatGroupRow>;
+
+export const AdminChatMessageDetail = __t.object("AdminChatMessageDetail", {
+  get row() {
+    return AdminChatMessageRow;
+  },
+  get context() {
+    return __t.array(SocialMessage);
+  },
+  get reports() {
+    return __t.array(ChatReportRef);
+  },
+});
+export type AdminChatMessageDetail = __Infer<typeof AdminChatMessageDetail>;
+
+export const AdminChatMessagePage = __t.object("AdminChatMessagePage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(AdminChatMessageRow);
+  },
+});
+export type AdminChatMessagePage = __Infer<typeof AdminChatMessagePage>;
+
+export const AdminChatMessageRow = __t.object("AdminChatMessageRow", {
+  get message() {
+    return SocialMessage;
+  },
+  channelKind: __t.string(),
+  channelName: __t.string(),
+  senderName: __t.string(),
+  reports: __t.u32(),
+});
+export type AdminChatMessageRow = __Infer<typeof AdminChatMessageRow>;
+
+export const AdminChatMessages = __t.object("AdminChatMessages", {});
+export type AdminChatMessages = __Infer<typeof AdminChatMessages>;
+
+export const AdminChatQueue = __t.object("AdminChatQueue", {});
+export type AdminChatQueue = __Infer<typeof AdminChatQueue>;
+
+export const AdminChatSettings = __t.object("AdminChatSettings", {});
+export type AdminChatSettings = __Infer<typeof AdminChatSettings>;
+
+export const AdminChatWords = __t.object("AdminChatWords", {});
+export type AdminChatWords = __Infer<typeof AdminChatWords>;
+
+export const AdminConfigKeys = __t.object("AdminConfigKeys", {});
+export type AdminConfigKeys = __Infer<typeof AdminConfigKeys>;
+
 export const AdminEconomySettings = __t.object("AdminEconomySettings", {});
 export type AdminEconomySettings = __Infer<typeof AdminEconomySettings>;
 
@@ -54,8 +164,59 @@ export type AdminEventRules = __Infer<typeof AdminEventRules>;
 export const AdminFaqs = __t.object("AdminFaqs", {});
 export type AdminFaqs = __Infer<typeof AdminFaqs>;
 
+export const AdminFriendEdge = __t.object("AdminFriendEdge", {
+  accountId: __t.u64(),
+  displayName: __t.string(),
+  state: __t.string(),
+  since: __t.timestamp(),
+  expiresAt: __t.u64(),
+});
+export type AdminFriendEdge = __Infer<typeof AdminFriendEdge>;
+
+export const AdminFriendRules = __t.object("AdminFriendRules", {});
+export type AdminFriendRules = __Infer<typeof AdminFriendRules>;
+
+export const AdminFriendSettings = __t.object("AdminFriendSettings", {});
+export type AdminFriendSettings = __Infer<typeof AdminFriendSettings>;
+
 export const AdminGamificationSettings = __t.object("AdminGamificationSettings", {});
 export type AdminGamificationSettings = __Infer<typeof AdminGamificationSettings>;
+
+export const AdminGiftDetail = __t.object("AdminGiftDetail", {
+  get row() {
+    return AdminGiftRow;
+  },
+  get trail() {
+    return __t.array(GiftTrailRow);
+  },
+});
+export type AdminGiftDetail = __Infer<typeof AdminGiftDetail>;
+
+export const AdminGiftPage = __t.object("AdminGiftPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(AdminGiftRow);
+  },
+});
+export type AdminGiftPage = __Infer<typeof AdminGiftPage>;
+
+export const AdminGiftRow = __t.object("AdminGiftRow", {
+  get gift() {
+    return SocialGift;
+  },
+  senderName: __t.string(),
+  recipientName: __t.string(),
+});
+export type AdminGiftRow = __Infer<typeof AdminGiftRow>;
+
+export const AdminGiftRules = __t.object("AdminGiftRules", {});
+export type AdminGiftRules = __Infer<typeof AdminGiftRules>;
+
+export const AdminGiftSettings = __t.object("AdminGiftSettings", {});
+export type AdminGiftSettings = __Infer<typeof AdminGiftSettings>;
+
+export const AdminGiftables = __t.object("AdminGiftables", {});
+export type AdminGiftables = __Infer<typeof AdminGiftables>;
 
 export const AdminItemsSettings = __t.object("AdminItemsSettings", {});
 export type AdminItemsSettings = __Infer<typeof AdminItemsSettings>;
@@ -93,6 +254,29 @@ export type AdminOffers = __Infer<typeof AdminOffers>;
 export const AdminPaymentMethods = __t.object("AdminPaymentMethods", {});
 export type AdminPaymentMethods = __Infer<typeof AdminPaymentMethods>;
 
+export const AdminPlayerFriends = __t.object("AdminPlayerFriends", {
+  get edges() {
+    return __t.array(AdminFriendEdge);
+  },
+  get rules() {
+    return FriendRulesResult;
+  },
+});
+export type AdminPlayerFriends = __Infer<typeof AdminPlayerFriends>;
+
+export const AdminPlayerQuota = __t.object("AdminPlayerQuota", {
+  get status() {
+    return QuotaStatus;
+  },
+  get lots() {
+    return __t.array(SocialQuotaLot);
+  },
+  get days() {
+    return __t.array(SocialQuotaDay);
+  },
+});
+export type AdminPlayerQuota = __Infer<typeof AdminPlayerQuota>;
+
 export const AdminPromoSettings = __t.object("AdminPromoSettings", {});
 export type AdminPromoSettings = __Infer<typeof AdminPromoSettings>;
 
@@ -102,8 +286,20 @@ export type AdminPublicationSettings = __Infer<typeof AdminPublicationSettings>;
 export const AdminPushConfig = __t.object("AdminPushConfig", {});
 export type AdminPushConfig = __Infer<typeof AdminPushConfig>;
 
+export const AdminQuotaRules = __t.object("AdminQuotaRules", {});
+export type AdminQuotaRules = __Infer<typeof AdminQuotaRules>;
+
+export const AdminQuotaSettings = __t.object("AdminQuotaSettings", {});
+export type AdminQuotaSettings = __Infer<typeof AdminQuotaSettings>;
+
+export const AdminReferralSettings = __t.object("AdminReferralSettings", {});
+export type AdminReferralSettings = __Infer<typeof AdminReferralSettings>;
+
 export const AdminReportRules = __t.object("AdminReportRules", {});
 export type AdminReportRules = __Infer<typeof AdminReportRules>;
+
+export const AdminRooms = __t.object("AdminRooms", {});
+export type AdminRooms = __Infer<typeof AdminRooms>;
 
 export const AdminSandboxSms = __t.object("AdminSandboxSms", {});
 export type AdminSandboxSms = __Infer<typeof AdminSandboxSms>;
@@ -120,6 +316,18 @@ export type AdminSponsors = __Infer<typeof AdminSponsors>;
 export const AdminStreaks = __t.object("AdminStreaks", {});
 export type AdminStreaks = __Infer<typeof AdminStreaks>;
 
+export const AdminSupportAgents = __t.object("AdminSupportAgents", {});
+export type AdminSupportAgents = __Infer<typeof AdminSupportAgents>;
+
+export const AdminSupportCanned = __t.object("AdminSupportCanned", {});
+export type AdminSupportCanned = __Infer<typeof AdminSupportCanned>;
+
+export const AdminSupportDepartments = __t.object("AdminSupportDepartments", {});
+export type AdminSupportDepartments = __Infer<typeof AdminSupportDepartments>;
+
+export const AdminSupportSettings = __t.object("AdminSupportSettings", {});
+export type AdminSupportSettings = __Infer<typeof AdminSupportSettings>;
+
 export const AdminTaskGroups = __t.object("AdminTaskGroups", {});
 export type AdminTaskGroups = __Infer<typeof AdminTaskGroups>;
 
@@ -128,6 +336,9 @@ export type AdminTasks = __Infer<typeof AdminTasks>;
 
 export const AdminTestPhones = __t.object("AdminTestPhones", {});
 export type AdminTestPhones = __Infer<typeof AdminTestPhones>;
+
+export const AdminTicketThread = __t.object("AdminTicketThread", {});
+export type AdminTicketThread = __Infer<typeof AdminTicketThread>;
 
 export const AdminView = __t.object("AdminView", {
   accountId: __t.u64(),
@@ -377,6 +588,13 @@ export const BaseTestPhone = __t.object("BaseTestPhone", {
 });
 export type BaseTestPhone = __Infer<typeof BaseTestPhone>;
 
+export const BlockedEntry = __t.object("BlockedEntry", {
+  accountId: __t.u64(),
+  displayName: __t.string(),
+  blockedAt: __t.timestamp(),
+});
+export type BlockedEntry = __Infer<typeof BlockedEntry>;
+
 export const ChanceGameLine = __t.object("ChanceGameLine", {
   get game() {
     return PromoChanceGame;
@@ -473,6 +691,237 @@ export const ChanceTurn = __t.object("ChanceTurn", {
   nextPlayAt: __t.u64(),
 });
 export type ChanceTurn = __Infer<typeof ChanceTurn>;
+
+export const ChatChannelEntry = __t.object("ChatChannelEntry", {
+  channelId: __t.u64(),
+  kind: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  name: __t.string(),
+  peerId: __t.u64(),
+  peerName: __t.string(),
+  role: __t.string(),
+  members: __t.u32(),
+  lastMessageId: __t.u64(),
+  lastMessageAt: __t.option(__t.timestamp()),
+  lastReadId: __t.u64(),
+  unread: __t.bool(),
+});
+export type ChatChannelEntry = __Infer<typeof ChatChannelEntry>;
+
+export const ChatFilterHit = __t.object("ChatFilterHit", {
+  id: __t.u64(),
+  word: __t.string(),
+  action: __t.string(),
+});
+export type ChatFilterHit = __Infer<typeof ChatFilterHit>;
+
+export const ChatFilterTest = __t.object("ChatFilterTest", {
+  text: __t.string(),
+  normalized: __t.string(),
+  changed: __t.bool(),
+  blocked: __t.bool(),
+  flagged: __t.bool(),
+  get hits() {
+    return __t.array(ChatFilterHit);
+  },
+});
+export type ChatFilterTest = __Infer<typeof ChatFilterTest>;
+
+export const ChatGroupResult = __t.object("ChatGroupResult", {
+  channelId: __t.u64(),
+});
+export type ChatGroupResult = __Infer<typeof ChatGroupResult>;
+
+export const ChatHistory = __t.object("ChatHistory", {
+  get rows() {
+    return __t.array(ChatMessageOut);
+  },
+  hasMore: __t.bool(),
+});
+export type ChatHistory = __Infer<typeof ChatHistory>;
+
+export const ChatLiveMessage = __t.object("ChatLiveMessage", {
+  id: __t.u64(),
+  channelId: __t.u64(),
+  senderId: __t.u64(),
+  senderName: __t.string(),
+  text: __t.string(),
+  replyToId: __t.u64(),
+  deleted: __t.bool(),
+  createdAt: __t.timestamp(),
+});
+export type ChatLiveMessage = __Infer<typeof ChatLiveMessage>;
+
+export const ChatMessageOut = __t.object("ChatMessageOut", {
+  id: __t.u64(),
+  channelId: __t.u64(),
+  senderId: __t.u64(),
+  senderName: __t.string(),
+  text: __t.string(),
+  replyToId: __t.u64(),
+  deleted: __t.bool(),
+  createdAt: __t.timestamp(),
+});
+export type ChatMessageOut = __Infer<typeof ChatMessageOut>;
+
+export const ChatReportRef = __t.object("ChatReportRef", {
+  id: __t.u64(),
+  reporterId: __t.u64(),
+  titleKey: __t.string(),
+  note: __t.string(),
+  status: __t.string(),
+  createdAt: __t.timestamp(),
+});
+export type ChatReportRef = __Infer<typeof ChatReportRef>;
+
+export const ChatReportResult = __t.object("ChatReportResult", {
+  reportId: __t.u64(),
+  duplicate: __t.bool(),
+});
+export type ChatReportResult = __Infer<typeof ChatReportResult>;
+
+export const ChatRoomEntry = __t.object("ChatRoomEntry", {
+  id: __t.u64(),
+  key: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  members: __t.u32(),
+  sort: __t.i32(),
+});
+export type ChatRoomEntry = __Infer<typeof ChatRoomEntry>;
+
+export const ChatRooms = __t.object("ChatRooms", {});
+export type ChatRooms = __Infer<typeof ChatRooms>;
+
+export const ChatSendResult = __t.object("ChatSendResult", {
+  ok: __t.bool(),
+  error: __t.string(),
+  messageId: __t.u64(),
+  channelId: __t.u64(),
+  text: __t.string(),
+  masked: __t.bool(),
+  flagged: __t.bool(),
+  get quota() {
+    return __t.option(QuotaRefusal);
+  },
+});
+export type ChatSendResult = __Infer<typeof ChatSendResult>;
+
+export const ConfigClient = __t.object("ConfigClient", {
+  accountId: __t.u64(),
+  platform: __t.string(),
+  appVersion: __t.string(),
+  updatedAt: __t.timestamp(),
+});
+export type ConfigClient = __Infer<typeof ConfigClient>;
+
+export const ConfigHistory = __t.object("ConfigHistory", {
+  id: __t.u64(),
+  key: __t.string(),
+  version: __t.u32(),
+  action: __t.string(),
+  snapshot: __t.string(),
+  by: __t.u64(),
+  at: __t.timestamp(),
+});
+export type ConfigHistory = __Infer<typeof ConfigHistory>;
+
+export const ConfigHistoryPage = __t.object("ConfigHistoryPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(ConfigHistory);
+  },
+});
+export type ConfigHistoryPage = __Infer<typeof ConfigHistoryPage>;
+
+export const ConfigKey = __t.object("ConfigKey", {
+  key: __t.string(),
+  type: __t.string(),
+  description: __t.string(),
+  value: __t.string(),
+  get text() {
+    return __t.array(Translation);
+  },
+  get rules() {
+    return __t.array(ConfigRule);
+  },
+  isActive: __t.bool(),
+  version: __t.u32(),
+  updatedBy: __t.u64(),
+  updatedAt: __t.timestamp(),
+});
+export type ConfigKey = __Infer<typeof ConfigKey>;
+
+export const ConfigPreview = __t.object("ConfigPreview", {
+  lang: __t.string(),
+  get values() {
+    return __t.array(ConfigPreviewLine);
+  },
+});
+export type ConfigPreview = __Infer<typeof ConfigPreview>;
+
+export const ConfigPreviewLine = __t.object("ConfigPreviewLine", {
+  key: __t.string(),
+  type: __t.string(),
+  value: __t.string(),
+  variant: __t.string(),
+  bucket: __t.u32(),
+});
+export type ConfigPreviewLine = __Infer<typeof ConfigPreviewLine>;
+
+export const ConfigResolved = __t.object("ConfigResolved", {
+  lang: __t.string(),
+  get values() {
+    return __t.array(ConfigValueLine);
+  },
+  hash: __t.string(),
+  changed: __t.array(__t.string()),
+});
+export type ConfigResolved = __Infer<typeof ConfigResolved>;
+
+export const ConfigRule = __t.object("ConfigRule", {
+  name: __t.string(),
+  value: __t.string(),
+  get text() {
+    return __t.array(Translation);
+  },
+  platforms: __t.array(__t.string()),
+  minVersion: __t.string(),
+  maxVersion: __t.string(),
+  tagIds: __t.array(__t.u64()),
+  countries: __t.array(__t.string()),
+  percent: __t.f64(),
+});
+export type ConfigRule = __Infer<typeof ConfigRule>;
+
+export const ConfigSeen = __t.object("ConfigSeen", {
+  accountId: __t.u64(),
+  hash: __t.string(),
+  variants: __t.string(),
+});
+export type ConfigSeen = __Infer<typeof ConfigSeen>;
+
+export const ConfigValueLine = __t.object("ConfigValueLine", {
+  key: __t.string(),
+  type: __t.string(),
+  value: __t.string(),
+  variant: __t.string(),
+});
+export type ConfigValueLine = __Infer<typeof ConfigValueLine>;
+
+export const ConfigValueRow = __t.object("ConfigValueRow", {
+  key: __t.string(),
+  type: __t.string(),
+  value: __t.string(),
+  variant: __t.string(),
+});
+export type ConfigValueRow = __Infer<typeof ConfigValueRow>;
 
 export const EconomyCurrency = __t.object("EconomyCurrency", {
   id: __t.u64(),
@@ -774,6 +1223,65 @@ export const FaqList = __t.object("FaqList", {
   },
 });
 export type FaqList = __Infer<typeof FaqList>;
+
+export const FriendEntry = __t.object("FriendEntry", {
+  accountId: __t.u64(),
+  displayName: __t.string(),
+  since: __t.timestamp(),
+});
+export type FriendEntry = __Infer<typeof FriendEntry>;
+
+export const FriendLimitPair = __t.object("FriendLimitPair", {
+  dailyRequests: __t.u32(),
+  maxFriends: __t.u32(),
+});
+export type FriendLimitPair = __Infer<typeof FriendLimitPair>;
+
+export const FriendRequestEntry = __t.object("FriendRequestEntry", {
+  accountId: __t.u64(),
+  displayName: __t.string(),
+  sentAt: __t.timestamp(),
+  expiresAt: __t.u64(),
+});
+export type FriendRequestEntry = __Infer<typeof FriendRequestEntry>;
+
+export const FriendRequestResult = __t.object("FriendRequestResult", {
+  sent: __t.array(__t.u64()),
+  accepted: __t.array(__t.u64()),
+  skipped: __t.array(__t.u64()),
+  remainingToday: __t.option(__t.u32()),
+});
+export type FriendRequestResult = __Infer<typeof FriendRequestResult>;
+
+export const FriendRuleRef = __t.object("FriendRuleRef", {
+  id: __t.u64(),
+  name: __t.string(),
+});
+export type FriendRuleRef = __Infer<typeof FriendRuleRef>;
+
+export const FriendRulesResult = __t.object("FriendRulesResult", {
+  dailyRequests: __t.u32(),
+  sentToday: __t.u32(),
+  remainingToday: __t.option(__t.u32()),
+  resetsAt: __t.timestamp(),
+  maxFriends: __t.u32(),
+  friends: __t.u32(),
+  friendSlotsLeft: __t.option(__t.u32()),
+  expiryDays: __t.u32(),
+  rejectCooldownHours: __t.u32(),
+  get base() {
+    return FriendLimitPair;
+  },
+  get bonus() {
+    return FriendLimitPair;
+  },
+  get tier() {
+    return __t.option(FriendRuleRef);
+  },
+  overLimit: __t.string(),
+  matchPolicy: __t.string(),
+});
+export type FriendRulesResult = __Infer<typeof FriendRulesResult>;
 
 export const GamAchievement = __t.object("GamAchievement", {
   id: __t.u64(),
@@ -1535,6 +2043,101 @@ export const GamUserTaskgroup = __t.object("GamUserTaskgroup", {
 });
 export type GamUserTaskgroup = __Infer<typeof GamUserTaskgroup>;
 
+export const GiftCount = __t.object("GiftCount", {
+  key: __t.string(),
+  count: __t.u32(),
+});
+export type GiftCount = __Infer<typeof GiftCount>;
+
+export const GiftCurrency = __t.object("GiftCurrency", {
+  currencyKey: __t.string(),
+  min: __t.i64(),
+  max: __t.i64(),
+});
+export type GiftCurrency = __Infer<typeof GiftCurrency>;
+
+export const GiftLimit = __t.object("GiftLimit", {
+  used: __t.u32(),
+  limit: __t.u32(),
+  remaining: __t.option(__t.u32()),
+  bonus: __t.u32(),
+});
+export type GiftLimit = __Infer<typeof GiftLimit>;
+
+export const GiftLimits = __t.object("GiftLimits", {
+  get sender() {
+    return GiftLimit;
+  },
+  get recipient() {
+    return GiftLimit;
+  },
+  get pair() {
+    return GiftLimit;
+  },
+  day: __t.i32(),
+  get rule() {
+    return __t.option(GiftRuleRef);
+  },
+});
+export type GiftLimits = __Infer<typeof GiftLimits>;
+
+export const GiftOptionCurrency = __t.object("GiftOptionCurrency", {
+  currencyKey: __t.string(),
+  min: __t.i64(),
+  max: __t.i64(),
+  balance: __t.i64(),
+});
+export type GiftOptionCurrency = __Infer<typeof GiftOptionCurrency>;
+
+export const GiftOptionItem = __t.object("GiftOptionItem", {
+  itemKey: __t.string(),
+  quantity: __t.u32(),
+  level: __t.u32(),
+  equipped: __t.bool(),
+  recipientOwns: __t.bool(),
+  giftable: __t.bool(),
+  reason: __t.string(),
+});
+export type GiftOptionItem = __Infer<typeof GiftOptionItem>;
+
+export const GiftOptionProduct = __t.object("GiftOptionProduct", {
+  productId: __t.u64(),
+  key: __t.string(),
+  priceToman: __t.i64(),
+  coinCurrency: __t.string(),
+  coinAmount: __t.i64(),
+  methods: __t.array(__t.string()),
+  giftable: __t.bool(),
+  reason: __t.string(),
+});
+export type GiftOptionProduct = __Infer<typeof GiftOptionProduct>;
+
+export const GiftOptions = __t.object("GiftOptions", {
+  friendId: __t.u64(),
+  friendName: __t.string(),
+  isFriend: __t.bool(),
+  canSend: __t.bool(),
+  reason: __t.string(),
+  get limits() {
+    return GiftLimits;
+  },
+  delivery: __t.string(),
+  expiryHours: __t.u32(),
+  messageEnabled: __t.bool(),
+  messageMaxLength: __t.u32(),
+  discountCodes: __t.bool(),
+  get items() {
+    return __t.array(GiftOptionItem);
+  },
+  get currencies() {
+    return __t.array(GiftOptionCurrency);
+  },
+  get products() {
+    return __t.array(GiftOptionProduct);
+  },
+});
+export type GiftOptions = __Infer<typeof GiftOptions>;
+
 export const GiftPage = __t.object("GiftPage", {
   total: __t.u32(),
   get rows() {
@@ -1542,6 +2145,118 @@ export const GiftPage = __t.object("GiftPage", {
   },
 });
 export type GiftPage = __Infer<typeof GiftPage>;
+
+export const GiftReceivedEntry = __t.object("GiftReceivedEntry", {
+  id: __t.u64(),
+  otherId: __t.u64(),
+  otherName: __t.string(),
+  kind: __t.string(),
+  source: __t.string(),
+  itemKey: __t.string(),
+  quantity: __t.u32(),
+  currencyKey: __t.string(),
+  amount: __t.i64(),
+  productId: __t.u64(),
+  productKey: __t.string(),
+  method: __t.string(),
+  paymentId: __t.u64(),
+  message: __t.string(),
+  status: __t.string(),
+  outcome: __t.string(),
+  delivery: __t.string(),
+  createdAt: __t.timestamp(),
+  expiresAt: __t.u64(),
+  deliveredAt: __t.u64(),
+  respondedAt: __t.u64(),
+});
+export type GiftReceivedEntry = __Infer<typeof GiftReceivedEntry>;
+
+export const GiftReport = __t.object("GiftReport", {
+  total: __t.u32(),
+  get byStatus() {
+    return __t.array(GiftCount);
+  },
+  get byKind() {
+    return __t.array(GiftCount);
+  },
+  senders: __t.u32(),
+  recipients: __t.u32(),
+  moneyToman: __t.i64(),
+  coinsSpent: __t.i64(),
+  currencyMoved: __t.i64(),
+  get topSenders() {
+    return __t.array(GiftTopPlayer);
+  },
+  get topRecipients() {
+    return __t.array(GiftTopPlayer);
+  },
+  get daily() {
+    return __t.array(GiftReportDay);
+  },
+});
+export type GiftReport = __Infer<typeof GiftReport>;
+
+export const GiftReportDay = __t.object("GiftReportDay", {
+  day: __t.i32(),
+  count: __t.u32(),
+});
+export type GiftReportDay = __Infer<typeof GiftReportDay>;
+
+export const GiftRuleRef = __t.object("GiftRuleRef", {
+  id: __t.u64(),
+  name: __t.string(),
+});
+export type GiftRuleRef = __Infer<typeof GiftRuleRef>;
+
+export const GiftSendResult = __t.object("GiftSendResult", {
+  giftId: __t.u64(),
+  status: __t.string(),
+  replayed: __t.bool(),
+  get purchase() {
+    return __t.option(PurchaseStartResult);
+  },
+});
+export type GiftSendResult = __Infer<typeof GiftSendResult>;
+
+export const GiftSentEntry = __t.object("GiftSentEntry", {
+  id: __t.u64(),
+  otherId: __t.u64(),
+  otherName: __t.string(),
+  kind: __t.string(),
+  source: __t.string(),
+  itemKey: __t.string(),
+  quantity: __t.u32(),
+  currencyKey: __t.string(),
+  amount: __t.i64(),
+  productId: __t.u64(),
+  productKey: __t.string(),
+  method: __t.string(),
+  paymentId: __t.u64(),
+  message: __t.string(),
+  status: __t.string(),
+  outcome: __t.string(),
+  delivery: __t.string(),
+  createdAt: __t.timestamp(),
+  expiresAt: __t.u64(),
+  deliveredAt: __t.u64(),
+  respondedAt: __t.u64(),
+});
+export type GiftSentEntry = __Infer<typeof GiftSentEntry>;
+
+export const GiftTopPlayer = __t.object("GiftTopPlayer", {
+  accountId: __t.u64(),
+  displayName: __t.string(),
+  count: __t.u32(),
+});
+export type GiftTopPlayer = __Infer<typeof GiftTopPlayer>;
+
+export const GiftTrailRow = __t.object("GiftTrailRow", {
+  accountId: __t.u64(),
+  action: __t.string(),
+  detail: __t.string(),
+  at: __t.timestamp(),
+});
+export type GiftTrailRow = __Infer<typeof GiftTrailRow>;
 
 export const InboxClaimResult = __t.object("InboxClaimResult", {
   inboxId: __t.u64(),
@@ -1985,8 +2700,41 @@ export type ModerationSummary = __Infer<typeof ModerationSummary>;
 export const MyAchievements = __t.object("MyAchievements", {});
 export type MyAchievements = __Infer<typeof MyAchievements>;
 
+export const MyActivity = __t.object("MyActivity", {});
+export type MyActivity = __Infer<typeof MyActivity>;
+
+export const MyBlocked = __t.object("MyBlocked", {});
+export type MyBlocked = __Infer<typeof MyBlocked>;
+
 export const MyChancePlays = __t.object("MyChancePlays", {});
 export type MyChancePlays = __Infer<typeof MyChancePlays>;
+
+export const MyChannels = __t.object("MyChannels", {});
+export type MyChannels = __Infer<typeof MyChannels>;
+
+export const MyChatLive = __t.object("MyChatLive", {});
+export type MyChatLive = __Infer<typeof MyChatLive>;
+
+export const MyChatMessages = __t.object("MyChatMessages", {});
+export type MyChatMessages = __Infer<typeof MyChatMessages>;
+
+export const MyChats = __t.object("MyChats", {});
+export type MyChats = __Infer<typeof MyChats>;
+
+export const MyFriendRequestsIn = __t.object("MyFriendRequestsIn", {});
+export type MyFriendRequestsIn = __Infer<typeof MyFriendRequestsIn>;
+
+export const MyFriendRequestsOut = __t.object("MyFriendRequestsOut", {});
+export type MyFriendRequestsOut = __Infer<typeof MyFriendRequestsOut>;
+
+export const MyFriends = __t.object("MyFriends", {});
+export type MyFriends = __Infer<typeof MyFriends>;
+
+export const MyGiftsReceived = __t.object("MyGiftsReceived", {});
+export type MyGiftsReceived = __Infer<typeof MyGiftsReceived>;
+
+export const MyGiftsSent = __t.object("MyGiftsSent", {});
+export type MyGiftsSent = __Infer<typeof MyGiftsSent>;
 
 export const MyInbox = __t.object("MyInbox", {});
 export type MyInbox = __Infer<typeof MyInbox>;
@@ -2011,6 +2759,15 @@ export type MyProfile = __Infer<typeof MyProfile>;
 
 export const MyPushDevices = __t.object("MyPushDevices", {});
 export type MyPushDevices = __Infer<typeof MyPushDevices>;
+
+export const MyReferral = __t.object("MyReferral", {});
+export type MyReferral = __Infer<typeof MyReferral>;
+
+export const MyReferrals = __t.object("MyReferrals", {});
+export type MyReferrals = __Infer<typeof MyReferrals>;
+
+export const MyRemoteConfig = __t.object("MyRemoteConfig", {});
+export type MyRemoteConfig = __Infer<typeof MyRemoteConfig>;
 
 export const MyReport = __t.object("MyReport", {
   id: __t.u64(),
@@ -2077,6 +2834,12 @@ export type MyTagRow = __Infer<typeof MyTagRow>;
 
 export const MyTags = __t.object("MyTags", {});
 export type MyTags = __Infer<typeof MyTags>;
+
+export const MyTicketMessages = __t.object("MyTicketMessages", {});
+export type MyTicketMessages = __Infer<typeof MyTicketMessages>;
+
+export const MyTickets = __t.object("MyTickets", {});
+export type MyTickets = __Infer<typeof MyTickets>;
 
 export const MyWallet = __t.object("MyWallet", {});
 export type MyWallet = __Infer<typeof MyWallet>;
@@ -2415,6 +3178,21 @@ export const PaymentPage = __t.object("PaymentPage", {
   },
 });
 export type PaymentPage = __Infer<typeof PaymentPage>;
+
+export const PlayerActivity = __t.object("PlayerActivity", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  kind: __t.string(),
+  action: __t.string(),
+  refId: __t.string(),
+  data: __t.string(),
+  actor: __t.string(),
+  device: __t.string(),
+  platform: __t.string(),
+  country: __t.string(),
+  at: __t.u64(),
+});
+export type PlayerActivity = __Infer<typeof PlayerActivity>;
 
 export const PlayerDetail = __t.object("PlayerDetail", {
   get player() {
@@ -3717,6 +4495,131 @@ export const PushRegisterResult = __t.object("PushRegisterResult", {
 });
 export type PushRegisterResult = __Infer<typeof PushRegisterResult>;
 
+export const QuotaFriendUsage = __t.object("QuotaFriendUsage", {
+  get messages() {
+    return QuotaUsage;
+  },
+  get conversations() {
+    return QuotaUsage;
+  },
+});
+export type QuotaFriendUsage = __Infer<typeof QuotaFriendUsage>;
+
+export const QuotaPackProduct = __t.object("QuotaPackProduct", {
+  id: __t.u64(),
+  key: __t.string(),
+  amount: __t.f64(),
+});
+export type QuotaPackProduct = __Infer<typeof QuotaPackProduct>;
+
+export const QuotaRefusal = __t.object("QuotaRefusal", {
+  code: __t.string(),
+  unit: __t.string(),
+  limit: __t.u32(),
+  used: __t.u32(),
+  packsLeft: __t.u32(),
+  resetsAt: __t.timestamp(),
+  friend: __t.bool(),
+  get rule() {
+    return __t.option(QuotaRuleRef);
+  },
+  message: __t.string(),
+  get products() {
+    return __t.array(QuotaPackProduct);
+  },
+});
+export type QuotaRefusal = __Infer<typeof QuotaRefusal>;
+
+export const QuotaReport = __t.object("QuotaReport", {
+  sent: __t.u32(),
+  blocked: __t.u32(),
+  blockedPlayers: __t.u32(),
+  fromPacks: __t.u32(),
+  free: __t.u32(),
+  unlimited: __t.u32(),
+  get daily() {
+    return __t.array(QuotaReportDay);
+  },
+  get top() {
+    return __t.array(QuotaTopRow);
+  },
+  packsFromMeta: __t.u32(),
+  packsFromAdmin: __t.u32(),
+});
+export type QuotaReport = __Infer<typeof QuotaReport>;
+
+export const QuotaReportDay = __t.object("QuotaReportDay", {
+  day: __t.i32(),
+  sent: __t.u32(),
+  blocked: __t.u32(),
+  fromPacks: __t.u32(),
+});
+export type QuotaReportDay = __Infer<typeof QuotaReportDay>;
+
+export const QuotaRuleRef = __t.object("QuotaRuleRef", {
+  id: __t.u64(),
+  name: __t.string(),
+});
+export type QuotaRuleRef = __Infer<typeof QuotaRuleRef>;
+
+export const QuotaStatus = __t.object("QuotaStatus", {
+  enabled: __t.bool(),
+  countMode: __t.string(),
+  unlimited: __t.bool(),
+  unlimitedBy: __t.string(),
+  get rule() {
+    return __t.option(QuotaRuleRef);
+  },
+  freeLeft: __t.u32(),
+  packsLeft: __t.u32(),
+  packsExpireAt: __t.u64(),
+  order: __t.string(),
+  day: __t.i32(),
+  resetsAt: __t.timestamp(),
+  get messages() {
+    return QuotaUsage;
+  },
+  get conversations() {
+    return QuotaUsage;
+  },
+  get friends() {
+    return __t.option(QuotaFriendUsage);
+  },
+  friendPolicy: __t.string(),
+  replyFree: __t.string(),
+  bonus: __t.u32(),
+  get today() {
+    return QuotaToday;
+  },
+  get products() {
+    return __t.array(QuotaPackProduct);
+  },
+});
+export type QuotaStatus = __Infer<typeof QuotaStatus>;
+
+export const QuotaToday = __t.object("QuotaToday", {
+  sent: __t.u32(),
+  fromPacks: __t.u32(),
+  free: __t.u32(),
+  unlimited: __t.u32(),
+  blocked: __t.u32(),
+});
+export type QuotaToday = __Infer<typeof QuotaToday>;
+
+export const QuotaTopRow = __t.object("QuotaTopRow", {
+  accountId: __t.u64(),
+  displayName: __t.string(),
+  blocked: __t.u32(),
+});
+export type QuotaTopRow = __Infer<typeof QuotaTopRow>;
+
+export const QuotaUsage = __t.object("QuotaUsage", {
+  limit: __t.u32(),
+  used: __t.u32(),
+  left: __t.u32(),
+});
+export type QuotaUsage = __Infer<typeof QuotaUsage>;
+
 export const RedeemResult = __t.object("RedeemResult", {
   get rewards() {
     return __t.array(RewardRow);
@@ -3726,6 +4629,181 @@ export const RedeemResult = __t.object("RedeemResult", {
   },
 });
 export type RedeemResult = __Infer<typeof RedeemResult>;
+
+export const Referral = __t.object("Referral", {
+  id: __t.u64(),
+  referrerId: __t.u64(),
+  refereeId: __t.u64(),
+  code: __t.string(),
+  status: __t.string(),
+  flags: __t.array(__t.string()),
+  referrerPrizeId: __t.u64(),
+  refereePrizeId: __t.u64(),
+  goalEventKey: __t.string(),
+  goalMeasure: __t.string(),
+  goalValue: __t.f64(),
+  device: __t.string(),
+  referrerClaimId: __t.u64(),
+  refereeClaimId: __t.u64(),
+  decidedBy: __t.u64(),
+  decidedAt: __t.u64(),
+  note: __t.string(),
+  createdAt: __t.u64(),
+  completedAt: __t.u64(),
+});
+export type Referral = __Infer<typeof Referral>;
+
+export const ReferralAdminLine = __t.object("ReferralAdminLine", {
+  get referral() {
+    return Referral;
+  },
+  referrerName: __t.string(),
+  refereeName: __t.string(),
+  progress: __t.f64(),
+  flagged: __t.bool(),
+});
+export type ReferralAdminLine = __Infer<typeof ReferralAdminLine>;
+
+export const ReferralAdminPage = __t.object("ReferralAdminPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(ReferralAdminLine);
+  },
+});
+export type ReferralAdminPage = __Infer<typeof ReferralAdminPage>;
+
+export const ReferralCode = __t.object("ReferralCode", {
+  accountId: __t.u64(),
+  code: __t.string(),
+  createdAt: __t.timestamp(),
+});
+export type ReferralCode = __Infer<typeof ReferralCode>;
+
+export const ReferralEntered = __t.object("ReferralEntered", {
+  referralId: __t.u64(),
+  status: __t.string(),
+  claims: __t.array(__t.u64()),
+});
+export type ReferralEntered = __Infer<typeof ReferralEntered>;
+
+export const ReferralInfoRow = __t.object("ReferralInfoRow", {
+  accountId: __t.u64(),
+  code: __t.string(),
+  enabled: __t.bool(),
+  enterUntil: __t.u64(),
+  referredByName: __t.string(),
+  referredStatus: __t.string(),
+  total: __t.u32(),
+  completed: __t.u32(),
+  pending: __t.u32(),
+  held: __t.u32(),
+});
+export type ReferralInfoRow = __Infer<typeof ReferralInfoRow>;
+
+export const ReferralInviteLine = __t.object("ReferralInviteLine", {
+  name: __t.string(),
+  status: __t.string(),
+  createdAt: __t.u64(),
+});
+export type ReferralInviteLine = __Infer<typeof ReferralInviteLine>;
+
+export const ReferralInviteRow = __t.object("ReferralInviteRow", {
+  id: __t.u64(),
+  name: __t.string(),
+  status: __t.string(),
+  createdAt: __t.u64(),
+  completedAt: __t.u64(),
+});
+export type ReferralInviteRow = __Infer<typeof ReferralInviteRow>;
+
+export const ReferralMark = __t.object("ReferralMark", {
+  key: __t.string(),
+  referralId: __t.u64(),
+  at: __t.timestamp(),
+});
+export type ReferralMark = __Infer<typeof ReferralMark>;
+
+export const ReferralMe = __t.object("ReferralMe", {
+  code: __t.string(),
+  enabled: __t.bool(),
+  canEnter: __t.bool(),
+  enterUntil: __t.u64(),
+  newAccountDays: __t.u32(),
+  referredByName: __t.string(),
+  referredStatus: __t.string(),
+  total: __t.u32(),
+  completed: __t.u32(),
+  pending: __t.u32(),
+  get recent() {
+    return __t.array(ReferralInviteLine);
+  },
+  referrerPrizeId: __t.u64(),
+  refereePrizeId: __t.u64(),
+  goalEventKey: __t.string(),
+  goalEventName: __t.string(),
+  goalMeasure: __t.string(),
+  goalValue: __t.f64(),
+});
+export type ReferralMe = __Infer<typeof ReferralMe>;
+
+export const ReferralSettings = __t.object("ReferralSettings", {
+  id: __t.u8(),
+  isEnabled: __t.bool(),
+  newAccountDays: __t.u32(),
+  referrerPrizeId: __t.u64(),
+  refereePrizeId: __t.u64(),
+  goalEventKey: __t.string(),
+  goalMeasure: __t.string(),
+  goalValue: __t.f64(),
+  maxPerReferrer: __t.u32(),
+  dailyPerReferrer: __t.u32(),
+  onePerDevice: __t.bool(),
+  onePerPhone: __t.bool(),
+  holdFlagged: __t.bool(),
+  triesPerHour: __t.u32(),
+  updatedAt: __t.timestamp(),
+});
+export type ReferralSettings = __Infer<typeof ReferralSettings>;
+
+export const ReferralSummary = __t.object("ReferralSummary", {
+  total: __t.u32(),
+  pending: __t.u32(),
+  held: __t.u32(),
+  completed: __t.u32(),
+  rejected: __t.u32(),
+  flagged: __t.u32(),
+  get top() {
+    return __t.array(ReferralTopLine);
+  },
+});
+export type ReferralSummary = __Infer<typeof ReferralSummary>;
+
+export const ReferralTopLine = __t.object("ReferralTopLine", {
+  accountId: __t.u64(),
+  name: __t.string(),
+  total: __t.u32(),
+  completed: __t.u32(),
+});
+export type ReferralTopLine = __Infer<typeof ReferralTopLine>;
+
+export const ReferralTree = __t.object("ReferralTree", {
+  accountId: __t.u64(),
+  get up() {
+    return __t.array(ReferralTreeLine);
+  },
+  get down() {
+    return __t.array(ReferralTreeLine);
+  },
+});
+export type ReferralTree = __Infer<typeof ReferralTree>;
+
+export const ReferralTreeLine = __t.object("ReferralTreeLine", {
+  accountId: __t.u64(),
+  name: __t.string(),
+  status: __t.string(),
+  createdAt: __t.u64(),
+});
+export type ReferralTreeLine = __Infer<typeof ReferralTreeLine>;
 
 export const ReportDetail = __t.object("ReportDetail", {
   get row() {
@@ -3905,6 +4983,359 @@ export const SmsProviderView = __t.object("SmsProviderView", {
 });
 export type SmsProviderView = __Infer<typeof SmsProviderView>;
 
+export const SocialChannel = __t.object("SocialChannel", {
+  id: __t.u64(),
+  kind: __t.string(),
+  key: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  name: __t.string(),
+  ownerId: __t.u64(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  members: __t.u32(),
+  messageCount: __t.u64(),
+  lastMessageId: __t.u64(),
+  lastMessageAt: __t.option(__t.timestamp()),
+  createdAt: __t.timestamp(),
+});
+export type SocialChannel = __Infer<typeof SocialChannel>;
+
+export const SocialEdge = __t.object("SocialEdge", {
+  key: __t.string(),
+  accountId: __t.u64(),
+  otherId: __t.u64(),
+  state: __t.string(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+  expiresAt: __t.u64(),
+});
+export type SocialEdge = __Infer<typeof SocialEdge>;
+
+export const SocialFriendDay = __t.object("SocialFriendDay", {
+  key: __t.string(),
+  count: __t.u32(),
+});
+export type SocialFriendDay = __Infer<typeof SocialFriendDay>;
+
+export const SocialFriendRule = __t.object("SocialFriendRule", {
+  id: __t.u64(),
+  name: __t.string(),
+  tagIds: __t.array(__t.u64()),
+  priority: __t.i32(),
+  dailyRequests: __t.option(__t.u32()),
+  maxFriends: __t.option(__t.u32()),
+  rejectCooldownHours: __t.option(__t.u32()),
+  isActive: __t.bool(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type SocialFriendRule = __Infer<typeof SocialFriendRule>;
+
+export const SocialFriendSettings = __t.object("SocialFriendSettings", {
+  id: __t.u8(),
+  dailyRequests: __t.u32(),
+  maxFriends: __t.u32(),
+  expiryDays: __t.u32(),
+  rejectCooldownHours: __t.u32(),
+  matchPolicy: __t.string(),
+  requestsBonusMeta: __t.string(),
+  friendsBonusMeta: __t.string(),
+  overLimit: __t.string(),
+  updatedAt: __t.timestamp(),
+});
+export type SocialFriendSettings = __Infer<typeof SocialFriendSettings>;
+
+export const SocialGift = __t.object("SocialGift", {
+  id: __t.u64(),
+  senderId: __t.u64(),
+  recipientId: __t.u64(),
+  source: __t.string(),
+  kind: __t.string(),
+  itemKey: __t.string(),
+  itemLevel: __t.u32(),
+  quantity: __t.u32(),
+  currencyKey: __t.string(),
+  amount: __t.i64(),
+  productId: __t.u64(),
+  prizeId: __t.u64(),
+  paymentId: __t.u64(),
+  method: __t.string(),
+  coinCurrency: __t.string(),
+  coinAmount: __t.i64(),
+  message: __t.string(),
+  messageFlagged: __t.bool(),
+  delivery: __t.string(),
+  status: __t.string(),
+  outcome: __t.string(),
+  error: __t.string(),
+  requestId: __t.string(),
+  day: __t.i32(),
+  rewards: __t.string(),
+  createdAt: __t.timestamp(),
+  expiresAt: __t.u64(),
+  deliveredAt: __t.u64(),
+  respondedAt: __t.u64(),
+  reversedAt: __t.u64(),
+  reversedBy: __t.u64(),
+  reverseNote: __t.string(),
+});
+export type SocialGift = __Infer<typeof SocialGift>;
+
+export const SocialGiftDay = __t.object("SocialGiftDay", {
+  key: __t.string(),
+  count: __t.u32(),
+});
+export type SocialGiftDay = __Infer<typeof SocialGiftDay>;
+
+export const SocialGiftRequest = __t.object("SocialGiftRequest", {
+  key: __t.string(),
+  giftId: __t.u64(),
+  detail: __t.string(),
+});
+export type SocialGiftRequest = __Infer<typeof SocialGiftRequest>;
+
+export const SocialGiftRule = __t.object("SocialGiftRule", {
+  id: __t.u64(),
+  name: __t.string(),
+  tagIds: __t.array(__t.u64()),
+  priority: __t.i32(),
+  perSenderDaily: __t.option(__t.u32()),
+  perRecipientDaily: __t.option(__t.u32()),
+  perPairDaily: __t.option(__t.u32()),
+  canSend: __t.bool(),
+  isActive: __t.bool(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type SocialGiftRule = __Infer<typeof SocialGiftRule>;
+
+export const SocialGiftSettings = __t.object("SocialGiftSettings", {
+  id: __t.u8(),
+  enabled: __t.bool(),
+  recipients: __t.string(),
+  minFriendDays: __t.u32(),
+  minMutualFriends: __t.u32(),
+  minSenderAccountDays: __t.u32(),
+  minRecipientAccountDays: __t.u32(),
+  minSenderLevel: __t.u32(),
+  levelTableId: __t.u64(),
+  inventoryEnabled: __t.bool(),
+  itemsDefault: __t.bool(),
+  equipped: __t.string(),
+  upgradeLevel: __t.string(),
+  regift: __t.string(),
+  itemRequirements: __t.string(),
+  currencyEnabled: __t.bool(),
+  get currencies() {
+    return __t.array(GiftCurrency);
+  },
+  shopEnabled: __t.bool(),
+  productsDefault: __t.bool(),
+  methods: __t.array(__t.string()),
+  discountCodes: __t.bool(),
+  perSenderDaily: __t.u32(),
+  perRecipientDaily: __t.u32(),
+  perPairDaily: __t.u32(),
+  matchPolicy: __t.string(),
+  sendBonusMeta: __t.string(),
+  receiveBonusMeta: __t.string(),
+  delivery: __t.string(),
+  expiryHours: __t.u32(),
+  onExpiry: __t.string(),
+  coinReturn: __t.string(),
+  moneyReturn: __t.string(),
+  senderCancel: __t.bool(),
+  messageEnabled: __t.bool(),
+  messageMaxLength: __t.u32(),
+  messageFilter: __t.string(),
+  notify: __t.string(),
+  notifySender: __t.bool(),
+  updatedAt: __t.timestamp(),
+});
+export type SocialGiftSettings = __Infer<typeof SocialGiftSettings>;
+
+export const SocialGiftable = __t.object("SocialGiftable", {
+  key: __t.string(),
+  kind: __t.string(),
+  refKey: __t.string(),
+  giftable: __t.bool(),
+  updatedAt: __t.timestamp(),
+});
+export type SocialGiftable = __Infer<typeof SocialGiftable>;
+
+export const SocialMember = __t.object("SocialMember", {
+  key: __t.string(),
+  channelId: __t.u64(),
+  accountId: __t.u64(),
+  role: __t.string(),
+  lastReadId: __t.u64(),
+  joinedAt: __t.timestamp(),
+});
+export type SocialMember = __Infer<typeof SocialMember>;
+
+export const SocialMessage = __t.object("SocialMessage", {
+  id: __t.u64(),
+  channelId: __t.u64(),
+  senderId: __t.u64(),
+  text: __t.string(),
+  original: __t.string(),
+  replyToId: __t.u64(),
+  status: __t.string(),
+  flagged: __t.bool(),
+  hits: __t.array(__t.string()),
+  deletedBy: __t.u64(),
+  deletedAt: __t.option(__t.timestamp()),
+  createdAt: __t.timestamp(),
+});
+export type SocialMessage = __Infer<typeof SocialMessage>;
+
+export const SocialQuotaDay = __t.object("SocialQuotaDay", {
+  key: __t.string(),
+  accountId: __t.u64(),
+  day: __t.i32(),
+  messages: __t.u32(),
+  conversations: __t.u32(),
+  friendMessages: __t.u32(),
+  friendConversations: __t.u32(),
+  packUsed: __t.u32(),
+  freeSent: __t.u32(),
+  unlimitedSent: __t.u32(),
+  total: __t.u32(),
+  blocked: __t.u32(),
+  notified: __t.bool(),
+});
+export type SocialQuotaDay = __Infer<typeof SocialQuotaDay>;
+
+export const SocialQuotaLot = __t.object("SocialQuotaLot", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  amount: __t.u32(),
+  remaining: __t.u32(),
+  source: __t.string(),
+  note: __t.string(),
+  expiresAt: __t.u64(),
+  createdBy: __t.u64(),
+  createdAt: __t.timestamp(),
+});
+export type SocialQuotaLot = __Infer<typeof SocialQuotaLot>;
+
+export const SocialQuotaRule = __t.object("SocialQuotaRule", {
+  id: __t.u64(),
+  name: __t.string(),
+  tagIds: __t.array(__t.u64()),
+  priority: __t.i32(),
+  unlimited: __t.bool(),
+  dailyMessages: __t.option(__t.u32()),
+  dailyConversations: __t.option(__t.u32()),
+  friendDailyMessages: __t.option(__t.u32()),
+  friendDailyConversations: __t.option(__t.u32()),
+  isActive: __t.bool(),
+  createdAt: __t.timestamp(),
+  updatedAt: __t.timestamp(),
+});
+export type SocialQuotaRule = __Infer<typeof SocialQuotaRule>;
+
+export const SocialQuotaSettings = __t.object("SocialQuotaSettings", {
+  id: __t.u8(),
+  enabled: __t.bool(),
+  countMode: __t.string(),
+  dailyMessages: __t.u32(),
+  dailyConversations: __t.u32(),
+  conversationScope: __t.string(),
+  resetMinute: __t.u16(),
+  utcOffsetMinutes: __t.i32(),
+  countDirect: __t.bool(),
+  countGroups: __t.bool(),
+  countRooms: __t.bool(),
+  replyFree: __t.string(),
+  friendPolicy: __t.string(),
+  friendDailyMessages: __t.u32(),
+  friendDailyConversations: __t.u32(),
+  packMeta: __t.string(),
+  packExpiryDays: __t.u32(),
+  order: __t.string(),
+  packProducts: __t.array(__t.string()),
+  bonusMeta: __t.string(),
+  matchPolicy: __t.string(),
+  unlimitedItems: __t.array(__t.string()),
+  unlimitedMeta: __t.string(),
+  unlimitedMetaMode: __t.string(),
+  get message() {
+    return __t.array(Translation);
+  },
+  notice: __t.string(),
+  updatedAt: __t.timestamp(),
+});
+export type SocialQuotaSettings = __Infer<typeof SocialQuotaSettings>;
+
+export const SocialQuotaTarget = __t.object("SocialQuotaTarget", {
+  key: __t.string(),
+  accountId: __t.u64(),
+  target: __t.string(),
+  firstAt: __t.u64(),
+  lastAt: __t.u64(),
+  lastDay: __t.i32(),
+  replyOwed: __t.bool(),
+});
+export type SocialQuotaTarget = __Infer<typeof SocialQuotaTarget>;
+
+export const SocialRate = __t.object("SocialRate", {
+  key: __t.string(),
+  minute: __t.u64(),
+  count: __t.u32(),
+});
+export type SocialRate = __Infer<typeof SocialRate>;
+
+export const SocialRejection = __t.object("SocialRejection", {
+  key: __t.string(),
+  requesterId: __t.u64(),
+  rejecterId: __t.u64(),
+  at: __t.u64(),
+});
+export type SocialRejection = __Infer<typeof SocialRejection>;
+
+export const SocialSettings = __t.object("SocialSettings", {
+  id: __t.u8(),
+  chatEnabled: __t.bool(),
+  messageMaxLength: __t.u32(),
+  messagesPerMinute: __t.u32(),
+  dmPolicy: __t.string(),
+  groupsEnabled: __t.bool(),
+  groupMaxMembers: __t.u32(),
+  groupsPerPlayer: __t.u32(),
+  filterEnabled: __t.bool(),
+  filterReportTitle: __t.string(),
+  historyPageMax: __t.u32(),
+  liveMessages: __t.u32(),
+  wordsSeeded: __t.bool(),
+  clockOffsetSec: __t.i64(),
+  updatedAt: __t.timestamp(),
+});
+export type SocialSettings = __Infer<typeof SocialSettings>;
+
+export const SocialTickTimer = __t.object("SocialTickTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type SocialTickTimer = __Infer<typeof SocialTickTimer>;
+
+export const SocialWord = __t.object("SocialWord", {
+  id: __t.u64(),
+  word: __t.string(),
+  normalized: __t.string(),
+  action: __t.string(),
+  match: __t.string(),
+  isActive: __t.bool(),
+  note: __t.string(),
+  createdAt: __t.timestamp(),
+});
+export type SocialWord = __Infer<typeof SocialWord>;
+
 export const StoreLink = __t.object("StoreLink", {
   store: __t.string(),
   url: __t.string(),
@@ -3913,6 +5344,399 @@ export const StoreLink = __t.object("StoreLink", {
   },
 });
 export type StoreLink = __Infer<typeof StoreLink>;
+
+export const SupportAdminTicketLine = __t.object("SupportAdminTicketLine", {
+  get ticket() {
+    return SupportTicket;
+  },
+  playerName: __t.string(),
+  assigneeName: __t.string(),
+  departmentKey: __t.string(),
+  overdue: __t.bool(),
+});
+export type SupportAdminTicketLine = __Infer<typeof SupportAdminTicketLine>;
+
+export const SupportAgent = __t.object("SupportAgent", {
+  accountId: __t.u64(),
+  lastSeenAt: __t.u64(),
+  away: __t.bool(),
+  focusTicketId: __t.u64(),
+  focusChatId: __t.u64(),
+});
+export type SupportAgent = __Infer<typeof SupportAgent>;
+
+export const SupportAgentLine = __t.object("SupportAgentLine", {
+  accountId: __t.u64(),
+  name: __t.string(),
+  role: __t.string(),
+  lastSeenAt: __t.u64(),
+  away: __t.bool(),
+  openTickets: __t.u32(),
+  activeChats: __t.u32(),
+});
+export type SupportAgentLine = __Infer<typeof SupportAgentLine>;
+
+export const SupportAttachment = __t.object("SupportAttachment", {
+  url: __t.string(),
+  name: __t.string(),
+  type: __t.string(),
+  size: __t.u32(),
+});
+export type SupportAttachment = __Infer<typeof SupportAttachment>;
+
+export const SupportCanned = __t.object("SupportCanned", {
+  id: __t.u64(),
+  key: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  get body() {
+    return __t.array(Translation);
+  },
+  departmentId: __t.u64(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  updatedAt: __t.timestamp(),
+});
+export type SupportCanned = __Infer<typeof SupportCanned>;
+
+export const SupportChat = __t.object("SupportChat", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  status: __t.string(),
+  departmentId: __t.u64(),
+  topic: __t.string(),
+  agentId: __t.u64(),
+  lastSeq: __t.u32(),
+  playerReadSeq: __t.u32(),
+  agentReadSeq: __t.u32(),
+  playerTypingAt: __t.u64(),
+  agentTypingAt: __t.u64(),
+  playerSeenAt: __t.u64(),
+  lastMessageAt: __t.u64(),
+  ticketId: __t.u64(),
+  rating: __t.u8(),
+  ratingComment: __t.string(),
+  closedBy: __t.string(),
+  createdAt: __t.u64(),
+  takenAt: __t.u64(),
+  closedAt: __t.u64(),
+});
+export type SupportChat = __Infer<typeof SupportChat>;
+
+export const SupportChatClosed = __t.object("SupportChatClosed", {
+  chatId: __t.u64(),
+  ticketId: __t.u64(),
+  ticketNumber: __t.string(),
+});
+export type SupportChatClosed = __Infer<typeof SupportChatClosed>;
+
+export const SupportChatLine = __t.object("SupportChatLine", {
+  id: __t.u64(),
+  status: __t.string(),
+  topic: __t.string(),
+  departmentId: __t.u64(),
+  agentName: __t.string(),
+  agentTypingAt: __t.u64(),
+  agentLastSeenAt: __t.u64(),
+  agentReadSeq: __t.u32(),
+  lastSeq: __t.u32(),
+  playerReadSeq: __t.u32(),
+  ticketId: __t.u64(),
+  ticketNumber: __t.string(),
+  canRate: __t.bool(),
+  rating: __t.u8(),
+  createdAt: __t.u64(),
+  closedAt: __t.u64(),
+});
+export type SupportChatLine = __Infer<typeof SupportChatLine>;
+
+export const SupportChatMessage = __t.object("SupportChatMessage", {
+  id: __t.u64(),
+  chatId: __t.u64(),
+  seq: __t.u32(),
+  authorType: __t.string(),
+  authorId: __t.u64(),
+  body: __t.string(),
+  event: __t.string(),
+  at: __t.u64(),
+});
+export type SupportChatMessage = __Infer<typeof SupportChatMessage>;
+
+export const SupportChatMessageLine = __t.object("SupportChatMessageLine", {
+  id: __t.u64(),
+  chatId: __t.u64(),
+  seq: __t.u32(),
+  authorType: __t.string(),
+  authorName: __t.string(),
+  body: __t.string(),
+  event: __t.string(),
+  at: __t.u64(),
+});
+export type SupportChatMessageLine = __Infer<typeof SupportChatMessageLine>;
+
+export const SupportChatOpened = __t.object("SupportChatOpened", {
+  chatId: __t.u64(),
+  status: __t.string(),
+  existing: __t.bool(),
+  agentsOnline: __t.u32(),
+});
+export type SupportChatOpened = __Infer<typeof SupportChatOpened>;
+
+export const SupportChatPage = __t.object("SupportChatPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(SupportChat);
+  },
+});
+export type SupportChatPage = __Infer<typeof SupportChatPage>;
+
+export const SupportChatQueueLine = __t.object("SupportChatQueueLine", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  playerName: __t.string(),
+  status: __t.string(),
+  topic: __t.string(),
+  departmentId: __t.u64(),
+  agentId: __t.u64(),
+  agentName: __t.string(),
+  lastSeq: __t.u32(),
+  agentReadSeq: __t.u32(),
+  playerTypingAt: __t.u64(),
+  playerSeenAt: __t.u64(),
+  lastMessageAt: __t.u64(),
+  createdAt: __t.u64(),
+  takenAt: __t.u64(),
+});
+export type SupportChatQueueLine = __Infer<typeof SupportChatQueueLine>;
+
+export const SupportDepartment = __t.object("SupportDepartment", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  firstResponseHours: __t.u32(),
+  agentIds: __t.array(__t.u64()),
+  autoAssign: __t.bool(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+});
+export type SupportDepartment = __Infer<typeof SupportDepartment>;
+
+export const SupportDepartmentLine = __t.object("SupportDepartmentLine", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  firstResponseHours: __t.u32(),
+  sort: __t.i32(),
+});
+export type SupportDepartmentLine = __Infer<typeof SupportDepartmentLine>;
+
+export const SupportDepartments = __t.object("SupportDepartments", {});
+export type SupportDepartments = __Infer<typeof SupportDepartments>;
+
+export const SupportInfo = __t.object("SupportInfo", {
+  lang: __t.string(),
+  chatEnabled: __t.bool(),
+  agentsOnline: __t.u32(),
+  greeting: __t.string(),
+  offline: __t.string(),
+  maxAttachments: __t.u32(),
+  maxAttachmentKb: __t.u32(),
+  attachmentTypes: __t.array(__t.string()),
+  unread: __t.u32(),
+  openTickets: __t.u32(),
+  chatId: __t.u64(),
+});
+export type SupportInfo = __Infer<typeof SupportInfo>;
+
+export const SupportMessage = __t.object("SupportMessage", {
+  id: __t.u64(),
+  ticketId: __t.u64(),
+  kind: __t.string(),
+  authorType: __t.string(),
+  authorId: __t.u64(),
+  body: __t.string(),
+  get attachments() {
+    return __t.array(SupportAttachment);
+  },
+  event: __t.string(),
+  eventData: __t.string(),
+  at: __t.u64(),
+});
+export type SupportMessage = __Infer<typeof SupportMessage>;
+
+export const SupportMessageLine = __t.object("SupportMessageLine", {
+  id: __t.u64(),
+  ticketId: __t.u64(),
+  authorType: __t.string(),
+  authorName: __t.string(),
+  body: __t.string(),
+  get attachments() {
+    return __t.array(SupportAttachment);
+  },
+  event: __t.string(),
+  eventData: __t.string(),
+  at: __t.u64(),
+});
+export type SupportMessageLine = __Infer<typeof SupportMessageLine>;
+
+export const SupportRate = __t.object("SupportRate", {
+  key: __t.string(),
+  bucket: __t.u64(),
+  count: __t.u32(),
+});
+export type SupportRate = __Infer<typeof SupportRate>;
+
+export const SupportRunResult = __t.object("SupportRunResult", {
+  ticketsClosed: __t.u32(),
+  chatsClosed: __t.u32(),
+  activityRemoved: __t.u32(),
+});
+export type SupportRunResult = __Infer<typeof SupportRunResult>;
+
+export const SupportSettings = __t.object("SupportSettings", {
+  id: __t.u8(),
+  maxOpenTickets: __t.u32(),
+  ticketsPerHour: __t.u32(),
+  messagesPerHour: __t.u32(),
+  maxAttachments: __t.u32(),
+  maxAttachmentKb: __t.u32(),
+  autoCloseDays: __t.u32(),
+  chatEnabled: __t.bool(),
+  get chatGreeting() {
+    return __t.array(Translation);
+  },
+  get chatOffline() {
+    return __t.array(Translation);
+  },
+  chatIdleMinutes: __t.u32(),
+  chatMessagesPerMinute: __t.u32(),
+  chatsPerHour: __t.u32(),
+  agentOnlineSeconds: __t.u32(),
+  activityRetentionDays: __t.u32(),
+  notifyCategoryKey: __t.string(),
+  clockOffsetSec: __t.i64(),
+  updatedAt: __t.timestamp(),
+});
+export type SupportSettings = __Infer<typeof SupportSettings>;
+
+export const SupportSummary = __t.object("SupportSummary", {
+  awaitingStaff: __t.u32(),
+  waitingChats: __t.u32(),
+  activeChats: __t.u32(),
+  overdue: __t.u32(),
+  unassigned: __t.u32(),
+  mine: __t.u32(),
+  myChats: __t.u32(),
+  agentsOnline: __t.u32(),
+  avgFirstResponseMinutes: __t.f64(),
+  avgRating: __t.f64(),
+  rated: __t.u32(),
+  clockOffsetSec: __t.i64(),
+});
+export type SupportSummary = __Infer<typeof SupportSummary>;
+
+export const SupportTickTimer = __t.object("SupportTickTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type SupportTickTimer = __Infer<typeof SupportTickTimer>;
+
+export const SupportTicket = __t.object("SupportTicket", {
+  id: __t.u64(),
+  number: __t.string(),
+  accountId: __t.u64(),
+  subject: __t.string(),
+  departmentId: __t.u64(),
+  priority: __t.string(),
+  status: __t.string(),
+  assigneeId: __t.u64(),
+  source: __t.string(),
+  chatId: __t.u64(),
+  messageCount: __t.u32(),
+  lastMessage: __t.string(),
+  lastPlayerMessageAt: __t.u64(),
+  lastStaffMessageAt: __t.u64(),
+  playerSeenAt: __t.u64(),
+  dueAt: __t.u64(),
+  firstResponseAt: __t.u64(),
+  statusAt: __t.u64(),
+  resolvedAt: __t.u64(),
+  closedAt: __t.u64(),
+  rating: __t.u8(),
+  ratingComment: __t.string(),
+  ratedAt: __t.u64(),
+  createdAt: __t.u64(),
+  updatedAt: __t.u64(),
+});
+export type SupportTicket = __Infer<typeof SupportTicket>;
+
+export const SupportTicketCreated = __t.object("SupportTicketCreated", {
+  ticketId: __t.u64(),
+  number: __t.string(),
+  assigneeId: __t.u64(),
+  status: __t.string(),
+});
+export type SupportTicketCreated = __Infer<typeof SupportTicketCreated>;
+
+export const SupportTicketDetail = __t.object("SupportTicketDetail", {
+  get ticket() {
+    return SupportTicket;
+  },
+  get messages() {
+    return __t.array(SupportMessage);
+  },
+  playerName: __t.string(),
+  playerTickets: __t.u32(),
+  playerOpenTickets: __t.u32(),
+  assigneeName: __t.string(),
+  departmentKey: __t.string(),
+  overdue: __t.bool(),
+});
+export type SupportTicketDetail = __Infer<typeof SupportTicketDetail>;
+
+export const SupportTicketLine = __t.object("SupportTicketLine", {
+  id: __t.u64(),
+  number: __t.string(),
+  subject: __t.string(),
+  departmentId: __t.u64(),
+  departmentKey: __t.string(),
+  priority: __t.string(),
+  status: __t.string(),
+  source: __t.string(),
+  messageCount: __t.u32(),
+  lastMessage: __t.string(),
+  lastStaffMessageAt: __t.u64(),
+  unread: __t.bool(),
+  canRate: __t.bool(),
+  rating: __t.u8(),
+  agentName: __t.string(),
+  chatId: __t.u64(),
+  createdAt: __t.u64(),
+  updatedAt: __t.u64(),
+  resolvedAt: __t.u64(),
+  closedAt: __t.u64(),
+});
+export type SupportTicketLine = __Infer<typeof SupportTicketLine>;
+
+export const SupportTicketPage = __t.object("SupportTicketPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(SupportAdminTicketLine);
+  },
+});
+export type SupportTicketPage = __Infer<typeof SupportTicketPage>;
 
 export const TagRef = __t.object("TagRef", {
   id: __t.u64(),
