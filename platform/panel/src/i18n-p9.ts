@@ -1,0 +1,33 @@
+export const faP9 = {
+  navGamesMode: 'بازی‌ها',
+  navGamesCatalog: 'فهرست بازی‌ها',
+  navGame: 'بازی',
+  navGameServers: 'سرورهای بازی',
+  navMatches: 'مسابقه‌ها',
+  navMatch: 'مسابقه',
+  navLeaderboards: 'جدول‌های امتیاز',
+  navLeaderboard: 'جدول امتیاز',
+  navGamePayouts: 'جایزه‌های بازی',
+  stGamesSettings: 'تنظیمات بازی‌ها',
+  errors: {} as Record<string, string>,
+  actions: {} as Record<string, string>,
+  actionGroups: {} as Record<string, string>,
+  fields: {} as Record<string, string>,
+};
+
+export const enP9: typeof faP9 = {
+  navGamesMode: 'Games',
+  navGamesCatalog: 'Game catalog',
+  navGame: 'Game',
+  navGameServers: 'Game servers',
+  navMatches: 'Matches',
+  navMatch: 'Match',
+  navLeaderboards: 'Leaderboards',
+  navLeaderboard: 'Leaderboard',
+  navGamePayouts: 'Game payouts',
+  stGamesSettings: 'Games settings',
+  errors: {},
+  actions: {},
+  actionGroups: {},
+  fields: {},
+};

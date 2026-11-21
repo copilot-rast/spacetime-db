@@ -22,6 +22,7 @@ import { PlayerActivityCard } from './support.tsx';
 import { PlayerFriendsCard } from './socialchat.tsx';
 import { PlayerQuotaCard } from './socialgifts.tsx';
 import { PlayerReferralCard } from './growth.tsx';
+import { PlayerGamesCard } from './gamesplay.tsx';
 import { digits, errorText, num, phone as fmtPhone, roleLabel, t, useLocale } from './i18n.ts';
 import { go, pageQuery, run, runToast, trText, useDebounced, useFetch, useLanguages, useRoute, useSession, type Tr } from './app.ts';
 import { Dialog, Empty, ErrBox, Field, Pager, Seg, Skel, TableSkeleton, TrInputs, confirmAsk, trMissingDefault } from './ui.tsx';
@@ -774,6 +775,7 @@ export function PlayerPage() {
           <PlayerFriendsCard accountId={p.id} />
           <PlayerQuotaCard accountId={p.id} />
           <PlayerReferralCard accountId={p.id} />
+          <PlayerGamesCard accountId={p.id} />
           {can('admin') && !self && p.role !== 'owner' && (!p.role || can('owner')) && (
             <Section title={t('pdAccount')}>
               <button

@@ -88,12 +88,18 @@ import {
   ChartLineUp,
   ListMagnifyingGlass,
   Scroll,
+  GameController,
+  Cube,
+  HardDrives,
+  Sword,
+  Coins as CoinsIc,
+  Ranking,
 } from '@phosphor-icons/react';
 import { t } from './i18n.ts';
 
 export type Need = 'support' | 'operator' | 'admin' | 'owner';
 
-export type ModeId = 'overview' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication' | 'support' | 'growth' | 'social' | 'access' | 'settings';
+export type ModeId = 'overview' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication' | 'support' | 'growth' | 'social' | 'games' | 'access' | 'settings';
 
 export type PageDef = { id: string; path: string; mode: ModeId; label: () => string; icon: Icon; need: Need };
 
@@ -105,6 +111,7 @@ export const MODES: { id: ModeId; label: () => string; icon: Icon }[] = [
   { id: 'items', label: () => t('navItemsMode'), icon: Backpack },
   { id: 'promo', label: () => t('navPromo'), icon: Megaphone },
   { id: 'publication', label: () => t('navPublication'), icon: Broadcast },
+  { id: 'games', label: () => t('navGamesMode'), icon: GameController },
   { id: 'support', label: () => t('navSupport'), icon: Lifebuoy },
   { id: 'social', label: () => t('navSocial'), icon: ChatCenteredDots },
   { id: 'growth', label: () => t('navGrowth'), icon: RocketLaunch },
@@ -152,6 +159,11 @@ export const PAGES: PageDef[] = [
   { id: 'news-comments', path: 'news-comments', mode: 'publication', label: () => t('navNewsComments'), icon: ChatsCircle, need: 'operator' },
   { id: 'news-sources', path: 'news-sources', mode: 'publication', label: () => t('navNewsSources'), icon: WebhooksLogo, need: 'operator' },
   { id: 'faq', path: 'faq', mode: 'publication', label: () => t('navFaq'), icon: Question, need: 'operator' },
+  { id: 'games-catalog', path: 'games-catalog', mode: 'games', label: () => t('navGamesCatalog'), icon: Cube, need: 'operator' },
+  { id: 'matches', path: 'matches', mode: 'games', label: () => t('navMatches'), icon: Sword, need: 'support' },
+  { id: 'leaderboards', path: 'leaderboards', mode: 'games', label: () => t('navLeaderboards'), icon: Ranking, need: 'operator' },
+  { id: 'game-payouts', path: 'game-payouts', mode: 'games', label: () => t('navGamePayouts'), icon: CoinsIc, need: 'operator' },
+  { id: 'game-servers', path: 'game-servers', mode: 'games', label: () => t('navGameServers'), icon: HardDrives, need: 'admin' },
   { id: 'tickets', path: 'tickets', mode: 'support', label: () => t('navTickets'), icon: Headset, need: 'support' },
   { id: 'live-chat', path: 'live-chat', mode: 'support', label: () => t('navLiveChat'), icon: ChatsTeardrop, need: 'support' },
   { id: 'activity', path: 'activity', mode: 'support', label: () => t('navActivity'), icon: ClockClockwise, need: 'support' },
@@ -174,7 +186,7 @@ export const PAGES: PageDef[] = [
   { id: 'audit', path: 'audit', mode: 'access', label: () => t('navAudit'), icon: ClockCounterClockwise, need: 'admin' },
 ];
 
-export type SectionDef = { id: string; group: 'project' | 'content' | 'login' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication' | 'support' | 'social' | 'growth'; label: () => string; icon: Icon; need: Need };
+export type SectionDef = { id: string; group: 'project' | 'content' | 'login' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication' | 'support' | 'social' | 'growth' | 'games'; label: () => string; icon: Icon; need: Need };
 
 export const SECTIONS: SectionDef[] = [
   { id: 'brand', group: 'project', label: () => t('stBrand'), icon: Palette, need: 'operator' },
@@ -202,6 +214,7 @@ export const SECTIONS: SectionDef[] = [
   { id: 'pub-settings', group: 'publication', label: () => t('stPubSettings'), icon: Gauge, need: 'operator' },
   { id: 'news-settings', group: 'publication', label: () => t('stNewsSettings'), icon: Newspaper, need: 'operator' },
   { id: 'public-feeds', group: 'publication', label: () => t('stPublicFeeds'), icon: Rss, need: 'operator' },
+  { id: 'games-settings', group: 'games', label: () => t('stGamesSettings'), icon: GameController, need: 'operator' },
   { id: 'support-settings', group: 'support', label: () => t('stSupportSettings'), icon: Lifebuoy, need: 'support' },
   { id: 'chat-settings', group: 'social', label: () => t('stChatSettings'), icon: ChatCenteredDots, need: 'operator' },
   { id: 'friend-settings', group: 'social', label: () => t('stFriendSettings'), icon: HandHeart, need: 'operator' },
@@ -220,6 +233,7 @@ export const GROUPS: { id: SectionDef['group']; label: () => string }[] = [
   { id: 'items', label: () => t('navItemsMode') },
   { id: 'promo', label: () => t('navPromo') },
   { id: 'publication', label: () => t('navPublication') },
+  { id: 'games', label: () => t('navGamesMode') },
   { id: 'support', label: () => t('navSupport') },
   { id: 'social', label: () => t('navSocial') },
   { id: 'growth', label: () => t('navGrowth') },
@@ -227,6 +241,9 @@ export const GROUPS: { id: SectionDef['group']; label: () => string }[] = [
 
 export const EXTRA_PAGES: { id: string; mode: ModeId; need: Need; label: () => string }[] = [
   { id: 'ticket', mode: 'support', need: 'support', label: () => t('navTicket') },
+  { id: 'game', mode: 'games', need: 'operator', label: () => t('navGame') },
+  { id: 'match', mode: 'games', need: 'support', label: () => t('navMatch') },
+  { id: 'leaderboard', mode: 'games', need: 'operator', label: () => t('navLeaderboard') },
   { id: 'referral-tree', mode: 'growth', need: 'operator', label: () => t('navReferralTree') },
   { id: 'friend-gift', mode: 'social', need: 'operator', label: () => t('navFriendGift') },
 ];

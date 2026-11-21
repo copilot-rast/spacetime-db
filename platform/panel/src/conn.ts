@@ -90,6 +90,11 @@ export const QUERIES = [
   'SELECT * FROM admin_gift_settings',
   'SELECT * FROM admin_gift_rules',
   'SELECT * FROM admin_giftables',
+  'SELECT * FROM admin_games',
+  'SELECT * FROM admin_game_rooms',
+  'SELECT * FROM admin_game_servers',
+  'SELECT * FROM admin_games_settings',
+  'SELECT * FROM admin_leaderboards',
 ];
 
 const TABLES = [
@@ -166,6 +171,11 @@ const TABLES = [
   'adminGiftSettings',
   'adminGiftRules',
   'adminGiftables',
+  'adminGames',
+  'adminGameRooms',
+  'adminGameServers',
+  'adminGamesSettings',
+  'adminLeaderboards',
 ] as const;
 
 export function defaultServer() {

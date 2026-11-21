@@ -21,6 +21,8 @@ import { EXTRA_PAGES, MODES, PAGES, pageMode } from './nav.tsx';
 import { Activity, CannedReplies, LiveChat, SupportDepartments, TicketPage, Tickets } from './support.tsx';
 import { ChatGroups, ChatMessages, ChatRooms, ChatWords, FriendRules } from './socialchat.tsx';
 import { FriendGiftPage, FriendGifts, GiftReport, GiftRules, Giftables, QuotaReport, QuotaRules } from './socialgifts.tsx';
+import { GameEditPage, GamesCatalog, GameServers } from './games.tsx';
+import { GamePayouts, LeaderboardPage, Leaderboards, MatchPage, Matches } from './gamesplay.tsx';
 import { ReferralTree, Referrals, RemoteConfig } from './growth.tsx';
 
 function Panel() {
@@ -88,6 +90,14 @@ function Panel() {
     'news-comments': () => <NewsComments />,
     'news-sources': () => <NewsSources />,
     faq: () => <Faq />,
+    'games-catalog': () => <GamesCatalog />,
+    game: () => <GameEditPage key={route.query.get('id') ?? ''} />,
+    'game-servers': () => <GameServers />,
+    matches: () => <Matches />,
+    match: () => <MatchPage key={route.query.get('id') ?? ''} />,
+    leaderboards: () => <Leaderboards />,
+    leaderboard: () => <LeaderboardPage key={route.query.get('id') ?? ''} />,
+    'game-payouts': () => <GamePayouts />,
     tickets: () => <Tickets />,
     ticket: () => <TicketPage key={route.query.get('id') ?? ''} />,
     'live-chat': () => <LiveChat />,

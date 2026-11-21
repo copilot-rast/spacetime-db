@@ -26,6 +26,7 @@ import {
 import { openWizard } from './shell.tsx';
 import { GamSettingsSection, ItemsSettingsSection, OfferSettingsSection, PromoSettingsSection } from './settings3.tsx';
 import { SupportSettingsSection } from './support.tsx';
+import { GamesSettingsSection } from './games.tsx';
 import { ChatSettingsSection, FriendSettingsSection } from './socialchat.tsx';
 import { GiftSettingsSection, QuotaSettingsSection } from './socialgifts.tsx';
 import { ReferralSettingsSection } from './growth.tsx';
@@ -111,6 +112,7 @@ export function SettingsWindow() {
             {section?.id === 'pub-settings' && <PubSettingsSection ro={ro} />}
             {section?.id === 'news-settings' && <NewsSettingsSection ro={ro} />}
             {section?.id === 'public-feeds' && <PublicFeedsSection ro={ro} />}
+            {section?.id === 'games-settings' && <GamesSettingsSection ro={ro} />}
             {section?.id === 'support-settings' && <SupportSettingsSection ro={ro} />}
             {section?.id === 'chat-settings' && <ChatSettingsSection ro={ro} />}
             {section?.id === 'friend-settings' && <FriendSettingsSection ro={ro} />}
