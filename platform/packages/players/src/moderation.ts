@@ -3,6 +3,7 @@ import { Timestamp } from 'spacetimedb';
 import {
   Translations,
   accountGuards,
+  logActivity,
   audit,
   cleanKey,
   cleanTranslations,
@@ -206,6 +207,7 @@ export function restrict(
     for (const s of [...ctx.db.session.accountId.filter(a.accountId)]) ctx.db.session.identity.delete(s.identity);
   }
   audit(asBase(ctx), meId, `restriction.${a.kind}`, String(a.accountId), `id=${row.id} until=${isoOf(endsAt)}`);
+  logActivity(ctx, a.accountId, { kind: 'restriction', action: a.kind, refId: String(row.id), data: JSON.stringify({ until: String(endsAt.microsSinceUnixEpoch) }), actor: `admin:${meId}` });
   return row;
 }
 
@@ -369,6 +371,7 @@ export function defineModeration(st: PlayersSchema) {
     guardTarget(ctx, me.id, r.accountId);
     ctx.db.restriction.id.update({ ...r, status: 'lifted', liftedBy: me.id, liftedAt: ctx.timestamp, liftNote: a.note.trim().slice(0, 500) });
     audit(asBase(ctx), me.id, 'restriction.lift', String(r.accountId), `id=${r.id}`);
+    logActivity(ctx, r.accountId, { kind: 'restriction', action: 'lifted', refId: String(r.id), data: JSON.stringify({ kind: r.kind }), actor: `admin:${me.id}` });
   });
 
   const adminPlayers = st.procedure(

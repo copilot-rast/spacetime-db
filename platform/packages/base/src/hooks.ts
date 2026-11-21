@@ -16,3 +16,11 @@ export function checkAccountGuards(ctx: Tx, accountId: bigint): GuardResult {
   }
   return undefined;
 }
+
+export type ActivityEntry = { kind: string; action: string; refId?: string; data?: string; actor?: string };
+export type ActivityWriter = (ctx: Tx, accountId: bigint, e: ActivityEntry) => void;
+export const activityWriters: ActivityWriter[] = [];
+
+export function logActivity(ctx: unknown, accountId: bigint, e: ActivityEntry) {
+  for (const w of activityWriters) w(ctx as Tx, accountId, e);
+}

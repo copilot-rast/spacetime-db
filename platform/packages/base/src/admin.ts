@@ -566,7 +566,7 @@ export function defineAdmin(st: BaseSchema) {
   });
 
   const adminChangeMyPassword = st.reducer({ oldPassword: t.string(), newPassword: t.string() }, (ctx, a) => {
-    const me = requireRole(ctx, 'operator');
+    const me = requireRole(ctx, 'support');
     const envUser = ctx.env.ADMIN_USERNAME ?? '';
     if (envUser && me.phone === `${PANEL_PREFIX}${envUser}`) fail('ENV_ADMIN_LOCKED');
     const u = ctx.db.adminUser.accountId.find(me.id);

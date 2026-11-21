@@ -1,6 +1,6 @@
 import { t } from 'spacetimedb/server';
 import { Timestamp } from 'spacetimedb';
-import { Translations, loginHooks, audit, cleanKey, cleanTranslations, fail, requireAccount, requireRole, toLatinDigits, type Tr, type Tx } from '@stg/base';
+import { Translations, loginHooks, logActivity, audit, cleanKey, cleanTranslations, fail, requireAccount, requireRole, toLatinDigits, type Tr, type Tx } from '@stg/base';
 import { GroupEntry, PrizeItem, economyRows, type EconomySchema } from './schema';
 import { addMeta, asAny, balanceOf, changeBalance, ensureDefaults, extraItemTypes, grantPrize, metaValue, setMeta, type ETx, type Reward } from './engine';
 
@@ -483,6 +483,7 @@ export function defineCatalog(st: EconomySchema) {
       const use = tx.db.giftUse.insert({ id: 0n, giftId: g.id, accountId: me.id, paymentId: 0n, status: 'used', createdAt: tx.timestamp, updatedAt: tx.timestamp });
       tx.db.gift.id.update({ ...g, totalUsed: g.totalUsed + 1 });
       const rewards = grantPrize(tx, me.id, g.prizeId, 'gift', String(use.id));
+      logActivity(tx, me.id, { kind: 'gift', action: 'redeemed', refId: String(g.id), data: JSON.stringify({ code: g.code, prizeId: String(g.prizeId) }), actor: 'player' });
       return { rewards, giftName: g.name };
     })
   );
