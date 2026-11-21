@@ -16,7 +16,7 @@ Prize items: `{type, key, action, value}`.
 - `meta` + `add` or `set`.
 - `prize_group` + `give`: one prize from the group, picked by weight with HMAC(`OTP_SECRET`, account, source, prize). The same source always gets the same pick.
 
-Later packages register more item types (`extraItemTypes`, `itemHandlers`).
+Later packages register more item types (`extraItemTypes`, `itemHandlers`, `itemValidators` to check an item on save) and block deletes (`prizeUseChecks`, `metaUseChecks`). `@stg/gamification` adds the `achievement` item type.
 
 A grant is idempotent per `(sourceType, sourceId, prize, account)`: repeating it returns the first rewards. A prize with `isRepeatable = false` is granted once per player (`PRIZE_ALREADY_GRANTED`).
 
