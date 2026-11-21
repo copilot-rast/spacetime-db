@@ -99,7 +99,7 @@ For each room with waiting matchmaking tickets, oldest first: the oldest unmatch
 
 `games_match` (private): game, room, keys, `path`, `state` (`waiting`, `playing`, `finished`, `cancelled`), `players` (account ids), `bots`, skill range, `reason` (who finished it, or why it was cancelled: `player_left`, `abandoned`, `start_timeout`, `play_timeout`, admin text), times.
 
-`games_tick` (every 2 s) and `admin_games_run` (admin, answers `{matches, expired, cancelled, boards, paid}`) expire old tickets, run the matcher, cancel late matches, roll leaderboard periods, prune history and pay waiting payouts; failed payouts are retried after 30 s up to `payoutMaxTries`.
+`games_tick` (every 2 s) and `admin_games_run` (admin, answers `{matches, expired, cancelled, boards, paid}`) expire old tickets, run the matcher, cancel late matches, roll leaderboard periods, prune history (the tick about every 5 minutes, `admin_games_run` every time) and pay waiting payouts; failed payouts are retried after 30 s up to `payoutMaxTries`.
 
 ## Results and prizes
 

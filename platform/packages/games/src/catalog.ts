@@ -387,7 +387,7 @@ export function authority(ctx: GTx) {
   fail('FORBIDDEN');
 }
 
-export function runTick(ctx: GTx) {
+export function runTick(ctx: GTx, prune = false) {
   const now = nowUs(ctx);
   const s = gamesSettings(ctx);
   const out = { matches: 0, expired: 0, cancelled: 0, boards: 0 };
@@ -423,7 +423,7 @@ export function runTick(ctx: GTx) {
     const after = rollover(ctx, lb, now);
     if (after.currentPeriod !== lb.currentPeriod) out.boards++;
   }
-  if (s.historyDays) {
+  if (s.historyDays && (prune || (ctx.timestamp.microsSinceUnixEpoch / SEC) % 300n < 2n)) {
     const cutoff = now - BigInt(s.historyDays) * 86_400n * SEC;
     let n = 0;
     for (const state of ['finished', 'cancelled']) {
@@ -989,14 +989,14 @@ export function defineCatalog(st: GamesSchema) {
     const r = ctx.withTx(tx => {
       const me = requireRole(base(tx), 'admin');
       audit(base(tx), me.id, 'games.run', 'tick');
-      return runTick(tx);
+      return runTick(tx, true);
     });
     const paid = runPayouts(ctx);
     return { ...r, paid };
   });
 
   const gamesTick = st.procedure({ onSchedule: gamesTables.gamesTickTimer }, { timer: gamesTables.gamesTickTimer.rowType }, t.unit(), ctx => {
-    const any = ctx.withTx(tx => [...tx.db.gameTicket.status.filter('waiting')].length > 0 || [...tx.db.gameMatch.state.filter('waiting')].length > 0 || [...tx.db.gameMatch.state.filter('playing')].length > 0 || [...tx.db.leaderboard.iter()].some(l => l.isActive) || tx.db.gamesSettings.id.find(0)!.historyDays > 0);
+    const any = ctx.withTx(tx => [...tx.db.gameTicket.status.filter('waiting')].length > 0 || [...tx.db.gameMatch.state.filter('waiting')].length > 0 || [...tx.db.gameMatch.state.filter('playing')].length > 0 || [...tx.db.leaderboard.iter()].some(l => l.isActive) || (tx.db.gamesSettings.id.find(0)?.historyDays ?? 0) > 0);
     if (any) ctx.withTx(tx => runTick(tx));
     runPayouts(ctx);
     retryFailed(ctx);
