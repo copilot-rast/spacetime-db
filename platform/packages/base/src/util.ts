@@ -80,7 +80,14 @@ export function requireAccount(ctx: Tx) {
   return a;
 }
 
+export const PANEL_PREFIX = 'admin:';
+
+export function isPanelAccount(a: { phone: string } | null | undefined) {
+  return !!a && a.phone.startsWith(PANEL_PREFIX);
+}
+
 export function roleOf(ctx: Tx, accountId: bigint): string | undefined {
+  if (!isPanelAccount(ctx.db.account.id.find(accountId))) return undefined;
   return ctx.db.admin.accountId.find(accountId)?.role;
 }
 
@@ -98,7 +105,7 @@ export function adminOrNull(ctx: { db: Tx['db']; sender: Tx['sender'] }, need: R
   const s = ctx.db.session.identity.find(ctx.sender);
   if (!s) return undefined;
   const a = ctx.db.account.id.find(s.accountId);
-  if (!a || a.status !== 'active') return undefined;
+  if (!a || a.status !== 'active' || !isPanelAccount(a)) return undefined;
   return hasRole(ctx.db.admin.accountId.find(a.id)?.role, need) ? a : undefined;
 }
 

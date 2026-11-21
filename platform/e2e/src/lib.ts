@@ -1,5 +1,10 @@
 import { execFileSync } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
 import { DbConnection } from './bindings/index.ts';
+
+const PW_FILE = new URL('../../.local/admin_password', import.meta.url);
+export const ADMIN_USER = process.env.STG_ADMIN_USER ?? 'admin';
+export const ADMIN_PASSWORD = process.env.STG_ADMIN_PASSWORD ?? (existsSync(PW_FILE) ? readFileSync(PW_FILE, 'utf8').trim() : '');
 
 export const URI = process.env.STG_URI ?? 'ws://127.0.0.1:7500';
 export const DB = process.env.STG_DB ?? 'stg-template';
@@ -150,3 +155,22 @@ export function uniquePhone(prefix = '0935') {
 }
 
 export const tr = (fa: string, en?: string) => (en ? [{ lang: 'fa', text: fa }, { lang: 'en', text: en }] : [{ lang: 'fa', text: fa }]);
+
+export async function loginOwner(c: Client) {
+  if (!ADMIN_PASSWORD) throw new Error('no admin password: set STG_ADMIN_PASSWORD or platform/.local/admin_password');
+  const r = await c.conn.procedures.adminLogin({ username: ADMIN_USER, password: ADMIN_PASSWORD });
+  if (!r.ok) throw new Error(`owner login failed: ${r.error}`);
+  await waitFor(() => [...c.conn.db.myRole.iter()][0]?.role === 'owner');
+  return r;
+}
+
+export async function panelUser(owner: Client, role: string, extra: string[] = []) {
+  const username = `u${Date.now() % 1000000}${Math.floor(Math.random() * 1000)}`;
+  const password = `Pass${Date.now()}x9`;
+  await owner.conn.reducers.adminCreateUser({ username, password, role });
+  const c = await connect(undefined, extra);
+  const r = await c.conn.procedures.adminLogin({ username, password });
+  if (!r.ok) throw new Error(`panel user login failed: ${r.error}`);
+  await waitFor(() => [...c.conn.db.myRole.iter()][0]?.role === role);
+  return { client: c, accountId: r.accountId, username, password };
+}

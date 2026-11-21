@@ -1,6 +1,5 @@
-import { ECONOMY_QUERIES, GAMIFICATION_QUERIES, PLAYER_QUERIES, check, connect, done, errorOf, login, tr, uniquePhone, waitFor, type Client } from './src/lib.ts';
+import { ECONOMY_QUERIES, GAMIFICATION_QUERIES, PLAYER_QUERIES, check, connect, done, loginOwner, panelUser, errorOf, login, tr, uniquePhone, waitFor, type Client } from './src/lib.ts';
 
-const OWNER = '09120000001';
 const R = String(Date.now() % 10_000_000);
 const c = (token?: string) => connect(token, [...PLAYER_QUERIES, ...ECONOMY_QUERIES, ...GAMIFICATION_QUERIES]);
 const rows = <T>(it: Iterable<T>) => [...it];
@@ -176,7 +175,7 @@ function ach(p: Client, id: bigint) {
 
 async function main() {
   o = await c();
-  await login(o, OWNER);
+  const ownerLogin = await loginOwner(o);
   await setDay(0);
   await o.conn.reducers.adminSaveGamificationSettings({ weekStart: 6, playerRateLimit: 120, retentionDays: 30, chainDepth: 8 });
   check('settings row seeded with defaults', await waitFor(() => {

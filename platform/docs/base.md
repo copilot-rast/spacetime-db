@@ -7,16 +7,17 @@ Phase 1 of the roadmap. All names below are the wire names (SQL, subscriptions, 
 | Key | Required | Use |
 |---|---|---|
 | `OTP_SECRET` | yes | HMAC key for login codes and test codes. 32+ random bytes. |
-| `ADMIN_PHONES` | no | Comma list. These phones become `owner` on login. Use it to bootstrap the first owner. |
-| `ADMIN_USERNAME`, `ADMIN_PASSWORD` | no | Panel login without SMS, like the Nakama console. Both set and the password 8+ characters, or the login is off. |
+| `ADMIN_USERNAME`, `ADMIN_PASSWORD` | yes for the panel | The env owner, like the Nakama console user. Both set and the password 8+ characters, or this login is off. |
 
 ## Roles
+
+Only panel accounts hold roles. A panel account is the env owner or a panel user the owner creates; its account phone is `admin:<username>`. Phone (SMS) accounts are players and never hold a role: `roleOf`, `adminOrNull` and `my_role` ignore them, and `init`/`clientConnected` drop any old role row that belongs to one.
 
 `owner` > `admin` > `operator`. A higher role can do everything a lower one can.
 
 - `operator`: dashboard, account list, admin list, settings view.
 - `admin`: every setting, SMS providers, test phones, languages, key types, categories, tags, account status, audit log.
-- `owner`: adds, changes and removes admins. The last owner cannot be removed or demoted.
+- `owner`: manages panel users. The env owner cannot be edited or removed here (`ENV_ADMIN_LOCKED`).
 
 ## Public tables
 
@@ -38,9 +39,13 @@ Phase 1 of the roadmap. All names below are the wire names (SQL, subscriptions, 
 | `admin_test_phones` | admin | fixed-code phones |
 | `admin_sandbox_sms` | admin | last 50 sandbox messages |
 
-## Admin login with username and password
+## Panel login (username and password only)
 
-`admin_login(username, password)` → `{ ok, error, accountId, role, retryAfterSec }`. It checks both values against `ADMIN_USERNAME` and `ADMIN_PASSWORD` and logs this device in as an account with phone `admin:<username>`, which is always `owner` (removing its role lasts only until its next login). Errors: `PASSWORD_LOGIN_DISABLED`, `INVALID_CREDENTIALS`, `TOO_MANY_ATTEMPTS` (with `retryAfterSec`).
+`admin_login(username, password)` → `{ ok, error, accountId, role, retryAfterSec }`. The env user (exact match) is checked against `ADMIN_PASSWORD` and is always `owner`. Any other username (case-insensitive) is a panel user checked against its PBKDF2-SHA256 hash (20 000 rounds, HMAC salt). An inactive or deleted user gets `INVALID_CREDENTIALS`, the same as a wrong password.
+
+Panel users (owner only): `admin_create_user(username, password, role)`, `admin_set_user_role`, `admin_set_user_password` (logs the user out), `admin_set_user_active` (inactive logs out), `admin_delete_user` (frees the username). Any panel user: `admin_change_my_password(oldPassword, newPassword)` (logs out its other devices). Usernames are 3–32 of `a-z 0-9 _ . -`; passwords 10–128 characters with letters and digits. Errors: `INVALID_USERNAME`, `USERNAME_TAKEN`, `PASSWORD_TOO_SHORT`, `PASSWORD_TOO_LONG`, `PASSWORD_TOO_WEAK`, `ENV_ADMIN_LOCKED`, `LAST_OWNER`, `CANNOT_CHANGE_SELF`.
+
+`admin_admins` rows: `accountId, username, displayName, role, isActive, isEnv, createdAt, lastLoginAt`. Errors: `PASSWORD_LOGIN_DISABLED`, `INVALID_CREDENTIALS`, `TOO_MANY_ATTEMPTS` (with `retryAfterSec`).
 
 After `adminLoginMaxAttempts` (5) wrong tries the username is locked for `adminLoginLockMinutes` (15), even for the right password. The owner changes both with `admin_save_login_rules` and unlocks with `admin_clear_login_locks`. An SMS code can never reach this account. Every login writes `admin.password_login` to the audit log.
 
@@ -67,7 +72,7 @@ An empty `apiKey` on edit keeps the stored key. `admin_test_sms(providerId, phon
 
 ## Admin reducers
 
-`admin_save_settings`, `admin_complete_setup`, `admin_save_brand`, `admin_save_sms_provider`, `admin_delete_sms_provider`, `admin_save_test_phone`, `admin_delete_test_phone`, `admin_clear_sandbox_sms`, `admin_save_language`, `admin_set_default_language`, `admin_delete_language`, `admin_save_key_type`, `admin_delete_key_type`, `admin_save_category`, `admin_delete_category`, `admin_save_tag`, `admin_delete_tag`, `admin_set_admin`, `admin_remove_admin`, `admin_set_account_status`. Every change writes `base_audit`.
+`admin_save_settings`, `admin_complete_setup`, `admin_save_brand`, `admin_save_sms_provider`, `admin_delete_sms_provider`, `admin_save_test_phone`, `admin_delete_test_phone`, `admin_clear_sandbox_sms`, `admin_save_language`, `admin_set_default_language`, `admin_delete_language`, `admin_save_key_type`, `admin_delete_key_type`, `admin_save_category`, `admin_delete_category`, `admin_save_tag`, `admin_delete_tag`, `admin_set_account_status`. Every change writes `base_audit`.
 
 ## Admin procedures
 

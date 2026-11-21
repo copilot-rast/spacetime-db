@@ -1,12 +1,11 @@
-import { PLAYER_QUERIES, check, connect, done, errorOf, login, tr, uniquePhone, waitFor, type Client } from './src/lib.ts';
+import { PLAYER_QUERIES, check, connect, done, loginOwner, panelUser, errorOf, login, tr, uniquePhone, waitFor, type Client } from './src/lib.ts';
 
-const OWNER = '09120000001';
 const c = (token?: string) => connect(token, PLAYER_QUERIES);
 const rows = <T>(it: Iterable<T>) => [...it];
 
 async function main() {
   const owner = await c();
-  await login(owner, OWNER);
+  const ownerLogin = await loginOwner(owner);
   const a = await c();
   const aPhone = uniquePhone('0936');
   const aLogin = await login(a, aPhone);
@@ -86,7 +85,7 @@ async function main() {
   check('muted filter', (await owner.conn.procedures.adminPlayers({ query: aPhone, tagId: 0n, status: 'muted', page: 1, pageSize: 10 })).total === 1);
   check('restriction needs an end', (await errorOf(owner.conn.reducers.adminRestrict({ accountId: aLogin.accountId, kind: 'suspend', minutes: 0, endsAt: 0n, reason: tr('x'), note: '' }))).includes('END_REQUIRED'));
   check('restriction needs a reason', (await errorOf(owner.conn.reducers.adminRestrict({ accountId: aLogin.accountId, kind: 'suspend', minutes: 5, endsAt: 0n, reason: [], note: '' }))).includes('TITLE_REQUIRED'));
-  check('owner cannot be restricted', (await errorOf(owner.conn.reducers.adminRestrict({ accountId: aLogin.accountId === 0n ? 1n : (await owner.conn.procedures.adminAccounts({ query: OWNER, status: '', page: 1, pageSize: 1 })).rows[0].id, kind: 'mute', minutes: 5, endsAt: 0n, reason: tr('x'), note: '' }))).includes('CANNOT_CHANGE_SELF'));
+  check('owner cannot be restricted', (await errorOf(owner.conn.reducers.adminRestrict({ accountId: aLogin.accountId === 0n ? 1n : ownerLogin.accountId, kind: 'mute', minutes: 5, endsAt: 0n, reason: tr('x'), note: '' }))).includes('CANNOT_CHANGE_SELF'));
 
   await owner.conn.reducers.adminRestrict({ accountId: aLogin.accountId, kind: 'suspend', minutes: 30, endsAt: 0n, reason: tr('تقلب', 'Cheating'), note: '' });
   check('suspension logs the player out live', await waitFor(() => rows(a.conn.db.me.iter()).length === 0));
@@ -150,15 +149,12 @@ async function main() {
   const sum = await owner.conn.procedures.adminModerationSummary();
   check('moderation summary', sum.muted >= 1, sum);
 
-  const op = await c();
-  const opPhone = uniquePhone('0912');
-  await owner.conn.reducers.adminSetAdmin({ phone: opPhone, role: 'operator' });
-  await login(op, opPhone);
+  const opUser = await panelUser(owner, 'operator', PLAYER_QUERIES);
+  const op = opUser.client;
   check('operator can moderate', (await errorOf(op.conn.reducers.adminRestrict({ accountId: bLogin.accountId, kind: 'warn', minutes: 0, endsAt: 0n, reason: tr('از اپراتور'), note: '' }))) === '');
   check('operator cannot change account rules', (await errorOf(op.conn.reducers.adminSaveAccountRules({ displayNameMin: 0, displayNameMax: 40, displayNameCharset: 'any', displayNameUnique: false }))).includes('FORBIDDEN'));
-  const opRow = rows(owner.conn.db.adminAdmins.iter()).find(x => x.phone === opPhone)!;
-  check('operator cannot restrict another admin', (await errorOf(op.conn.reducers.adminRestrict({ accountId: (await owner.conn.procedures.adminAccounts({ query: OWNER, status: '', page: 1, pageSize: 1 })).rows[0].id, kind: 'warn', minutes: 0, endsAt: 0n, reason: tr('x'), note: '' }))).match(/FORBIDDEN|CANNOT_RESTRICT_OWNER/) !== null);
-  await owner.conn.reducers.adminRemoveAdmin({ accountId: opRow.accountId });
+  check('operator cannot restrict another admin', (await errorOf(op.conn.reducers.adminRestrict({ accountId: ownerLogin.accountId, kind: 'warn', minutes: 0, endsAt: 0n, reason: tr('x'), note: '' }))).match(/FORBIDDEN|CANNOT_RESTRICT_OWNER/) !== null);
+  await owner.conn.reducers.adminDeleteUser({ accountId: opUser.accountId });
 
   const mute = (await owner.conn.procedures.adminPlayer({ accountId: aLogin.accountId })).player.mute;
   if (mute) await owner.conn.reducers.adminLiftRestriction({ id: mute.id, note: 'test cleanup' });

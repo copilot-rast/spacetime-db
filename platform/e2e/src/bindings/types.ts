@@ -89,10 +89,13 @@ export type AdminTestPhones = __Infer<typeof AdminTestPhones>;
 
 export const AdminView = __t.object("AdminView", {
   accountId: __t.u64(),
-  phone: __t.string(),
+  username: __t.string(),
   displayName: __t.string(),
   role: __t.string(),
+  isActive: __t.bool(),
+  isEnv: __t.bool(),
   createdAt: __t.timestamp(),
+  lastLoginAt: __t.option(__t.timestamp()),
 });
 export type AdminView = __Infer<typeof AdminView>;
 
@@ -154,6 +157,17 @@ export const BaseAdmin = __t.object("BaseAdmin", {
   createdBy: __t.u64(),
 });
 export type BaseAdmin = __Infer<typeof BaseAdmin>;
+
+export const BaseAdminUser = __t.object("BaseAdminUser", {
+  accountId: __t.u64(),
+  username: __t.string(),
+  passwordHash: __t.string(),
+  isActive: __t.bool(),
+  createdBy: __t.u64(),
+  createdAt: __t.timestamp(),
+  lastLoginAt: __t.option(__t.timestamp()),
+});
+export type BaseAdminUser = __Infer<typeof BaseAdminUser>;
 
 export const BaseAudit = __t.object("BaseAudit", {
   id: __t.u64(),

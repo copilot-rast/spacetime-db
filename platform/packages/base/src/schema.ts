@@ -185,6 +185,19 @@ const tag = table(
   }
 );
 
+const adminUser = table(
+  { name: 'base_admin_user' },
+  {
+    accountId: t.u64().primaryKey(),
+    username: t.string().unique(),
+    passwordHash: t.string(),
+    isActive: t.bool(),
+    createdBy: t.u64(),
+    createdAt: t.timestamp(),
+    lastLoginAt: t.option(t.timestamp()),
+  }
+);
+
 const loginAttempt = table(
   { name: 'base_login_attempt' },
   {
@@ -223,11 +236,11 @@ export const baseTables = {
   tag,
   audit,
   loginAttempt,
+  adminUser,
 };
 
 export const baseEnv = {
   OTP_SECRET: t.string(),
-  ADMIN_PHONES: t.string().optional(),
   ADMIN_USERNAME: t.string().optional(),
   ADMIN_PASSWORD: t.string().optional(),
 };
