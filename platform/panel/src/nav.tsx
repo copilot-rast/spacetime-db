@@ -70,12 +70,30 @@ import {
   Question,
   Rss,
   Gauge,
+  Headset,
+  ChatsTeardrop,
+  ClockClockwise,
+  Buildings,
+  ChatText,
+  ShareNetwork,
+  ToggleRight,
+  Lifebuoy,
+  RocketLaunch,
+  ChatCenteredDots,
+  DoorOpen,
+  TextAa,
+  UsersFour,
+  HandHeart,
+  Gauge as GaugeIc,
+  ChartLineUp,
+  ListMagnifyingGlass,
+  Scroll,
 } from '@phosphor-icons/react';
 import { t } from './i18n.ts';
 
 export type Need = 'support' | 'operator' | 'admin' | 'owner';
 
-export type ModeId = 'overview' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication' | 'access' | 'settings';
+export type ModeId = 'overview' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication' | 'support' | 'growth' | 'social' | 'access' | 'settings';
 
 export type PageDef = { id: string; path: string; mode: ModeId; label: () => string; icon: Icon; need: Need };
 
@@ -87,6 +105,9 @@ export const MODES: { id: ModeId; label: () => string; icon: Icon }[] = [
   { id: 'items', label: () => t('navItemsMode'), icon: Backpack },
   { id: 'promo', label: () => t('navPromo'), icon: Megaphone },
   { id: 'publication', label: () => t('navPublication'), icon: Broadcast },
+  { id: 'support', label: () => t('navSupport'), icon: Lifebuoy },
+  { id: 'social', label: () => t('navSocial'), icon: ChatCenteredDots },
+  { id: 'growth', label: () => t('navGrowth'), icon: RocketLaunch },
   { id: 'access', label: () => t('navAccess'), icon: ShieldCheck },
   { id: 'settings', label: () => t('navSettings'), icon: GearSix },
 ];
@@ -131,11 +152,29 @@ export const PAGES: PageDef[] = [
   { id: 'news-comments', path: 'news-comments', mode: 'publication', label: () => t('navNewsComments'), icon: ChatsCircle, need: 'operator' },
   { id: 'news-sources', path: 'news-sources', mode: 'publication', label: () => t('navNewsSources'), icon: WebhooksLogo, need: 'operator' },
   { id: 'faq', path: 'faq', mode: 'publication', label: () => t('navFaq'), icon: Question, need: 'operator' },
+  { id: 'tickets', path: 'tickets', mode: 'support', label: () => t('navTickets'), icon: Headset, need: 'support' },
+  { id: 'live-chat', path: 'live-chat', mode: 'support', label: () => t('navLiveChat'), icon: ChatsTeardrop, need: 'support' },
+  { id: 'activity', path: 'activity', mode: 'support', label: () => t('navActivity'), icon: ClockClockwise, need: 'support' },
+  { id: 'support-departments', path: 'support-departments', mode: 'support', label: () => t('navSupportDepartments'), icon: Buildings, need: 'support' },
+  { id: 'canned-replies', path: 'canned-replies', mode: 'support', label: () => t('navCannedReplies'), icon: ChatText, need: 'support' },
+  { id: 'chat-messages', path: 'chat-messages', mode: 'social', label: () => t('navChatMessages'), icon: ListMagnifyingGlass, need: 'operator' },
+  { id: 'chat-rooms', path: 'chat-rooms', mode: 'social', label: () => t('navChatRooms'), icon: DoorOpen, need: 'operator' },
+  { id: 'chat-groups', path: 'chat-groups', mode: 'social', label: () => t('navChatGroups'), icon: UsersFour, need: 'operator' },
+  { id: 'chat-words', path: 'chat-words', mode: 'social', label: () => t('navChatWords'), icon: TextAa, need: 'operator' },
+  { id: 'friend-rules', path: 'friend-rules', mode: 'social', label: () => t('navFriendRules'), icon: HandHeart, need: 'operator' },
+  { id: 'quota-rules', path: 'quota-rules', mode: 'social', label: () => t('navQuotaRules'), icon: GaugeIc, need: 'operator' },
+  { id: 'quota-report', path: 'quota-report', mode: 'social', label: () => t('navQuotaReport'), icon: ChartLineUp, need: 'operator' },
+  { id: 'friend-gifts', path: 'friend-gifts', mode: 'social', label: () => t('navFriendGifts'), icon: Gift, need: 'operator' },
+  { id: 'gift-rules', path: 'gift-rules', mode: 'social', label: () => t('navGiftRules'), icon: Scroll, need: 'operator' },
+  { id: 'giftables', path: 'giftables', mode: 'social', label: () => t('navGiftables'), icon: ToggleRight, need: 'operator' },
+  { id: 'gift-report', path: 'gift-report', mode: 'social', label: () => t('navGiftReport'), icon: ChartLineUp, need: 'operator' },
+  { id: 'referrals', path: 'referrals', mode: 'growth', label: () => t('navReferrals'), icon: ShareNetwork, need: 'operator' },
+  { id: 'remote-config', path: 'remote-config', mode: 'growth', label: () => t('navRemoteConfig'), icon: ToggleRight, need: 'operator' },
   { id: 'admins', path: 'admins', mode: 'access', label: () => t('navAdmins'), icon: IdentificationBadge, need: 'operator' },
   { id: 'audit', path: 'audit', mode: 'access', label: () => t('navAudit'), icon: ClockCounterClockwise, need: 'admin' },
 ];
 
-export type SectionDef = { id: string; group: 'project' | 'content' | 'login' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication'; label: () => string; icon: Icon; need: Need };
+export type SectionDef = { id: string; group: 'project' | 'content' | 'login' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication' | 'support' | 'social' | 'growth'; label: () => string; icon: Icon; need: Need };
 
 export const SECTIONS: SectionDef[] = [
   { id: 'brand', group: 'project', label: () => t('stBrand'), icon: Palette, need: 'operator' },
@@ -163,6 +202,12 @@ export const SECTIONS: SectionDef[] = [
   { id: 'pub-settings', group: 'publication', label: () => t('stPubSettings'), icon: Gauge, need: 'operator' },
   { id: 'news-settings', group: 'publication', label: () => t('stNewsSettings'), icon: Newspaper, need: 'operator' },
   { id: 'public-feeds', group: 'publication', label: () => t('stPublicFeeds'), icon: Rss, need: 'operator' },
+  { id: 'support-settings', group: 'support', label: () => t('stSupportSettings'), icon: Lifebuoy, need: 'support' },
+  { id: 'chat-settings', group: 'social', label: () => t('stChatSettings'), icon: ChatCenteredDots, need: 'operator' },
+  { id: 'friend-settings', group: 'social', label: () => t('stFriendSettings'), icon: HandHeart, need: 'operator' },
+  { id: 'quota-settings', group: 'social', label: () => t('stQuotaSettings'), icon: GaugeIc, need: 'operator' },
+  { id: 'gift-settings', group: 'social', label: () => t('stGiftSettings'), icon: Gift, need: 'operator' },
+  { id: 'referral-settings', group: 'growth', label: () => t('stReferralSettings'), icon: ShareNetwork, need: 'operator' },
 ];
 
 export const GROUPS: { id: SectionDef['group']; label: () => string }[] = [
@@ -175,10 +220,21 @@ export const GROUPS: { id: SectionDef['group']; label: () => string }[] = [
   { id: 'items', label: () => t('navItemsMode') },
   { id: 'promo', label: () => t('navPromo') },
   { id: 'publication', label: () => t('navPublication') },
+  { id: 'support', label: () => t('navSupport') },
+  { id: 'social', label: () => t('navSocial') },
+  { id: 'growth', label: () => t('navGrowth') },
+];
+
+export const EXTRA_PAGES: { id: string; mode: ModeId; need: Need; label: () => string }[] = [
+  { id: 'ticket', mode: 'support', need: 'support', label: () => t('navTicket') },
+  { id: 'referral-tree', mode: 'growth', need: 'operator', label: () => t('navReferralTree') },
+  { id: 'friend-gift', mode: 'social', need: 'operator', label: () => t('navFriendGift') },
 ];
 
 export function pageMode(page: string): ModeId {
   if (page === 'player') return 'players';
   if (page === 'sponsor-report') return 'promo';
+  const extra = EXTRA_PAGES.find(p => p.id === page);
+  if (extra) return extra.mode;
   return PAGES.find(p => p.id === page)?.mode ?? 'overview';
 }

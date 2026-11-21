@@ -17,7 +17,11 @@ import { Faq, News, NewsComments, NewsSources } from './pubnews.tsx';
 import { Currencies, EconomyOverview, Gifts, Metas, Payments, PrizeGroups, Prizes, Products } from './economy.tsx';
 import { SettingsWindow } from './settings.tsx';
 import { Wizard } from './wizard.tsx';
-import { MODES, PAGES, pageMode } from './nav.tsx';
+import { EXTRA_PAGES, MODES, PAGES, pageMode } from './nav.tsx';
+import { Activity, CannedReplies, LiveChat, SupportDepartments, TicketPage, Tickets } from './support.tsx';
+import { ChatGroups, ChatMessages, ChatRooms, ChatWords, FriendRules } from './socialchat.tsx';
+import { FriendGiftPage, FriendGifts, GiftReport, GiftRules, Giftables, QuotaReport, QuotaRules } from './socialgifts.tsx';
+import { ReferralTree, Referrals, RemoteConfig } from './growth.tsx';
 
 function Panel() {
   const route = useRoute();
@@ -41,7 +45,7 @@ function Panel() {
     setWizard(true);
   }, [settings?.setupDone, !!settings, me?.id, can('admin')]);
 
-  const known = route.page === 'player' || route.page === 'sponsor-report' || PAGES.some(p => p.id === route.page && can(p.need));
+  const known = route.page === 'player' || route.page === 'sponsor-report' || PAGES.some(p => p.id === route.page && can(p.need)) || EXTRA_PAGES.some(p => p.id === route.page && can(p.need));
   const def = known ? route.page : 'dashboard';
   const PAGE_EL: Record<string, () => ReactNode> = {
     players: () => <PlayersList />,
@@ -84,12 +88,33 @@ function Panel() {
     'news-comments': () => <NewsComments />,
     'news-sources': () => <NewsSources />,
     faq: () => <Faq />,
+    tickets: () => <Tickets />,
+    ticket: () => <TicketPage key={route.query.get('id') ?? ''} />,
+    'live-chat': () => <LiveChat />,
+    activity: () => <Activity />,
+    'support-departments': () => <SupportDepartments />,
+    'canned-replies': () => <CannedReplies />,
+    'chat-messages': () => <ChatMessages />,
+    'chat-rooms': () => <ChatRooms />,
+    'chat-groups': () => <ChatGroups />,
+    'chat-words': () => <ChatWords />,
+    'friend-rules': () => <FriendRules />,
+    'quota-rules': () => <QuotaRules />,
+    'quota-report': () => <QuotaReport />,
+    'friend-gifts': () => <FriendGifts />,
+    'friend-gift': () => <FriendGiftPage key={route.query.get('id') ?? ''} />,
+    'gift-rules': () => <GiftRules />,
+    giftables: () => <Giftables />,
+    'gift-report': () => <GiftReport />,
+    referrals: () => <Referrals />,
+    'referral-tree': () => <ReferralTree key={route.query.get('id') ?? ''} />,
+    'remote-config': () => <RemoteConfig />,
     admins: () => <Admins />,
     audit: () => <Audit />,
   };
   const page = (PAGE_EL[def] ?? (() => <Dashboard />))();
   const mode = MODES.find(m => m.id === pageMode(def));
-  const pageLabel = def === 'player' ? t('navPlayer') : def === 'sponsor-report' ? t('spReport') : PAGES.find(p => p.id === def)?.label() ?? t('dashTitle');
+  const pageLabel = def === 'player' ? t('navPlayer') : def === 'sponsor-report' ? t('spReport') : (PAGES.find(p => p.id === def) ?? EXTRA_PAGES.find(p => p.id === def))?.label() ?? t('dashTitle');
   const crumbs = mode && mode.label() !== pageLabel ? [mode.label(), pageLabel] : [pageLabel];
 
   return (

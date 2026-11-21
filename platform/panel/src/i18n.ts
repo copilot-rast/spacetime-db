@@ -2,6 +2,17 @@ import { useSyncExternalStore } from 'react';
 import { enP2, faP2, type DictP2 } from './i18n-p2.ts';
 import { enP3, faP3, type DictP3 } from './i18n-p3.ts';
 import { enP4, faP4, type DictP4 } from './i18n-p4.ts';
+import { enP5, faP5 } from './i18n-p5.ts';
+import { enP6, faP6 } from './i18n-p6.ts';
+import { enP7, faP7 } from './i18n-p7.ts';
+import { enP8, faP8 } from './i18n-p8.ts';
+
+export type Extra = { errors: Record<string, string>; actions: Record<string, string>; actionGroups: Record<string, string>; fields: Record<string, string> };
+
+function strings<T extends Extra>(d: T): Omit<T, keyof Extra> {
+  const { errors: _e, actions: _a, actionGroups: _g, fields: _f, ...rest } = d;
+  return rest;
+}
 
 export type Locale = 'fa' | 'en';
 
@@ -881,22 +892,27 @@ const en: DictBase = {
   },
 };
 
-function merge(base: DictBase, p2: DictP2, p3: DictP3, p4: DictP4) {
+function merge(base: DictBase, p2: DictP2, p3: DictP3, p4: DictP4, p5: typeof faP5, p6: typeof faP6, p7: typeof faP7, p8: typeof faP8) {
+  const ex = [p5, p6, p7, p8] as Extra[];
   return {
     ...base,
     ...p2,
     ...p3,
     ...p4,
-    err: { ...base.err, ...p2.errP2, ...p3.errP3, ...p4.errP4 } as Record<string, string>,
-    act: { ...base.act, ...p2.actP2, ...p3.actP3, ...p4.actP4 },
-    actGroup: { ...base.actGroup, ...p2.actGroupP2, ...p3.actGroupP3, ...p4.actGroupP4 },
-    fieldP2: { ...p2.fieldP2, ...p4.fieldP4 } as Record<string, string>,
+    ...strings(p5),
+    ...strings(p6),
+    ...strings(p7),
+    ...strings(p8),
+    err: Object.assign({ ...base.err, ...p2.errP2, ...p3.errP3, ...p4.errP4 }, ...ex.map(x => x.errors)) as Record<string, string>,
+    act: Object.assign({ ...base.act, ...p2.actP2, ...p3.actP3, ...p4.actP4 }, ...ex.map(x => x.actions)) as Record<string, string>,
+    actGroup: Object.assign({ ...base.actGroup, ...p2.actGroupP2, ...p3.actGroupP3, ...p4.actGroupP4 }, ...ex.map(x => x.actionGroups)) as Record<string, string>,
+    fieldP2: Object.assign({ ...p2.fieldP2, ...p4.fieldP4 }, ...ex.map(x => x.fields)) as Record<string, string>,
   };
 }
 
 export type Dict = ReturnType<typeof merge>;
 
-const dicts: Record<Locale, Dict> = { fa: merge(fa, faP2, faP3, faP4), en: merge(en, enP2, enP3, enP4) };
+const dicts: Record<Locale, Dict> = { fa: merge(fa, faP2, faP3, faP4, faP5, faP6, faP7, faP8), en: merge(en, enP2, enP3, enP4, enP5, enP6, enP7, enP8) };
 
 export type StrKey = { [K in keyof Dict]: Dict[K] extends string ? K : never }[keyof Dict];
 

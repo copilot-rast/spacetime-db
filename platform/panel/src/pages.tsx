@@ -38,6 +38,7 @@ import { go, openSettings, pageQuery, runToast, useDebounced, useFetch, useRoute
 import { ConfirmHost, Empty, ErrBox, Notice, Pager, Seg, Skel, Switch, TableSkeleton, confirmAsk } from './ui.tsx';
 import { CreateUserDialog, ResetPasswordDialog, kindLabel } from './dialogs.tsx';
 import { openWizard } from './shell.tsx';
+import { SupportSummary } from './support.tsx';
 
 export { ConfirmHost };
 
@@ -106,7 +107,7 @@ function SupportHome() {
           <div className="page-sub">{me?.displayName || roleLabel(role)}</div>
         </div>
       </div>
-      <Notice title={t('supHomeTitle')} text={t('supHomeText')} />
+      <SupportSummary />
     </main>
   );
 }
