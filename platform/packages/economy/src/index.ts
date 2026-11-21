@@ -6,7 +6,7 @@ import { seedEconomy } from './seed';
 export { economyTables, economyEnv, PrizeItem, GroupEntry, seedEconomy };
 export type { EconomySchema };
 export * from './engine';
-export { checkGift, prizeUseChecks, metaUseChecks, itemValidators, shopFilters, discounted, productVisible, activeMethods, METHODS, GATEWAYS, STORES } from './catalog';
+export { checkGift, prizeUseChecks, metaUseChecks, currencyUseChecks, prizeGroupUseChecks, itemValidators, shopFilters, discounted, productVisible, activeMethods, METHODS, GATEWAYS, STORES } from './catalog';
 export { paymentHooks, grantPayment, startPurchase, purchaseChecks, purchaseCreatedHooks, settleChecks, StartResult, type PurchaseQuote, type PurchaseRequest, type ProductRow, type PaymentRow } from './payments';
 
 export function defineEconomy(spacetimedb: unknown) {

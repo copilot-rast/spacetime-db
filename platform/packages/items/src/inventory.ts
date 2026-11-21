@@ -151,8 +151,11 @@ function requirementMet(ctx: IDb, accountId: bigint, it: ItemRow) {
 
 function itemUsed(ctx: ITx, key: string) {
   if ([...ctx.db.prize.iter()].some(p => p.items.some(i => i.type === 'item' && i.key === key))) return true;
-  return [...ctx.db.item.iter()].some(i => i.requiresKey === key);
+  if ([...ctx.db.item.iter()].some(i => i.requiresKey === key)) return true;
+  return itemUseChecks.some(h => h(ctx, key));
 }
+
+export const itemUseChecks: ((ctx: ITx, itemKey: string) => boolean)[] = [];
 
 function flagsFor(ctx: IDb, accountId: bigint, productId: bigint) {
   const product = ctx.db.product.id.find(productId);

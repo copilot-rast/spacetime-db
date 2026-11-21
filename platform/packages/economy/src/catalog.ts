@@ -207,6 +207,7 @@ export function defineCatalog(st: EconomySchema) {
     if ([...ctx.db.prize.iter()].some(p => p.items.some(i => i.type === 'currency' && i.key === c.key))) fail('IN_USE');
     if ([...ctx.db.product.iter()].some(p => p.coinCurrency === c.key)) fail('IN_USE');
     if ([...ctx.db.wallet.iter()].some(w => w.currencyKey === c.key && w.balance !== 0n)) fail('IN_USE');
+    for (const h of currencyUseChecks) if (h(ctx, c.key)) fail('IN_USE');
     ctx.db.currency.id.delete(id);
     audit(base(ctx), me.id, 'currency.delete', String(id), c.key);
   });
@@ -302,6 +303,7 @@ export function defineCatalog(st: EconomySchema) {
     const g = ctx.db.prizeGroup.id.find(id);
     if (!g) fail('NOT_FOUND');
     if ([...ctx.db.prize.iter()].some(p => p.items.some(i => i.type === 'prize_group' && i.key === g.key))) fail('IN_USE');
+    for (const h of prizeGroupUseChecks) if (h(ctx, id)) fail('IN_USE');
     ctx.db.prizeGroup.id.delete(id);
     audit(base(ctx), me.id, 'prize_group.delete', String(id), g.key);
   });
@@ -553,6 +555,8 @@ export function defineCatalog(st: EconomySchema) {
 export const shopFilters: ((ctx: { db: ETx['db'] }, accountId: bigint | undefined, productId: bigint) => boolean)[] = [];
 export const prizeUseChecks: ((ctx: ETx, prizeId: bigint) => boolean)[] = [];
 export const metaUseChecks: ((ctx: ETx, metaKey: string) => boolean)[] = [];
+export const currencyUseChecks: ((ctx: ETx, currencyKey: string) => boolean)[] = [];
+export const prizeGroupUseChecks: ((ctx: ETx, groupId: bigint) => boolean)[] = [];
 export const itemValidators: ((ctx: ETx, item: { type: string; key: string; action: string; value: number }) => void)[] = [];
 
 export function checkGift(ctx: ETx, accountId: bigint, raw: string, type: string) {
