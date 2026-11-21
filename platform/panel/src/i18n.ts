@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { enP2, faP2, type DictP2 } from './i18n-p2.ts';
 
 export type Locale = 'fa' | 'en';
 
@@ -76,7 +77,7 @@ const fa = {
   navAccess: 'دسترسی',
   navSettings: 'تنظیمات پروژه',
   navDashboard: 'داشبورد',
-  navAdmins: 'مدیران',
+  navAdmins: 'کاربران پنل',
   navAudit: 'گزارش کارها',
   navAllPlayers: 'همهٔ بازیکن‌ها',
   navActivePlayers: 'بازیکن‌های فعال',
@@ -143,7 +144,7 @@ const fa = {
   plEmpty: 'بازیکنی با این مشخصات پیدا نشد',
   plTotal: '{n} حساب',
 
-  adTitle: 'مدیران',
+  adTitle: 'کاربران پنل',
   adAdd: 'افزودن مدیر',
   adPhone: 'شمارهٔ موبایل',
   adRole: 'نقش',
@@ -439,9 +440,9 @@ const fa = {
   } as Record<string, string>,
 };
 
-export type Dict = typeof fa;
+export type DictBase = typeof fa;
 
-const en: Dict = {
+const en: DictBase = {
   appName: 'Admin panel',
   loading: 'Loading…',
   save: 'Save',
@@ -515,7 +516,7 @@ const en: Dict = {
   navAccess: 'Access',
   navSettings: 'Project settings',
   navDashboard: 'Dashboard',
-  navAdmins: 'Admins',
+  navAdmins: 'Panel users',
   navAudit: 'Audit log',
   navAllPlayers: 'All players',
   navActivePlayers: 'Active players',
@@ -582,7 +583,7 @@ const en: Dict = {
   plEmpty: 'No players match',
   plTotal: '{n} accounts',
 
-  adTitle: 'Admins',
+  adTitle: 'Panel users',
   adAdd: 'Add admin',
   adPhone: 'Mobile number',
   adRole: 'Role',
@@ -878,9 +879,21 @@ const en: Dict = {
   },
 };
 
-const dicts: Record<Locale, Dict> = { fa, en };
+function merge(base: DictBase, p2: DictP2) {
+  return {
+    ...base,
+    ...p2,
+    err: { ...base.err, ...p2.errP2 } as Record<string, string>,
+    act: { ...base.act, ...p2.actP2 },
+    actGroup: { ...base.actGroup, ...p2.actGroupP2 },
+  };
+}
 
-type StrKey = { [K in keyof Dict]: Dict[K] extends string ? K : never }[keyof Dict];
+export type Dict = ReturnType<typeof merge>;
+
+const dicts: Record<Locale, Dict> = { fa: merge(fa, faP2), en: merge(en, enP2) };
+
+export type StrKey = { [K in keyof Dict]: Dict[K] extends string ? K : never }[keyof Dict];
 
 let locale: Locale = (localStorage.getItem('stg.locale') as Locale) === 'en' ? 'en' : 'fa';
 const listeners = new Set<() => void>();
@@ -898,6 +911,10 @@ export function setLocale(l: Locale) {
   applyDocument();
   listeners.forEach(f => f());
 }
+
+window.addEventListener('storage', e => {
+  if (e.key === 'stg.locale' && (e.newValue === 'fa' || e.newValue === 'en') && e.newValue !== locale) setLocale(e.newValue);
+});
 
 export function getLocale() {
   return locale;
@@ -950,6 +967,8 @@ export function num(n: number | bigint): string {
 }
 
 export function phone(p: string): string {
+  if (p.startsWith('admin:')) return p.slice(6);
+  if (p.startsWith('deleted-admin:')) return p.split(':')[1] ?? p;
   return digits(p);
 }
 
@@ -969,14 +988,18 @@ export function actionGroups(): [string, string][] {
   return Object.entries(dicts[locale].actGroup);
 }
 
-const ERR_CODES = Object.keys(fa.err).filter(k => k !== 'UNKNOWN');
+const ERR_CODES = Object.keys(dicts.fa.err).filter(k => k !== 'UNKNOWN' && k !== 'GATEWAY_CODE' && k !== 'INVALID_RULE');
 
-export type ErrInfo = { code: string; seconds?: number; raw: string };
+export type ErrInfo = { code: string; seconds?: number; field?: string; raw: string };
 
 export function parseError(e: unknown): ErrInfo {
   const raw = typeof e === 'string' ? e : (e as Error)?.message ?? String(e);
   const m = raw.match(/RETRY_LATER:(\d+)/);
   if (m) return { code: 'RETRY_LATER', seconds: Number(m[1]), raw };
+  const rule = raw.match(/INVALID_RULE:(\w+)/);
+  if (rule) return { code: 'INVALID_RULE', field: rule[1], raw };
+  const gw = raw.match(/\b((?:ZARINPAL|ZIBAL)_-?\w+)/);
+  if (gw && !ERR_CODES.includes(gw[1])) return { code: 'GATEWAY_CODE', field: gw[1], raw };
   const found = (raw.match(/[A-Z][A-Z_]{2,}/g) ?? []).filter(c => ERR_CODES.includes(c));
   if (found.length) return { code: found[found.length - 1], raw };
   return { code: 'UNKNOWN', raw };
@@ -986,7 +1009,8 @@ export function errorText(e: unknown | ErrInfo, seconds?: number): string {
   const info = e && typeof e === 'object' && 'code' in (e as object) && 'raw' in (e as object) ? (e as ErrInfo) : parseError(e);
   const errs = dicts[locale].err as Record<string, string>;
   const s = seconds ?? info.seconds ?? 0;
-  return fill(errs[info.code] ?? errs.UNKNOWN, { s, raw: info.raw.slice(0, 160) });
+  const field = info.field ? dicts[locale].fieldP2[info.field] ?? info.field : '';
+  return fill(errs[info.code] ?? errs.UNKNOWN, { s, raw: info.raw.slice(0, 160), field, code: info.field ?? '' });
 }
 
 export function codeText(code: string): string {

@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, useState } from 'react';
+import { StrictMode, useEffect, useState, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 import { useRows, useSnap } from './conn.ts';
@@ -7,7 +7,9 @@ import { useRoute, useSession } from './app.ts';
 import { ConfirmHost, Toasts } from './ui.tsx';
 import { ConnectScreen, ConnectingScreen, LoginScreen, NoAccessScreen } from './auth.tsx';
 import { Shell } from './shell.tsx';
-import { Admins, Audit, Dashboard, Players } from './pages.tsx';
+import { Admins, Audit, Dashboard } from './pages.tsx';
+import { PlayerPage, PlayersList, Reports, Restrictions } from './moderation.tsx';
+import { Currencies, EconomyOverview, Gifts, Metas, Payments, PrizeGroups, Prizes, Products } from './economy.tsx';
 import { SettingsWindow } from './settings.tsx';
 import { Wizard } from './wizard.tsx';
 import { MODES, PAGES, pageMode } from './nav.tsx';
@@ -34,11 +36,27 @@ function Panel() {
     setWizard(true);
   }, [settings?.setupDone, !!settings, me?.id, can('admin')]);
 
-  const def = PAGES.find(p => p.id === route.page && can(p.need)) ? route.page : 'dashboard';
-  const page =
-    def === 'players' ? <Players key="players" /> : def === 'admins' ? <Admins /> : def === 'audit' ? <Audit /> : <Dashboard />;
+  const known = route.page === 'player' || PAGES.some(p => p.id === route.page && can(p.need));
+  const def = known ? route.page : 'dashboard';
+  const PAGE_EL: Record<string, () => ReactNode> = {
+    players: () => <PlayersList />,
+    player: () => <PlayerPage key={route.query.get('id') ?? ''} />,
+    restrictions: () => <Restrictions />,
+    reports: () => <Reports />,
+    economy: () => <EconomyOverview />,
+    currencies: () => <Currencies />,
+    metas: () => <Metas />,
+    prizes: () => <Prizes />,
+    'prize-groups': () => <PrizeGroups />,
+    products: () => <Products />,
+    gifts: () => <Gifts />,
+    payments: () => <Payments />,
+    admins: () => <Admins />,
+    audit: () => <Audit />,
+  };
+  const page = (PAGE_EL[def] ?? (() => <Dashboard />))();
   const mode = MODES.find(m => m.id === pageMode(def));
-  const pageLabel = def === 'players' ? t('plTitle') : def === 'admins' ? t('adTitle') : def === 'audit' ? t('auTitle') : t('dashTitle');
+  const pageLabel = def === 'player' ? t('navPlayer') : PAGES.find(p => p.id === def)?.label() ?? t('dashTitle');
   const crumbs = mode && mode.label() !== pageLabel ? [mode.label(), pageLabel] : [pageLabel];
 
   return (

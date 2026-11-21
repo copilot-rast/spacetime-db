@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { CaretLeft, CaretRight, Check, Database, GearSix, List, MagnifyingGlass, Moon, SignOut, Sun, Translate, User } from '@phosphor-icons/react';
-import { recentDbs, saveCfg, useRows, useSnap } from './conn.ts';
-import { phone as fmtPhone, roleLabel, setLocale, t, useLocale, latin, withLocale } from './i18n.ts';
-import { go, openSettings, runToast, setTheme, useBrand, useRoute, useSession, useTheme } from './app.ts';
+import { CaretLeft, CaretRight, Check, Database, GearSix, Key, List, MagnifyingGlass, Moon, SignOut, Sun, Translate, User } from '@phosphor-icons/react';
+import { getConn, recentDbs, saveCfg, useRows, useSnap } from './conn.ts';
+import { num, phone as fmtPhone, roleLabel, setLocale, t, useLocale, latin, withLocale } from './i18n.ts';
+import { go, openSettings, runToast, setTheme, useBrand, useFetch, useRoute, useSession, useTheme } from './app.ts';
 import { GROUPS, MODES, PAGES, SECTIONS, pageMode, type ModeId } from './nav.tsx';
 import { Field, Pop, SaveButton, useEscape } from './ui.tsx';
+import { ChangeMyPasswordDialog } from './dialogs.tsx';
 
 function isCurrent(path: string, page: string, query: URLSearchParams) {
   const [p, q] = path.split('?');
+  if (page === 'player' && p === 'players') return true;
   if (p !== page) return false;
+  if (!q) return true;
   const want = new URLSearchParams(q ?? '').get('status') ?? '';
   return (query.get('status') ?? '') === want;
 }
@@ -19,15 +22,18 @@ export function openWizard() {
 
 export function Shell(props: { children: ReactNode; crumbs: string[] }) {
   const route = useRoute();
-  const { can, me, role } = useSession();
+  const { can, me, role, username } = useSession();
   const { brand, name, mark } = useBrand();
   const snap = useSnap();
   const settings = useRows('adminSettings')[0];
+  const modSum = useFetch(() => getConn().procedures.adminModerationSummary({}), [route.page]);
+  const openReports = modSum.data ? modSum.data.reportsOpen : 0;
   const [drawer, setDrawer] = useState(false);
   const [mode, setMode] = useState<ModeId>(pageMode(route.page));
   const [pal, setPal] = useState(false);
   const [profile, setProfile] = useState<HTMLElement | null>(null);
   const [dbPop, setDbPop] = useState<HTMLElement | null>(null);
+  const [myPw, setMyPw] = useState(false);
   const theme = useTheme();
   useLocale();
 
@@ -142,6 +148,11 @@ export function Shell(props: { children: ReactNode; crumbs: string[] }) {
                 <button key={p.id} type="button" className="nav" aria-current={cur ? 'page' : undefined} onClick={() => go(p.path)} data-testid={`side-${p.id}`}>
                   <Icon className="ic" weight={cur ? 'duotone' : 'regular'} />
                   <span className="nav-label">{p.label()}</span>
+                  {p.id === 'reports' && openReports > 0 && (
+                    <span className="nav-badge" data-testid="nav-reports-badge" aria-label={t('rpOpen')}>
+                      {num(openReports)}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -153,7 +164,7 @@ export function Shell(props: { children: ReactNode; crumbs: string[] }) {
             <span className="nav-label">{t('navSettings')}</span>
           </button>
           <div className="row small muted" style={{ padding: '4px 8px' }}>
-            <span className="ellipsis">{fmtPhone(me?.phone ?? '')}</span>
+            <span className="ellipsis mono" data-testid="side-username">{username}</span>
             <span className="grow" />
             <span className="badge">{roleLabel(role)}</span>
           </div>
@@ -199,14 +210,15 @@ export function Shell(props: { children: ReactNode; crumbs: string[] }) {
         {props.children}
       </div>
       {pal && <Palette onClose={() => setPal(false)} />}
-      {profile && <ProfileMenu anchor={profile} onClose={() => setProfile(null)} />}
+      {profile && <ProfileMenu anchor={profile} onClose={() => setProfile(null)} onPassword={() => setMyPw(true)} />}
+      {myPw && <ChangeMyPasswordDialog onClose={() => setMyPw(false)} />}
       {dbPop && <DbMenu anchor={dbPop} onClose={() => setDbPop(null)} />}
     </div>
   );
 }
 
-function ProfileMenu(props: { anchor: HTMLElement; onClose: () => void }) {
-  const { me, role } = useSession();
+function ProfileMenu(props: { anchor: HTMLElement; onClose: () => void; onPassword: () => void }) {
+  const { me, role, username, isEnv } = useSession();
   const l = useLocale();
   const theme = useTheme();
   const langs = useRows('language');
@@ -221,7 +233,7 @@ function ProfileMenu(props: { anchor: HTMLElement; onClose: () => void }) {
       <div className="pop-pad stack stack-sm" style={{ gap: 2 }}>
         <b>{me?.displayName || t('plNoName')}</b>
         <span className="small muted">
-          {fmtPhone(me?.phone ?? '')} · {roleLabel(role)}
+          <span className="mono">{username}</span> · {roleLabel(role)}
         </span>
       </div>
       <div className="pop-sep" />
@@ -260,6 +272,20 @@ function ProfileMenu(props: { anchor: HTMLElement; onClose: () => void }) {
         </button>
       ))}
       <div className="pop-sep" />
+      {!isEnv && (
+        <button
+          type="button"
+          className="pop-item"
+          data-testid="profile-password"
+          onClick={() => {
+            props.onClose();
+            props.onPassword();
+          }}
+        >
+          <Key className="ic" />
+          {t('myPw')}
+        </button>
+      )}
       <button
         type="button"
         className="pop-item"

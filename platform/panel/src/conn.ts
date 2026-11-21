@@ -29,6 +29,18 @@ export const QUERIES = [
   'SELECT * FROM admin_test_phones',
   'SELECT * FROM admin_sandbox_sms',
   'SELECT * FROM admin_admins',
+  'SELECT * FROM players_account_rules',
+  'SELECT * FROM players_app_version',
+  'SELECT * FROM players_country',
+  'SELECT * FROM players_tag_meta',
+  'SELECT * FROM players_report_title',
+  'SELECT * FROM admin_report_rules',
+  'SELECT * FROM economy_currency',
+  'SELECT * FROM economy_meta',
+  'SELECT * FROM economy_prize',
+  'SELECT * FROM economy_prize_group',
+  'SELECT * FROM admin_payment_methods',
+  'SELECT * FROM admin_economy_settings',
 ];
 
 const TABLES = [
@@ -44,6 +56,18 @@ const TABLES = [
   'adminTestPhones',
   'adminSandboxSms',
   'adminAdmins',
+  'accountRules',
+  'appVersion',
+  'country',
+  'tagMeta',
+  'reportTitle',
+  'adminReportRules',
+  'currency',
+  'meta',
+  'prize',
+  'prizeGroup',
+  'adminPaymentMethods',
+  'adminEconomySettings',
 ] as const;
 
 export function defaultServer() {

@@ -1,5 +1,5 @@
 import { useId, useMemo, useState, type FormEvent } from 'react';
-import { Plus } from '@phosphor-icons/react';
+import { Eye, EyeSlash, Plus } from '@phosphor-icons/react';
 import { useRows, getConn, type RowOf } from './conn.ts';
 import { codeText, digits, errorText, latin, numeric, t } from './i18n.ts';
 import { run, toast, trText, useLanguages, useSession, type Tr } from './app.ts';
@@ -146,7 +146,7 @@ function descendants(list: CategoryRow[], id: bigint): Set<bigint> {
   return out;
 }
 
-export function CategoryPicker(props: { keyType: string; value: bigint; onChange: (v: bigint) => void; exclude?: bigint; disabled?: boolean; testId?: string }) {
+export function CategoryPicker(props: { keyType: string; value: bigint; onChange: (v: bigint) => void; exclude?: bigint; disabled?: boolean; testId?: string; none?: string; label?: string }) {
   const all = useRows('category');
   const { def } = useLanguages();
   const { can } = useSession();
@@ -166,9 +166,9 @@ export function CategoryPicker(props: { keyType: string; value: bigint; onChange
         onChange={e => props.onChange(BigInt(e.target.value))}
         disabled={props.disabled}
         data-testid={props.testId}
-        aria-label={t('ctParent')}
+        aria-label={props.label ?? t('ctParent')}
       >
-        <option value="0">{t('ctNoParent')}</option>
+        <option value="0">{props.none ?? t('ctNoParent')}</option>
         {options.map(o => (
           <option key={String(o.id)} value={String(o.id)}>
             {o.label}
@@ -185,7 +185,7 @@ export function CategoryPicker(props: { keyType: string; value: bigint; onChange
   );
 }
 
-async function waitFor<T>(fn: () => T | undefined, ms = 3000): Promise<T | undefined> {
+export async function waitFor<T>(fn: () => T | undefined, ms = 3000): Promise<T | undefined> {
   const end = Date.now() + ms;
   while (Date.now() < end) {
     const v = fn();
@@ -267,7 +267,7 @@ export function CategoryDialog(props: { row?: CategoryRow; keyType: string; pare
   );
 }
 
-export function TagDialog(props: { row?: TagRow; keyType: string; onClose: () => void }) {
+export function TagDialog(props: { row?: TagRow; keyType: string; onClose: () => void; onSaved?: (id: bigint) => void }) {
   const { def } = useLanguages();
   const r = props.row;
   const [keyType, setKeyType] = useState(r?.keyType ?? props.keyType);
@@ -293,7 +293,14 @@ export function TagDialog(props: { row?: TagRow; keyType: string; onClose: () =>
             e,
             () => getConn().reducers.adminSaveTag({ id: r?.id ?? 0n, keyType, key: key.trim().toLowerCase(), title, color: color.trim(), sort, isActive }),
             t('saved'),
-            props.onClose
+            async () => {
+              if (props.onSaved) {
+                const k = key.trim().toLowerCase();
+                const found = await waitFor(() => [...getConn().db.tag.iter()].find(x => x.keyType === keyType && x.key === k));
+                if (found) props.onSaved(found.id);
+              }
+              props.onClose();
+            }
           );
         }}
       >
@@ -464,7 +471,7 @@ export function ProviderDialog(props: { row?: ProviderRow; onClose: () => void }
 
 export function TestSmsForm(props: { provider: ProviderRow; compact?: boolean }) {
   const { me } = useSession();
-  const [phone, setPhone] = useState(digits(me?.phone ?? ''));
+  const [phone, setPhone] = useState(/^09\d{9}$/.test(me?.phone ?? '') ? digits(me!.phone) : '');
   const [otp, setOtp] = useState(true);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -541,31 +548,140 @@ export function TestPhoneDialog(props: { row?: TestPhoneRow; onClose: () => void
   );
 }
 
-export function AddAdminDialog(props: { onClose: () => void }) {
-  const [phone, setPhone] = useState('');
+function genPassword() {
+  const abc = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
+  const dig = '23456789';
+  const all = abc + dig;
+  const r = crypto.getRandomValues(new Uint32Array(14));
+  const out = [...r].map(x => all[x % all.length]);
+  out[3] = dig[r[3] % dig.length];
+  out[9] = abc[r[9] % abc.length];
+  return out.join('');
+}
+
+export function PasswordInput(props: { value: string; onChange: (v: string) => void; name: string; id?: string; generate?: boolean; autoComplete?: string; autoFocus?: boolean }) {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="input-group">
+      <input
+        id={props.id}
+        className="input ltr grow"
+        name={props.name}
+        type={show ? 'text' : 'password'}
+        value={props.value}
+        onChange={e => props.onChange(e.target.value)}
+        autoComplete={props.autoComplete ?? 'new-password'}
+        autoFocus={props.autoFocus}
+      />
+      <button type="button" className="btn btn-outline btn-icon" style={{ height: 36, width: 36 }} onClick={() => setShow(!show)} aria-label={show ? t('lgHide') : t('lgShow')} aria-pressed={show} data-testid={`${props.name}-toggle`}>
+        {show ? <EyeSlash className="ic" /> : <Eye className="ic" />}
+      </button>
+      {props.generate && (
+        <button
+          type="button"
+          className="btn btn-outline"
+          style={{ height: 36 }}
+          onClick={() => {
+            props.onChange(genPassword());
+            setShow(true);
+          }}
+          data-testid={`${props.name}-gen`}
+        >
+          {t('puGenerate')}
+        </button>
+      )}
+    </div>
+  );
+}
+
+function RoleRadios(props: { value: string; onChange: (v: string) => void }) {
+  return (
+    <div className="stack stack-sm">
+      {(['operator', 'admin', 'owner'] as const).map(r => (
+        <label key={r} className="check" style={{ alignItems: 'flex-start' }}>
+          <input type="radio" name="role" value={r} checked={props.value === r} onChange={() => props.onChange(r)} style={{ marginTop: 3 }} />
+          <span className="stack" style={{ gap: 0 }}>
+            <span>{r === 'owner' ? t('roleOwner') : r === 'admin' ? t('roleAdmin') : t('roleOperator')}</span>
+            <span className="hint">{r === 'owner' ? t('adRoleHelpOwner') : r === 'admin' ? t('adRoleHelpAdmin') : t('adRoleHelpOperator')}</span>
+          </span>
+        </label>
+      ))}
+    </div>
+  );
+}
+
+export function CreateUserDialog(props: { onClose: () => void }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [role, setRole] = useState('operator');
   const f = useForm();
-  const id = 'ad-form';
+  const id = 'pu-form';
   return (
-    <Dialog title={t('adAdd')} onClose={props.onClose} testId="ad-dialog" foot={<Foot busy={f.busy} onClose={props.onClose} form={id} label={t('add')} />}>
-      <form id={id} className="stack" onSubmit={e => f.submit(e, () => getConn().reducers.adminSetAdmin({ phone: latin(phone), role }), t('adAdded'), props.onClose)}>
-        <Field label={t('adPhone')} required>
-          <input className="input ltr" name="phone" value={phone} onChange={e => setPhone(e.target.value)} inputMode="tel" autoFocus placeholder="09…" />
+    <Dialog title={t('puAdd')} width={500} onClose={props.onClose} testId="pu-dialog" foot={<Foot busy={f.busy} onClose={props.onClose} form={id} label={t('create')} />}>
+      <form id={id} className="stack" onSubmit={e => f.submit(e, () => getConn().reducers.adminCreateUser({ username: username.trim().toLowerCase(), password, role }), t('puCreated'), props.onClose)}>
+        <Field label={t('puUsername')} hint={t('puUsernameHint')} required>
+          <input className="input ltr" name="username" value={username} onChange={e => setUsername(e.target.value)} autoFocus autoComplete="off" />
+        </Field>
+        <Field label={t('puPassword')} hint={t('puPasswordHint')} required>
+          <PasswordInput value={password} onChange={setPassword} name="password" generate />
         </Field>
         <div className="field">
-          <span className="label">{t('adRole')}</span>
-          <div className="stack stack-sm">
-            {(['operator', 'admin', 'owner'] as const).map(r => (
-              <label key={r} className="check" style={{ alignItems: 'flex-start' }}>
-                <input type="radio" name="role" value={r} checked={role === r} onChange={() => setRole(r)} style={{ marginTop: 3 }} />
-                <span className="stack" style={{ gap: 0 }}>
-                  <span>{r === 'owner' ? t('roleOwner') : r === 'admin' ? t('roleAdmin') : t('roleOperator')}</span>
-                  <span className="hint">{r === 'owner' ? t('adRoleHelpOwner') : r === 'admin' ? t('adRoleHelpAdmin') : t('adRoleHelpOperator')}</span>
-                </span>
-              </label>
-            ))}
-          </div>
+          <span className="label">{t('puRole')}</span>
+          <RoleRadios value={role} onChange={setRole} />
         </div>
+        <p className="hint">{t('puCopy')}</p>
+        <ErrBox text={f.err} />
+      </form>
+    </Dialog>
+  );
+}
+
+export function ResetPasswordDialog(props: { accountId: bigint; name: string; onClose: () => void }) {
+  const [password, setPassword] = useState('');
+  const f = useForm();
+  const id = 'pr-pw-form';
+  return (
+    <Dialog title={t('puResetTitle', { name: props.name })} width={460} onClose={props.onClose} testId="pw-reset-dialog" foot={<Foot busy={f.busy} onClose={props.onClose} form={id} />}>
+      <form id={id} className="stack" onSubmit={e => f.submit(e, () => getConn().reducers.adminSetUserPassword({ accountId: props.accountId, password }), t('puResetDone'), props.onClose)}>
+        <Field label={t('puPassword')} hint={t('puPasswordHint')} required>
+          <PasswordInput value={password} onChange={setPassword} name="newUserPassword" generate autoFocus />
+        </Field>
+        <p className="hint">{t('puCopy')}</p>
+        <ErrBox text={f.err} />
+      </form>
+    </Dialog>
+  );
+}
+
+export function ChangeMyPasswordDialog(props: { onClose: () => void }) {
+  const [oldPassword, setOld] = useState('');
+  const [newPassword, setNew] = useState('');
+  const [repeat, setRepeat] = useState('');
+  const f = useForm();
+  const id = 'my-pw-form';
+  return (
+    <Dialog title={t('myPw')} width={460} onClose={props.onClose} testId="my-pw-dialog" foot={<Foot busy={f.busy} onClose={props.onClose} form={id} />}>
+      <form
+        id={id}
+        className="stack"
+        onSubmit={e => {
+          if (newPassword !== repeat) {
+            e.preventDefault();
+            f.setErr(t('myPwMismatch'));
+            return;
+          }
+          f.submit(e, () => getConn().reducers.adminChangeMyPassword({ oldPassword, newPassword }), t('myPwDone'), props.onClose);
+        }}
+      >
+        <Field label={t('myPwOld')} required>
+          <PasswordInput value={oldPassword} onChange={setOld} name="oldPassword" autoComplete="current-password" autoFocus />
+        </Field>
+        <Field label={t('myPwNew')} hint={t('puPasswordHint')} required>
+          <PasswordInput value={newPassword} onChange={setNew} name="newPassword" />
+        </Field>
+        <Field label={t('myPwRepeat')} required>
+          <PasswordInput value={repeat} onChange={setRepeat} name="repeatPassword" />
+        </Field>
         <ErrBox text={f.err} />
       </form>
     </Dialog>
