@@ -22,7 +22,8 @@ export default defineConfig({
   },
   projects: [
     { name: 'login', testMatch: /login\.setup\.ts/ },
-    { name: 'panel', testMatch: /\.spec\.ts/, testIgnore: /mobile\.spec\.ts/, dependencies: ['login'] },
+    { name: 'panel', testMatch: /\.spec\.ts/, testIgnore: [/mobile\.spec\.ts/, /p8-/], dependencies: ['login'] },
+    ...['p8-support', 'shots-p8-support', 'p8-social', 'shots-p8-social', 'p8-gifts', 'shots-p8-gifts', 'p8-growth', 'shots-p8-growth'].map(name => ({ name, testMatch: new RegExp(`(^|/)${name}\\.spec\\.ts$`), dependencies: ['login'] })),
     { name: 'mobile', testMatch: /mobile\.spec\.ts/, dependencies: ['login'], use: { viewport: { width: 390, height: 844 } } },
   ],
 });
