@@ -21,6 +21,7 @@ export default __t.row({
   agentName: __t.string().name("agent_name"),
   lastSeq: __t.u32().name("last_seq"),
   agentReadSeq: __t.u32().name("agent_read_seq"),
+  playerReadSeq: __t.u32().name("player_read_seq"),
   playerTypingAt: __t.u64().name("player_typing_at"),
   playerSeenAt: __t.u64().name("player_seen_at"),
   lastMessageAt: __t.u64().name("last_message_at"),

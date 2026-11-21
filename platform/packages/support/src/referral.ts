@@ -46,7 +46,7 @@ const AdminPage = t.object('ReferralAdminPage', { total: t.u32(), rows: t.array(
 const TopLine = t.object('ReferralTopLine', { accountId: t.u64(), name: t.string(), total: t.u32(), completed: t.u32() });
 const Summary = t.object('ReferralSummary', { total: t.u32(), pending: t.u32(), held: t.u32(), completed: t.u32(), rejected: t.u32(), flagged: t.u32(), top: t.array(TopLine) });
 const TreeLine = t.object('ReferralTreeLine', { accountId: t.u64(), name: t.string(), status: t.string(), createdAt: t.u64() });
-const Tree = t.object('ReferralTree', { accountId: t.u64(), up: t.array(TreeLine), down: t.array(TreeLine) });
+const Tree = t.object('ReferralTree', { accountId: t.u64(), code: t.string(), up: t.array(TreeLine), down: t.array(TreeLine) });
 
 export function refSettings(ctx: SDb) {
   const s = ctx.db.refSettings.id.find(0);
@@ -396,7 +396,7 @@ export function defineReferral(st: SupportSchema) {
         r = tx.db.referral.refereeId.find(r.referrerId);
       }
       const down = [...tx.db.referral.referrerId.filter(a.accountId)].map(x => ({ accountId: x.refereeId, name: nameOf(tx, x.refereeId), status: x.status, createdAt: x.createdAt }));
-      return { accountId: a.accountId, up, down };
+      return { accountId: a.accountId, code: tx.db.refCode.accountId.find(a.accountId)?.code ?? '', up, down };
     })
   );
 

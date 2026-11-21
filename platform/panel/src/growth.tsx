@@ -629,7 +629,7 @@ function usePlayerRefs(accountId: bigint) {
     error: tree.error ?? mine.error ?? invites.error,
     tree: tree.data,
     by,
-    code: inv?.referral.code ?? '',
+    code: tree.data?.code || inv?.referral.code || '',
     name: by?.refereeName || inv?.referrerName || '',
     counts: {
       total: down.filter(x => x.status !== 'rejected').length,

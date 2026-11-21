@@ -192,6 +192,9 @@ test('support takes a live chat, sees typing, replies, hands it over and closes 
       return !!c && c.agentReadSeq >= 3;
     }, 5000)
   ).toBe(true);
+  await expect(panel.locator('[data-testid^="lc-read-"]')).toHaveCount(0);
+  await player.c.conn.reducers.supportChatSeen({ chatId });
+  await expect(panel.locator('[data-testid^="lc-read-"]').first()).toContainText('خوانده شد');
   await panel.getByTestId('lc-transfer').click();
   const td = sp.getByTestId('lc-transfer-dialog');
   await td.getByTestId('lc-transfer-queue').click();

@@ -5435,6 +5435,7 @@ export type ReferralTopLine = __Infer<typeof ReferralTopLine>;
 
 export const ReferralTree = __t.object("ReferralTree", {
   accountId: __t.u64(),
+  code: __t.string(),
   get up() {
     return __t.array(ReferralTreeLine);
   },
@@ -6149,6 +6150,7 @@ export const SupportChatQueueLine = __t.object("SupportChatQueueLine", {
   agentName: __t.string(),
   lastSeq: __t.u32(),
   agentReadSeq: __t.u32(),
+  playerReadSeq: __t.u32(),
   playerTypingAt: __t.u64(),
   playerSeenAt: __t.u64(),
   lastMessageAt: __t.u64(),

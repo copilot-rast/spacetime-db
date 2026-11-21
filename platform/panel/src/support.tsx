@@ -1045,6 +1045,7 @@ type ChatView = {
   agentName: string;
   lastSeq: number;
   agentReadSeq: number;
+  playerReadSeq: number;
   playerTypingAt: bigint;
   playerSeenAt: bigint;
   lastMessageAt: bigint;
@@ -1307,6 +1308,11 @@ function ChatPanel(props: { c: ChatView | undefined; meId: bigint; nowMs: number
                 <div className="sx-msg-head">
                   <b>{m.authorType === 'player' ? pname(chat.playerName, chat.accountId) : agents.name(m.authorId) || t('sxStaff')}</b>
                   <span className="grow" />
+                  {m.authorType !== 'player' && m.seq <= chat.playerReadSeq && (
+                    <span className="small muted nowrap" data-testid={`lc-read-${m.seq}`}>
+                      {t('sxReadByPlayer')}
+                    </span>
+                  )}
                   <span className="nowrap">{clock(m.at)}</span>
                 </div>
                 <div className="sx-msg-body" dir="auto">

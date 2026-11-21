@@ -483,6 +483,7 @@ async function main() {
   const tree = await o.conn.procedures.adminReferralTree({ accountId: idB });
   check('referral tree up and down', tree.up[0]?.accountId === idA && tree.down.length === 1 && tree.down[0].accountId === idC);
   const treeA = await o.conn.procedures.adminReferralTree({ accountId: idA });
+  check('referral tree shows the player code', treeA.code.length === 8 && tree.code.length === 8 && treeA.code !== tree.code, { a: treeA.code, b: tree.code });
   check('referral tree lists invited players', treeA.down.some(d => d.accountId === idB) && treeA.down.some(d => d.accountId === idD));
   check('players cannot list referrals', (await errorOf(rA.conn.procedures.adminReferrals({ query: '', status: '', flag: '', flagged: false, referrerId: 0n, refereeId: 0n, page: 1, pageSize: 10 }))).includes('FORBIDDEN'));
   check('referral audit', (await audits('referral')).includes('referral.approve') && (await audits('referral')).includes('referral.reject') && (await audits('referral')).includes('referral_settings.save'));
