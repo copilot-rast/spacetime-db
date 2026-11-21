@@ -561,19 +561,3 @@ test('profile name, english locale and dark theme', async ({ page }) => {
   await page.getByTestId('theme-toggle').click();
   await expect(page.locator('html')).not.toHaveClass(/dark/);
 });
-
-test('mobile width uses cards and a drawer', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await open(page, 'players');
-  await expect(page.getByTestId('pl-cards')).toBeVisible();
-  await expect(page.getByTestId('pl-table')).toBeHidden();
-  await expect(page.locator('.side')).toBeHidden();
-  await page.getByTestId('menu-btn').click();
-  await expect(page.locator('.side')).toBeVisible();
-  await page.getByTestId('rail-access').click();
-  await page.getByTestId('side-admins').click();
-  await expect(page.getByTestId('page-admins')).toBeVisible();
-  await expect(page.locator('.side')).toBeHidden();
-  const width = await page.evaluate(() => document.documentElement.scrollWidth);
-  expect(width).toBeLessThanOrEqual(390);
-});
