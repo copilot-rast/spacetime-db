@@ -30,11 +30,26 @@ export const AccountPage = __t.object("AccountPage", {
 });
 export type AccountPage = __Infer<typeof AccountPage>;
 
+export const AdminAchievements = __t.object("AdminAchievements", {});
+export type AdminAchievements = __Infer<typeof AdminAchievements>;
+
 export const AdminAdmins = __t.object("AdminAdmins", {});
 export type AdminAdmins = __Infer<typeof AdminAdmins>;
 
 export const AdminEconomySettings = __t.object("AdminEconomySettings", {});
 export type AdminEconomySettings = __Infer<typeof AdminEconomySettings>;
+
+export const AdminEventRules = __t.object("AdminEventRules", {});
+export type AdminEventRules = __Infer<typeof AdminEventRules>;
+
+export const AdminGamificationSettings = __t.object("AdminGamificationSettings", {});
+export type AdminGamificationSettings = __Infer<typeof AdminGamificationSettings>;
+
+export const AdminLevelTables = __t.object("AdminLevelTables", {});
+export type AdminLevelTables = __Infer<typeof AdminLevelTables>;
+
+export const AdminMetaRelations = __t.object("AdminMetaRelations", {});
+export type AdminMetaRelations = __Infer<typeof AdminMetaRelations>;
 
 export const AdminPaymentMethods = __t.object("AdminPaymentMethods", {});
 export type AdminPaymentMethods = __Infer<typeof AdminPaymentMethods>;
@@ -50,6 +65,15 @@ export type AdminSettings = __Infer<typeof AdminSettings>;
 
 export const AdminSmsProviders = __t.object("AdminSmsProviders", {});
 export type AdminSmsProviders = __Infer<typeof AdminSmsProviders>;
+
+export const AdminStreaks = __t.object("AdminStreaks", {});
+export type AdminStreaks = __Infer<typeof AdminStreaks>;
+
+export const AdminTaskGroups = __t.object("AdminTaskGroups", {});
+export type AdminTaskGroups = __Infer<typeof AdminTaskGroups>;
+
+export const AdminTasks = __t.object("AdminTasks", {});
+export type AdminTasks = __Infer<typeof AdminTasks>;
 
 export const AdminTestPhones = __t.object("AdminTestPhones", {});
 export type AdminTestPhones = __Infer<typeof AdminTestPhones>;
@@ -532,6 +556,766 @@ export const EconomyWallet = __t.object("EconomyWallet", {
 });
 export type EconomyWallet = __Infer<typeof EconomyWallet>;
 
+export const GamAchievement = __t.object("GamAchievement", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  get hint() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  lockedIconUrl: __t.string(),
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  rarity: __t.string(),
+  points: __t.u32(),
+  isHidden: __t.bool(),
+  source: __t.string(),
+  eventKey: __t.string(),
+  metric: __t.string(),
+  valueMin: __t.option(__t.f64()),
+  valueMax: __t.option(__t.f64()),
+  taskId: __t.u64(),
+  taskGroupId: __t.u64(),
+  get tiers() {
+    return __t.array(GamAchievementTier);
+  },
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+});
+export type GamAchievement = __Infer<typeof GamAchievement>;
+
+export const GamAchievementEntry = __t.object("GamAchievementEntry", {
+  achievementId: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  get hint() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  rarity: __t.string(),
+  points: __t.u32(),
+  categoryId: __t.u64(),
+  hidden: __t.bool(),
+  state: __t.string(),
+  source: __t.string(),
+  tier: __t.u32(),
+  maxTier: __t.u32(),
+  value: __t.f64(),
+  get tiers() {
+    return __t.array(GamAchievementTier);
+  },
+  claimable: __t.array(__t.u64()),
+});
+export type GamAchievementEntry = __Infer<typeof GamAchievementEntry>;
+
+export const GamAchievementStep = __t.object("GamAchievementStep", {
+  key: __t.string(),
+  from: __t.u32(),
+  to: __t.u32(),
+});
+export type GamAchievementStep = __Infer<typeof GamAchievementStep>;
+
+export const GamAchievementTier = __t.object("GamAchievementTier", {
+  tier: __t.u32(),
+  threshold: __t.f64(),
+  get name() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+});
+export type GamAchievementTier = __Infer<typeof GamAchievementTier>;
+
+export const GamClaim = __t.object("GamClaim", {
+  id: __t.u64(),
+  uniq: __t.string(),
+  accountId: __t.u64(),
+  kind: __t.string(),
+  ownerId: __t.u64(),
+  refId: __t.u64(),
+  scope: __t.string(),
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+  status: __t.string(),
+  depth: __t.u8(),
+  attempts: __t.u8(),
+  error: __t.string(),
+  rewards: __t.string(),
+  createdAt: __t.timestamp(),
+  grantedAt: __t.option(__t.timestamp()),
+});
+export type GamClaim = __Infer<typeof GamClaim>;
+
+export const GamClaimPage = __t.object("GamClaimPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(GamClaim);
+  },
+});
+export type GamClaimPage = __Infer<typeof GamClaimPage>;
+
+export const GamClaimResult = __t.object("GamClaimResult", {
+  claimId: __t.u64(),
+  kind: __t.string(),
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+  status: __t.string(),
+  error: __t.string(),
+  get rewards() {
+    return __t.array(GamReward);
+  },
+});
+export type GamClaimResult = __Infer<typeof GamClaimResult>;
+
+export const GamEventCounter = __t.object("GamEventCounter", {
+  key: __t.string(),
+  accountId: __t.u64(),
+  typeKey: __t.string(),
+  window: __t.string(),
+  count: __t.u32(),
+  sum: __t.f64(),
+  max: __t.f64(),
+});
+export type GamEventCounter = __Infer<typeof GamEventCounter>;
+
+export const GamEventPage = __t.object("GamEventPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(GamPlayerEvent);
+  },
+});
+export type GamEventPage = __Infer<typeof GamEventPage>;
+
+export const GamEventRate = __t.object("GamEventRate", {
+  key: __t.string(),
+  minute: __t.u64(),
+  count: __t.u32(),
+});
+export type GamEventRate = __Infer<typeof GamEventRate>;
+
+export const GamEventRule = __t.object("GamEventRule", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  eventKey: __t.string(),
+  measure: __t.string(),
+  period: __t.string(),
+  threshold: __t.f64(),
+  repeat: __t.string(),
+  maxClaims: __t.u32(),
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+  audienceTagIds: __t.array(__t.u64()),
+  startsAt: __t.u64(),
+  endsAt: __t.u64(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+});
+export type GamEventRule = __Infer<typeof GamEventRule>;
+
+export const GamEventType = __t.object("GamEventType", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  clientAllowed: __t.bool(),
+  valueMin: __t.f64(),
+  valueMax: __t.f64(),
+  rateLimit: __t.u32(),
+  isActive: __t.bool(),
+  isSystem: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+});
+export type GamEventType = __Infer<typeof GamEventType>;
+
+export const GamGrantTimer = __t.object("GamGrantTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type GamGrantTimer = __Infer<typeof GamGrantTimer>;
+
+export const GamHandoutResult = __t.object("GamHandoutResult", {
+  groupKey: __t.string(),
+  handed: __t.array(__t.string()),
+});
+export type GamHandoutResult = __Infer<typeof GamHandoutResult>;
+
+export const GamLevelEntry = __t.object("GamLevelEntry", {
+  tableId: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  metaKey: __t.string(),
+  level: __t.u32(),
+  get steps() {
+    return __t.array(GamLevelStep);
+  },
+});
+export type GamLevelEntry = __Infer<typeof GamLevelEntry>;
+
+export const GamLevelStep = __t.object("GamLevelStep", {
+  level: __t.u32(),
+  threshold: __t.f64(),
+  get title() {
+    return __t.array(Translation);
+  },
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+});
+export type GamLevelStep = __Infer<typeof GamLevelStep>;
+
+export const GamLevelTable = __t.object("GamLevelTable", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  metaKey: __t.string(),
+  levelMetaKey: __t.string(),
+  get steps() {
+    return __t.array(GamLevelStep);
+  },
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+});
+export type GamLevelTable = __Infer<typeof GamLevelTable>;
+
+export const GamMetaRelation = __t.object("GamMetaRelation", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  metaKey: __t.string(),
+  operator: __t.string(),
+  value: __t.f64(),
+  get targets() {
+    return __t.array(GamRelationTarget);
+  },
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+  repeat: __t.string(),
+  maxFires: __t.u32(),
+  audienceTagIds: __t.array(__t.u64()),
+  clientVisible: __t.bool(),
+  startsAt: __t.u64(),
+  endsAt: __t.u64(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+});
+export type GamMetaRelation = __Infer<typeof GamMetaRelation>;
+
+export const GamMilestoneView = __t.object("GamMilestoneView", {
+  day: __t.u32(),
+  reached: __t.bool(),
+  safe: __t.bool(),
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+  status: __t.string(),
+  claimId: __t.u64(),
+});
+export type GamMilestoneView = __Infer<typeof GamMilestoneView>;
+
+export const GamPlayerEvent = __t.object("GamPlayerEvent", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  typeKey: __t.string(),
+  value: __t.f64(),
+  metadata: __t.string(),
+  source: __t.string(),
+  at: __t.timestamp(),
+});
+export type GamPlayerEvent = __Infer<typeof GamPlayerEvent>;
+
+export const GamPlayerProgress = __t.object("GamPlayerProgress", {
+  get levels() {
+    return __t.array(GamUserLevel);
+  },
+  get streaks() {
+    return __t.array(GamUserStreak);
+  },
+  get relations() {
+    return __t.array(GamUserRelation);
+  },
+  get tasks() {
+    return __t.array(GamUserTask);
+  },
+  get groups() {
+    return __t.array(GamUserTaskgroup);
+  },
+  get achievements() {
+    return __t.array(GamUserAchievement);
+  },
+  get totals() {
+    return __t.array(GamEventCounter);
+  },
+  get claims() {
+    return __t.array(GamClaim);
+  },
+});
+export type GamPlayerProgress = __Infer<typeof GamPlayerProgress>;
+
+export const GamRecordResult = __t.object("GamRecordResult", {
+  eventId: __t.u64(),
+  get claims() {
+    return __t.array(GamClaimResult);
+  },
+  get streaks() {
+    return __t.array(GamStreakStep);
+  },
+  get tasks() {
+    return __t.array(GamTaskStep);
+  },
+  get achievements() {
+    return __t.array(GamAchievementStep);
+  },
+});
+export type GamRecordResult = __Infer<typeof GamRecordResult>;
+
+export const GamRelationEntry = __t.object("GamRelationEntry", {
+  relationId: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  repeat: __t.string(),
+  fires: __t.u32(),
+  maxFires: __t.u32(),
+  completed: __t.bool(),
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+});
+export type GamRelationEntry = __Infer<typeof GamRelationEntry>;
+
+export const GamRelationTarget = __t.object("GamRelationTarget", {
+  metaKey: __t.string(),
+  action: __t.string(),
+  amount: __t.f64(),
+});
+export type GamRelationTarget = __Infer<typeof GamRelationTarget>;
+
+export const GamReward = __t.object("GamReward", {
+  type: __t.string(),
+  key: __t.string(),
+  action: __t.string(),
+  value: __t.f64(),
+  prizeKey: __t.string(),
+});
+export type GamReward = __Infer<typeof GamReward>;
+
+export const GamRuleProgress = __t.object("GamRuleProgress", {
+  key: __t.string(),
+  ruleId: __t.u64(),
+  accountId: __t.u64(),
+  window: __t.string(),
+  count: __t.u32(),
+  sum: __t.f64(),
+  max: __t.f64(),
+  steps: __t.u32(),
+});
+export type GamRuleProgress = __Infer<typeof GamRuleProgress>;
+
+export const GamRuleView = __t.object("GamRuleView", {
+  ruleId: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  eventKey: __t.string(),
+  measure: __t.string(),
+  period: __t.string(),
+  repeat: __t.string(),
+  threshold: __t.f64(),
+  current: __t.f64(),
+  claims: __t.u32(),
+  maxClaims: __t.u32(),
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+  periodEndsAt: __t.u64(),
+  endsAt: __t.u64(),
+  claimable: __t.array(__t.u64()),
+});
+export type GamRuleView = __Infer<typeof GamRuleView>;
+
+export const GamSettings = __t.object("GamSettings", {
+  id: __t.u8(),
+  weekStart: __t.u8(),
+  playerRateLimit: __t.u32(),
+  retentionDays: __t.u32(),
+  chainDepth: __t.u8(),
+  clockOffsetSec: __t.i64(),
+  updatedAt: __t.timestamp(),
+});
+export type GamSettings = __Infer<typeof GamSettings>;
+
+export const GamStreak = __t.object("GamStreak", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  eventKey: __t.string(),
+  periodDays: __t.u8(),
+  gracePeriods: __t.u8(),
+  missAction: __t.string(),
+  cycleLength: __t.u32(),
+  repayAfterFall: __t.bool(),
+  get rewards() {
+    return __t.array(GamStreakDay);
+  },
+  get milestones() {
+    return __t.array(GamStreakDay);
+  },
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+});
+export type GamStreak = __Infer<typeof GamStreak>;
+
+export const GamStreakDay = __t.object("GamStreakDay", {
+  day: __t.u32(),
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+});
+export type GamStreakDay = __Infer<typeof GamStreakDay>;
+
+export const GamStreakStep = __t.object("GamStreakStep", {
+  key: __t.string(),
+  count: __t.u32(),
+  advanced: __t.bool(),
+  floor: __t.u32(),
+  fell: __t.bool(),
+});
+export type GamStreakStep = __Infer<typeof GamStreakStep>;
+
+export const GamStreakView = __t.object("GamStreakView", {
+  streakId: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  eventKey: __t.string(),
+  periodDays: __t.u8(),
+  count: __t.u32(),
+  storedCount: __t.u32(),
+  best: __t.u32(),
+  peak: __t.u32(),
+  run: __t.u32(),
+  falls: __t.u32(),
+  floor: __t.u32(),
+  nextMilestone: __t.u32(),
+  countedThisPeriod: __t.bool(),
+  broken: __t.bool(),
+  floored: __t.bool(),
+  graceLeft: __t.u32(),
+  gracePeriods: __t.u8(),
+  missAction: __t.string(),
+  cycleLength: __t.u32(),
+  repayAfterFall: __t.bool(),
+  nextPeriodAt: __t.u64(),
+  get rewards() {
+    return __t.array(GamStreakDay);
+  },
+  get milestones() {
+    return __t.array(GamMilestoneView);
+  },
+  claimable: __t.array(__t.u64()),
+});
+export type GamStreakView = __Infer<typeof GamStreakView>;
+
+export const GamSummary = __t.object("GamSummary", {
+  eventTypes: __t.u32(),
+  eventRules: __t.u32(),
+  levelTables: __t.u32(),
+  streaks: __t.u32(),
+  metaRelations: __t.u32(),
+  tasks: __t.u32(),
+  taskGroups: __t.u32(),
+  achievements: __t.u32(),
+  eventsToday: __t.u32(),
+  claimsReady: __t.u32(),
+  claimsFailed: __t.u32(),
+  clockOffsetSec: __t.i64(),
+});
+export type GamSummary = __Infer<typeof GamSummary>;
+
+export const GamTask = __t.object("GamTask", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  condition: __t.string(),
+  eventKey: __t.string(),
+  metric: __t.string(),
+  target: __t.f64(),
+  valueMin: __t.option(__t.f64()),
+  valueMax: __t.option(__t.f64()),
+  repeat: __t.string(),
+  repeatMinutes: __t.u32(),
+  maxCompletions: __t.u32(),
+  parentId: __t.u64(),
+  dependsOn: __t.array(__t.u64()),
+  groupId: __t.u64(),
+  prizeId: __t.u64(),
+  grantMode: __t.string(),
+  audienceTagIds: __t.array(__t.u64()),
+  levelTableId: __t.u64(),
+  minLevel: __t.u32(),
+  maxLevel: __t.u32(),
+  startsAt: __t.u64(),
+  endsAt: __t.u64(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+});
+export type GamTask = __Infer<typeof GamTask>;
+
+export const GamTaskGroupView = __t.object("GamTaskGroupView", {
+  groupId: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  cycle: __t.u32(),
+  activeCount: __t.u8(),
+  orderMode: __t.string(),
+  handout: __t.string(),
+  handoutMinutes: __t.u32(),
+  repeatable: __t.bool(),
+  total: __t.u32(),
+  done: __t.u32(),
+  handed: __t.array(__t.string()),
+  nextAt: __t.u64(),
+  canRequest: __t.bool(),
+  finished: __t.bool(),
+});
+export type GamTaskGroupView = __Infer<typeof GamTaskGroupView>;
+
+export const GamTaskList = __t.object("GamTaskList", {
+  get tasks() {
+    return __t.array(GamTaskView);
+  },
+  get groups() {
+    return __t.array(GamTaskGroupView);
+  },
+});
+export type GamTaskList = __Infer<typeof GamTaskList>;
+
+export const GamTaskStep = __t.object("GamTaskStep", {
+  key: __t.string(),
+  scope: __t.string(),
+  value: __t.f64(),
+  target: __t.f64(),
+  status: __t.string(),
+});
+export type GamTaskStep = __Infer<typeof GamTaskStep>;
+
+export const GamTaskView = __t.object("GamTaskView", {
+  taskId: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  categoryId: __t.u64(),
+  tagIds: __t.array(__t.u64()),
+  condition: __t.string(),
+  eventKey: __t.string(),
+  metric: __t.string(),
+  target: __t.f64(),
+  value: __t.f64(),
+  progress: __t.f64(),
+  state: __t.string(),
+  scope: __t.string(),
+  claimable: __t.bool(),
+  claimId: __t.u64(),
+  pending: __t.u32(),
+  grantMode: __t.string(),
+  prizeId: __t.u64(),
+  repeat: __t.string(),
+  repeatMinutes: __t.u32(),
+  maxCompletions: __t.u32(),
+  completions: __t.u32(),
+  periodEndsAt: __t.u64(),
+  nextAt: __t.u64(),
+  dependsOn: __t.array(__t.u64()),
+  parentId: __t.u64(),
+  groupId: __t.u64(),
+});
+export type GamTaskView = __Infer<typeof GamTaskView>;
+
+export const GamTaskgroup = __t.object("GamTaskgroup", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  iconUrl: __t.string(),
+  categoryId: __t.u64(),
+  activeCount: __t.u8(),
+  orderMode: __t.string(),
+  handout: __t.string(),
+  handoutMinutes: __t.u32(),
+  isRepeatable: __t.bool(),
+  taskIds: __t.array(__t.u64()),
+  audienceTagIds: __t.array(__t.u64()),
+  startsAt: __t.u64(),
+  endsAt: __t.u64(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+  createdAt: __t.timestamp(),
+});
+export type GamTaskgroup = __Infer<typeof GamTaskgroup>;
+
+export const GamTickTimer = __t.object("GamTickTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type GamTickTimer = __Infer<typeof GamTickTimer>;
+
+export const GamUserAchievement = __t.object("GamUserAchievement", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  achievementId: __t.u64(),
+  count: __t.u32(),
+  sum: __t.f64(),
+  max: __t.f64(),
+  tier: __t.u32(),
+  unlockedAt: __t.option(__t.timestamp()),
+  tierAt: __t.option(__t.timestamp()),
+  source: __t.string(),
+  sourceRef: __t.string(),
+});
+export type GamUserAchievement = __Infer<typeof GamUserAchievement>;
+
+export const GamUserLevel = __t.object("GamUserLevel", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  tableId: __t.u64(),
+  level: __t.u32(),
+  updatedAt: __t.timestamp(),
+});
+export type GamUserLevel = __Infer<typeof GamUserLevel>;
+
+export const GamUserRelation = __t.object("GamUserRelation", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  relationId: __t.u64(),
+  fires: __t.u32(),
+  armed: __t.bool(),
+  firstAt: __t.timestamp(),
+  lastAt: __t.timestamp(),
+});
+export type GamUserRelation = __Infer<typeof GamUserRelation>;
+
+export const GamUserStreak = __t.object("GamUserStreak", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  streakId: __t.u64(),
+  count: __t.u32(),
+  best: __t.u32(),
+  peak: __t.u32(),
+  run: __t.u32(),
+  falls: __t.u32(),
+  graceUsed: __t.u32(),
+  lastPeriod: __t.i64(),
+  updatedAt: __t.timestamp(),
+});
+export type GamUserStreak = __Infer<typeof GamUserStreak>;
+
+export const GamUserTask = __t.object("GamUserTask", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  taskId: __t.u64(),
+  scope: __t.string(),
+  status: __t.string(),
+  count: __t.u32(),
+  sum: __t.f64(),
+  max: __t.f64(),
+  completedAt: __t.option(__t.timestamp()),
+  completedMicros: __t.u64(),
+  completedBy: __t.string(),
+  claimId: __t.u64(),
+  claimedAt: __t.option(__t.timestamp()),
+  error: __t.string(),
+});
+export type GamUserTask = __Infer<typeof GamUserTask>;
+
+export const GamUserTaskgroup = __t.object("GamUserTaskgroup", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  groupId: __t.u64(),
+  cycle: __t.u32(),
+  handed: __t.array(__t.u64()),
+  nextAt: __t.u64(),
+});
+export type GamUserTaskgroup = __Infer<typeof GamUserTaskgroup>;
+
 export const GiftPage = __t.object("GiftPage", {
   total: __t.u32(),
   get rows() {
@@ -557,6 +1341,15 @@ export const ModerationSummary = __t.object("ModerationSummary", {
   tagged: __t.u32(),
 });
 export type ModerationSummary = __Infer<typeof ModerationSummary>;
+
+export const MyAchievements = __t.object("MyAchievements", {});
+export type MyAchievements = __Infer<typeof MyAchievements>;
+
+export const MyLevels = __t.object("MyLevels", {});
+export type MyLevels = __Infer<typeof MyLevels>;
+
+export const MyMetaRelations = __t.object("MyMetaRelations", {});
+export type MyMetaRelations = __Infer<typeof MyMetaRelations>;
 
 export const MyMetas = __t.object("MyMetas", {});
 export type MyMetas = __Infer<typeof MyMetas>;
@@ -593,6 +1386,9 @@ export const MyReportsPage = __t.object("MyReportsPage", {
   duplicateHours: __t.u32(),
 });
 export type MyReportsPage = __Infer<typeof MyReportsPage>;
+
+export const MyRewards = __t.object("MyRewards", {});
+export type MyRewards = __Infer<typeof MyRewards>;
 
 export const MyRole = __t.object("MyRole", {});
 export type MyRole = __Infer<typeof MyRole>;

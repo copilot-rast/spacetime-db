@@ -62,6 +62,22 @@ export const ECONOMY_QUERIES = [
   'SELECT * FROM admin_economy_settings',
 ];
 
+export const GAMIFICATION_QUERIES = [
+  'SELECT * FROM gam_event_type',
+  'SELECT * FROM my_rewards',
+  'SELECT * FROM my_levels',
+  'SELECT * FROM my_meta_relations',
+  'SELECT * FROM my_achievements',
+  'SELECT * FROM admin_gamification_settings',
+  'SELECT * FROM admin_event_rules',
+  'SELECT * FROM admin_level_tables',
+  'SELECT * FROM admin_streaks',
+  'SELECT * FROM admin_meta_relations',
+  'SELECT * FROM admin_tasks',
+  'SELECT * FROM admin_task_groups',
+  'SELECT * FROM admin_achievements',
+];
+
 export function connect(token?: string, extra: string[] = []): Promise<Client> {
   return new Promise((resolve, reject) => {
     const b = DbConnection.builder()
