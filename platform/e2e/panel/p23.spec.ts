@@ -373,6 +373,7 @@ test('settings: account rules with try box, report titles and rules', async ({ p
   const oldPer = await per.inputValue();
   await per.fill('۱۲');
   await page.getByTestId(`rr-trusted-${TAG}`).click();
+  await expect(page.locator('.toast-ok')).toHaveCount(0, { timeout: 10_000 });
   await page.getByTestId('rr-save').click();
   await toastOk(page);
   await open(page, 'settings/report-rules');

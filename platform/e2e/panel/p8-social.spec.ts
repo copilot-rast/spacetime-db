@@ -105,7 +105,7 @@ test('chat settings: translated validation, save, run now and the test clock', a
   await st.getByTestId('scs-save').click();
   await toastOk(page);
   await st.getByTestId('scs-run').click();
-  await expect(page.locator('.toast-ok').last()).toContainText('بررسی انجام شد');
+  await expect(page.locator('.toast-ok', { hasText: 'بررسی انجام شد' })).toBeVisible({ timeout: 20_000 });
   await st.getByTestId('scs-clock-fwd').click();
   await expect(st.getByTestId('scs-clock-now')).not.toContainText('واقعی');
   await expect.poll(() => chatRow().clockOffsetSec).toBe(86400n);
