@@ -2,6 +2,7 @@ import { t } from 'spacetimedb/server';
 import { bytesToHex } from '@noble/hashes/utils.js';
 import { baseRows, type BaseSchema } from './schema';
 import { sendSms, type SmsProviderRow } from './sms';
+import { checkAccountGuards, loginHooks, profileValidators } from './hooks';
 import {
   addSeconds,
   dayKey,
@@ -33,6 +34,7 @@ const VerifyOtpResult = t.object('VerifyOtpResult', {
   isNew: t.bool(),
   attemptsLeft: t.u32(),
   role: t.string(),
+  detail: t.string(),
 });
 
 function hashCode(secret: string, phone: string, code: string) {
@@ -70,6 +72,10 @@ export function defineAuth(st: BaseSchema) {
       const now = tx.timestamp;
       const acc = tx.db.account.phone.find(phone);
       if (acc && acc.status !== 'active') fail('ACCOUNT_BLOCKED');
+      if (acc) {
+        const g = checkAccountGuards(tx, acc.id);
+        if (g) fail(g.code);
+      }
       const existing = tx.db.otp.phone.find(phone);
       const wait = BigInt(s.otpResendSec) * 1_000_000n;
       if (existing && micros(now) - micros(existing.sentAt) < wait) {
@@ -138,7 +144,7 @@ export function defineAuth(st: BaseSchema) {
     const secret = ctx.env.OTP_SECRET;
     return ctx.withTx(tx => {
       const s = settingsOf(tx);
-      const res = (error: string, attemptsLeft = 0) => ({ ok: false, error, accountId: 0n, isNew: false, attemptsLeft, role: '' });
+      const res = (error: string, attemptsLeft = 0, detail = '') => ({ ok: false, error, accountId: 0n, isNew: false, attemptsLeft, role: '', detail });
       const row = tx.db.otp.phone.find(phone);
       if (!row) return res('NO_CODE');
       if (micros(tx.timestamp) > micros(row.expiresAt)) {
@@ -158,6 +164,10 @@ export function defineAuth(st: BaseSchema) {
       let acc = tx.db.account.phone.find(phone);
       const isNew = !acc;
       if (acc && acc.status !== 'active') return res('ACCOUNT_BLOCKED');
+      if (acc) {
+        const g = checkAccountGuards(tx, acc.id);
+        if (g) return res(g.code, 0, g.detail);
+      }
       if (!acc) {
         acc = tx.db.account.insert({
           id: 0n,
@@ -175,7 +185,8 @@ export function defineAuth(st: BaseSchema) {
       if (tx.db.session.identity.find(tx.sender)) tx.db.session.identity.update(sessionRow);
       else tx.db.session.insert(sessionRow);
       ensureBootstrapOwner(tx, acc.id, phone);
-      return { ok: true, error: '', accountId: acc.id, isNew, attemptsLeft: 0, role: tx.db.admin.accountId.find(acc.id)?.role ?? '' };
+      for (const h of loginHooks) h(tx, acc.id, isNew);
+      return { ok: true, error: '', accountId: acc.id, isNew, attemptsLeft: 0, role: tx.db.admin.accountId.find(acc.id)?.role ?? '', detail: '' };
     });
   });
 
@@ -185,7 +196,9 @@ export function defineAuth(st: BaseSchema) {
 
   const updateProfile = st.reducer({ displayName: t.string(), lang: t.string() }, (ctx, { displayName, lang }) => {
     const acc = requireAccount(ctx);
-    const name = displayName.trim().slice(0, 40);
+    const name = displayName.trim().replace(/\s+/g, ' ');
+    if ([...name].length > 64) fail('DISPLAY_NAME_TOO_LONG');
+    for (const v of profileValidators) v(ctx, acc.id, name);
     const l = ctx.db.language.code.find(lang);
     if (!l || !l.isActive) fail('UNKNOWN_LANGUAGE');
     ctx.db.account.id.update({ ...acc, displayName: name, lang });

@@ -4,6 +4,7 @@ import { hmac } from '@noble/hashes/hmac.js';
 import { sha256 } from '@noble/hashes/sha2.js';
 import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils.js';
 import type { BaseSchema, Role } from './schema';
+import { checkAccountGuards } from './hooks';
 
 export type S = InferSchema<BaseSchema>;
 export type Tx = ReducerCtx<S>;
@@ -74,6 +75,8 @@ export function requireAccount(ctx: Tx) {
   const a = sessionAccount(ctx);
   if (!a) fail('NOT_LOGGED_IN');
   if (a.status !== 'active') fail('ACCOUNT_BLOCKED');
+  const g = checkAccountGuards(ctx, a.id);
+  if (g) fail(g.code);
   return a;
 }
 

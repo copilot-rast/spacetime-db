@@ -38,7 +38,31 @@ export const ALL_QUERIES = [
   'SELECT * FROM admin_admins',
 ];
 
-export function connect(token?: string): Promise<Client> {
+export const PLAYER_QUERIES = [
+  'SELECT * FROM players_account_rules',
+  'SELECT * FROM players_app_version',
+  'SELECT * FROM players_country',
+  'SELECT * FROM players_tag_meta',
+  'SELECT * FROM players_report_title',
+  'SELECT * FROM my_status',
+  'SELECT * FROM my_tags',
+  'SELECT * FROM my_profile',
+  'SELECT * FROM admin_report_rules',
+];
+
+export const ECONOMY_QUERIES = [
+  'SELECT * FROM economy_currency',
+  'SELECT * FROM economy_meta',
+  'SELECT * FROM economy_prize',
+  'SELECT * FROM economy_prize_group',
+  'SELECT * FROM my_wallet',
+  'SELECT * FROM my_metas',
+  'SELECT * FROM shop',
+  'SELECT * FROM admin_payment_methods',
+  'SELECT * FROM admin_economy_settings',
+];
+
+export function connect(token?: string, extra: string[] = []): Promise<Client> {
   return new Promise((resolve, reject) => {
     const b = DbConnection.builder()
       .withUri(URI)
@@ -48,7 +72,7 @@ export function connect(token?: string): Promise<Client> {
           .subscriptionBuilder()
           .onApplied(() => resolve({ conn, token: tok }))
           .onError(ctx => reject(ctx.event))
-          .subscribe(ALL_QUERIES);
+          .subscribe([...ALL_QUERIES, ...extra]);
       })
       .onConnectError((_c, e) => reject(e));
     if (token) b.withToken(token);
@@ -89,7 +113,12 @@ export async function waitFor(fn: () => boolean, ms = 3000) {
 }
 
 export async function login(c: Client, phone: string) {
-  await c.conn.procedures.requestOtp({ phone });
+  const err = await errorOf(c.conn.procedures.requestOtp({ phone }));
+  const wait = err.match(/RETRY_LATER:(\d+)/);
+  if (wait) {
+    await new Promise(r => setTimeout(r, Number(wait[1]) * 1000 + 500));
+    await c.conn.procedures.requestOtp({ phone });
+  } else if (err) throw new Error(err);
   const r = await c.conn.procedures.verifyOtp({ phone, code: lastSandboxCode(phone) });
   if (!r.ok) throw new Error(`login failed ${phone}: ${r.error}`);
   await waitFor(() => [...c.conn.db.me.iter()].length === 1);

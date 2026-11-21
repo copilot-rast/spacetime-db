@@ -6,6 +6,7 @@ import { seedBase } from './seed';
 export { baseTables, baseEnv, Translations, Translation, ROLES, seedBase };
 export type { BaseSchema, Role };
 export * from './util';
+export * from './hooks';
 export { sendSms, SMS_KINDS } from './sms';
 
 export function defineBase(spacetimedb: unknown) {
