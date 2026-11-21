@@ -632,7 +632,7 @@ export function PushPage() {
             )}
             <ErrBox text={err} />
             {!ro && (
-              <div className="form-actions">
+              <div className="row" style={{ justifyContent: 'flex-end' }}>
                 <button type="button" className="btn btn-primary" disabled={busy} onClick={saveCfg} data-testid="push-save">
                   {t('save')}
                 </button>
@@ -657,7 +657,7 @@ export function PushPage() {
               </Field>
             </div>
             {testRes && (testRes.ok ? <OkBox text={testRes.text} /> : <ErrBox text={testRes.text} />)}
-            <div className="form-actions">
+            <div className="row" style={{ justifyContent: 'flex-end' }}>
               <button type="button" className="btn btn-primary" onClick={test} data-testid="push-test-go">
                 <PaperPlaneTilt className="ic" />
                 {t('pushTestSend')}
@@ -1061,8 +1061,8 @@ function ReportDialog(props: { row: CampaignRow; onClose: () => void }) {
         <div className="row row-wrap">
           {campaignBadge(r.status)}
           <span className="small muted grow">
-            {t('crRun', { n: r.run + 1 })} · {t('crBatches', { n: r.batches })}
-            {r.finishedAt ? ` · ${t('crFinished', { when: usMicros(r.finishedAt) })}` : ''}
+            {t('crRun', { n: r.run + 1 })}، {t('crBatches', { n: r.batches })}
+            {r.finishedAt ? `، ${t('crFinished', { when: usMicros(r.finishedAt) })}` : ''}
           </span>
           <a className="btn btn-sm" href={`#/messages?campaign=${r.id}`} data-testid="cm-report-outbox">
             <Tray className="ic" />

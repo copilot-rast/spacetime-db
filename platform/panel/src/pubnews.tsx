@@ -1018,6 +1018,7 @@ function SampleDialog(props: { row: SourceRow; onClose: () => void }) {
             </button>
           </div>
         </Field>
+        {s.authMode === 'hmac' && <pre className="pre ltr">{'signature = hex(HMAC-SHA256(secret, timestamp + "." + body))'}</pre>}
         <span className="small sub">{s.authMode === 'hmac' ? t('srHmacHelp', { ts: s.timestampHeader, sig: s.signatureHeader, skew: s.skewSeconds }) : t('srTokenHelp', { h: s.tokenHeader })}</span>
         <div className="row">
           <span className="section-label grow">{t('srCurl')}</span>

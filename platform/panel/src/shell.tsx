@@ -26,7 +26,8 @@ export function Shell(props: { children: ReactNode; crumbs: string[] }) {
   const { brand, name, mark } = useBrand();
   const snap = useSnap();
   const settings = useRows('adminSettings')[0];
-  const modSum = useFetch(() => getConn().procedures.adminModerationSummary({}), [route.page]);
+  const staff = can('operator');
+  const modSum = useFetch(() => (staff ? getConn().procedures.adminModerationSummary({}) : Promise.resolve(null)), [route.page, staff]);
   const openReports = modSum.data ? modSum.data.reportsOpen : 0;
   const [drawer, setDrawer] = useState(false);
   const [mode, setMode] = useState<ModeId>(pageMode(route.page));
@@ -66,7 +67,7 @@ export function Shell(props: { children: ReactNode; crumbs: string[] }) {
         <div className="rail-brand" title={name}>
           {brand?.iconUrl || brand?.logoUrl ? <img src={brand.iconUrl || brand.logoUrl} alt="" /> : mark}
         </div>
-        {MODES.map(m => {
+        {MODES.filter(m => (m.id === 'settings' ? sections.length > 0 : PAGES.some(p => p.mode === m.id && can(p.need)))).map(m => {
           const Icon = m.icon;
           return (
             <button

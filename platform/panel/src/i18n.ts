@@ -1033,6 +1033,7 @@ export function roleLabel(role: string): string {
   if (role === 'owner') return t('roleOwner');
   if (role === 'admin') return t('roleAdmin');
   if (role === 'operator') return t('roleOperator');
+  if (role === 'support') return t('roleSupport');
   return t('rolePlayer');
 }
 

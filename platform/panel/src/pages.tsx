@@ -92,6 +92,27 @@ function TileGrid(props: { tiles: { key: string; label: string; value: string; i
 export function Dashboard() {
   const { can } = useSession();
   useLocale();
+  if (!can('operator')) return <SupportHome />;
+  return <StaffDashboard />;
+}
+
+function SupportHome() {
+  const { me, role } = useSession();
+  return (
+    <main className="page" data-testid="page-dashboard">
+      <div className="page-head">
+        <div className="grow">
+          <div className="page-title">{t('dashTitle')}</div>
+          <div className="page-sub">{me?.displayName || roleLabel(role)}</div>
+        </div>
+      </div>
+      <Notice title={t('supHomeTitle')} text={t('supHomeText')} />
+    </main>
+  );
+}
+
+function StaffDashboard() {
+  const { can } = useSession();
   const { data, error, loading } = useFetch(() => getConn().procedures.adminDashboard({}), []);
   const mod = useFetch(() => getConn().procedures.adminModerationSummary({}), []);
   const eco = useFetch(() => getConn().procedures.adminEconomySummary({}), []);
@@ -210,6 +231,7 @@ export function Admins() {
         <option value="owner">{t('roleOwner')}</option>
         <option value="admin">{t('roleAdmin')}</option>
         <option value="operator">{t('roleOperator')}</option>
+        <option value="support">{t('roleSupport')}</option>
       </select>
     ) : (
       <RoleBadge role={r.role} />
@@ -330,6 +352,7 @@ const WORDS: Record<string, () => string> = {
   owner: () => t('roleOwner'),
   admin: () => t('roleAdmin'),
   operator: () => t('roleOperator'),
+  support: () => t('roleSupport'),
   active: () => t('plStatusActive'),
   blocked: () => t('plStatusBlocked'),
   true: () => t('yes'),

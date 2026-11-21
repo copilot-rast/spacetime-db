@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { createHmac, generateKeyPairSync } from 'node:crypto';
 import { DB, ECONOMY_QUERIES, PLAYER_QUERIES, PUBLICATION_QUERIES, connect, login, loginOwner, waitFor, type Client } from '../src/lib.ts';
-import { expect, open, stamp, test, toastOk, uniquePhone } from './fixtures.ts';
+import { expect, freshPage, open, stamp, test, toastOk, uniquePhone } from './fixtures.ts';
 
 const S = stamp();
 const fa = (s: string | number | bigint) => String(s).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[Number(d)]);
@@ -244,6 +244,10 @@ test('campaigns: validation, create, edit, preview, send, report; schedule and c
   await page.getByTestId(`cm-del-${k2}`).click();
   await confirm(page);
   await expect(row2).toHaveCount(0);
+  await page.getByRole('button', { name: /^تمام‌شده/ }).click();
+  await page.getByTestId(`cm-del-${k}`).click();
+  await confirm(page);
+  await expect(row).toHaveCount(0);
 });
 
 test('automatic messages: create, edit, runs dialog, delete', async ({ page }) => {
@@ -531,4 +535,38 @@ test('english locale shows publication pages in English with Latin digits', asyn
   await expect(page.locator('.page-title')).toHaveText('Webhook sources');
   await open(page, 'messages');
   await expect(page.getByTestId('page-messages')).not.toContainText(/[۰-۹]/);
+});
+
+test('support role sees only the dashboard and can change its own password', async ({ page }) => {
+  const username = `sup${S}`;
+  const pass1 = `Support${S}pass`;
+  const pass2 = `Support${S}next`;
+  await owner.conn.reducers.adminCreateUser({ username, password: pass1, role: 'support' });
+  const sp = await freshPage(page.context().browser()!);
+  await sp.goto('/');
+  await sp.locator('#c-db').fill(process.env.STG_DB!);
+  await sp.getByTestId('connect-go').click();
+  await sp.locator('#l-user').fill(username);
+  await sp.locator('#l-pass').fill(pass1);
+  await sp.getByTestId('login-pass-go').click();
+  await expect(sp.locator('.rail')).toBeVisible();
+  await expect(sp.getByTestId('page-dashboard')).toContainText('پشتیبان');
+  await expect(sp.locator('.rail-mode')).toHaveCount(1);
+  await expect(sp.getByTestId('rail-publication')).toHaveCount(0);
+  await expect(sp.getByTestId('rail-settings')).toHaveCount(0);
+  await sp.goto('/#/campaigns');
+  await expect(sp.getByTestId('page-dashboard')).toBeVisible();
+  await expect(sp.getByTestId('page-campaigns')).toHaveCount(0);
+  await expect(sp.locator('.toast-bad')).toHaveCount(0);
+  await sp.getByTestId('profile-btn').click();
+  await sp.getByTestId('profile-password').click();
+  const mp = sp.getByTestId('my-pw-dialog');
+  await mp.locator('input[name="oldPassword"]').fill(pass1);
+  await mp.locator('input[name="newPassword"]').fill(pass2);
+  await mp.locator('input[name="repeatPassword"]').fill(pass2);
+  await mp.getByTestId('dialog-save').click();
+  await expect(mp).toHaveCount(0);
+  await toastOk(sp);
+  await open(page, 'admins');
+  await expect(page.getByTestId(`pu-role-${username}`)).toHaveValue('support');
 });

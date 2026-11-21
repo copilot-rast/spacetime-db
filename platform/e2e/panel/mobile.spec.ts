@@ -1,10 +1,11 @@
 import { test as base, expect, type BrowserContext, type Page } from '@playwright/test';
-import { readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { PUBLICATION_QUERIES, connect, loginOwner, waitFor, type Client } from '../src/lib.ts';
 import { STATE, open, stamp } from './fixtures.ts';
 
 const MOBILE = { width: 390, height: 844 };
 const S = stamp();
+mkdirSync('../.local/shots/panel7', { recursive: true });
 
 const test = base.extend<{ page: Page }, { mobile: { ctx: BrowserContext; page: Page } }>({
   mobile: [
@@ -107,6 +108,8 @@ test('mobile publication pages: campaigns become cards and the drawer reaches th
   await page.getByTestId(`cmc-edit-${campaignId}`).click();
   await expect(page.getByTestId('cm-dialog')).toBeVisible();
   await page.keyboard.press('Escape');
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: '../.local/shots/panel7/fa-mobile-campaigns.png' });
   for (const p of ['campaigns', 'messages', 'news', 'news-comments', 'faq']) {
     await open(page, p);
     const width = await page.evaluate(() => document.documentElement.scrollWidth);

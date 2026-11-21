@@ -73,7 +73,7 @@ import {
 } from '@phosphor-icons/react';
 import { t } from './i18n.ts';
 
-export type Need = 'operator' | 'admin' | 'owner';
+export type Need = 'support' | 'operator' | 'admin' | 'owner';
 
 export type ModeId = 'overview' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'publication' | 'access' | 'settings';
 
@@ -92,7 +92,7 @@ export const MODES: { id: ModeId; label: () => string; icon: Icon }[] = [
 ];
 
 export const PAGES: PageDef[] = [
-  { id: 'dashboard', path: 'dashboard', mode: 'overview', label: () => t('navDashboard'), icon: ChartPieSlice, need: 'operator' },
+  { id: 'dashboard', path: 'dashboard', mode: 'overview', label: () => t('navDashboard'), icon: ChartPieSlice, need: 'support' },
   { id: 'players', path: 'players', mode: 'players', label: () => t('navPlayersList'), icon: Users, need: 'operator' },
   { id: 'restrictions', path: 'restrictions', mode: 'players', label: () => t('navRestrictions'), icon: Prohibit, need: 'operator' },
   { id: 'reports', path: 'reports', mode: 'players', label: () => t('navReports'), icon: Flag, need: 'operator' },

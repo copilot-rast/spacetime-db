@@ -2809,3 +2809,11 @@ html[dir='rtl'] .win-head {
 .seg button {
   flex: none;
 }
+
+.stack > .seg {
+  align-self: flex-start;
+}
+
+.field > .seg {
+  align-self: flex-start;
+}
