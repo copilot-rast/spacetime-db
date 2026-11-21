@@ -4,7 +4,7 @@ Everything we build lives in `platform/`. The rest of this repository is upstrea
 
 ## Layout
 
-- `packages/<name>`: shared TypeScript packages (`@stg/base`, `@stg/players`, `@stg/economy`, `@stg/gamification`, `@stg/items`, `@stg/promo`, later publication, social). Each exports its tables, env declarations and a `define<Name>(spacetimedb)` function. Game modules spread the tables into one `schema()` and re-export the functions by name.
+- `packages/<name>`: shared TypeScript packages (`@stg/base`, `@stg/players`, `@stg/economy`, `@stg/gamification`, `@stg/items`, `@stg/promo`, `@stg/publication`, later social). Each exports its tables, env declarations and a `define<Name>(spacetimedb)` function. Game modules spread the tables into one `schema()` and re-export the functions by name.
 - `games/template/spacetimedb`: the one module every game publishes. `schema.ts`, `platform.ts`, `platform-tables.ts` and `index.ts` belong to this repo. Game repos change only `src/game/` (`tables.ts` for tables and env, `index.ts` for reducers and views, `init.ts` for seed data), so upstream merges never touch game code.
 - `packages/platform.json` lists the packages in the module. After adding a package or a function, run `node scripts/gen-platform-exports.mjs`; it rewrites `platform.ts` and `platform-tables.ts` from the last `return { ... }` block of each listed file.
 - `panel/`: admin panel (React + Vite), connects straight to a game database over WebSocket.
@@ -31,11 +31,13 @@ export PATH=~/.nvm/versions/node/v22.18.0/bin:$PATH
 npm install
 ./scripts/dev-server.sh
 OTP_SECRET=$(cat .local/otp_secret) ADMIN_USERNAME=admin ADMIN_PASSWORD=$(cat .local/admin_password) spacetime publish stg-template -s stglocal -p games/template/spacetimedb --no-config --yes
-cd e2e && npm run gen && npx tsx base.test.ts && npx tsx players.test.ts && npx tsx economy.test.ts && npx tsx gamification.test.ts && npx tsx items.test.ts && npx tsx promo.test.ts
+cd e2e && npm run gen && npx tsx base.test.ts && npx tsx players.test.ts && npx tsx economy.test.ts && npx tsx gamification.test.ts && npx tsx items.test.ts && npx tsx promo.test.ts && npx tsx publication.test.ts
 ```
 
 - SpacetimeDB CLI stays on 2.12.0 (`spacetime version use 2.12.0`), matching the `spacetimedb` npm package.
 - Dev server: 127.0.0.1:7500, data in `.local/stdb`, CLI nickname `stglocal` (`spacetime server add stglocal --url http://127.0.0.1:7500 --no-fingerprint`).
-- Gamification tests move days with `admin_set_clock_offset`, items tests with `admin_set_items_clock_offset` and promo tests with `admin_set_promo_clock_offset` (each package's own clock only); all set it back to 0 at the end.
+- Gamification tests move days with `admin_set_clock_offset`, items tests with `admin_set_items_clock_offset`, promo tests with `admin_set_promo_clock_offset` and publication tests with `admin_set_publication_clock_offset` (each package's own clock only); all set it back to 0 at the end.
 - The owner phone may request 10 codes a day per database; running every suite more than once a day needs `spacetime sql <db> -s stglocal --no-config "DELETE FROM base_otp_daily WHERE count >= 0"`.
+- Publication runs its worker every 3 s (`pub_tick`); tests call `admin_publication_run` to run a pass at once. Push tests use the `log` provider; a token starting with `sandbox-dead` counts as unregistered.
+- Webhook and public routes live under `/v1/database/<db>/route/publication/...`; route paths are exact and cannot hold a dot, so keys go in the query string.
 - Sandbox SMS codes: `spacetime sql <db> -s stglocal --no-config "SELECT * FROM base_sandbox_sms"` or the panel's sandbox inbox.

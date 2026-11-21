@@ -11,6 +11,7 @@ Phase 4: player events, event prizes, level tables, streaks with milestones (saf
 - `loginHooks`: every login records `login`.
 - `paymentHooks`: every granted payment records `purchase_completed` (value = final Toman, or the coin amount for `in_app`).
 - `metaHooks`: every meta change (purchases, prizes, gift codes, admin edits, relation targets, level metas) runs the meta relations, then the level tables of that meta.
+- `eventHooks` (new here): called at the end of every `recordEvent` with `(ctx, accountId, key, value, metadata, eventId, source)`; publication uses it for automatic notifications.
 - `prizeUseChecks`: a prize used by an event rule, level step, streak day or milestone, meta relation, task or achievement tier cannot be deleted (`IN_USE`).
 - `metaUseChecks` (new in economy): a meta used by a level table (source or level meta) or a relation (source or target) cannot be deleted.
 - `extraItemTypes` / `itemHandlers` / `itemValidators` (the last new in economy): prize item `{type: 'achievement', key, action: 'give', value: tier}` gives an achievement inside the grant; an unknown key is refused on save (`ACHIEVEMENT_NOT_FOUND`).
