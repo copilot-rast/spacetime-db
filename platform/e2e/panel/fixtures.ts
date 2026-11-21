@@ -1,8 +1,8 @@
 import { test as base, expect, type Browser, type BrowserContext, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-import { lastSandboxCode, uniquePhone } from '../src/lib.ts';
+import { ADMIN_PASSWORD, ADMIN_USER, lastSandboxCode, uniquePhone } from '../src/lib.ts';
 
-export { expect, lastSandboxCode, uniquePhone };
+export { ADMIN_USER, expect, lastSandboxCode, uniquePhone };
 
 export const STATE = '../.local/panel-owner.json';
 export const VIEW = { width: 1280, height: 800 };
@@ -46,19 +46,35 @@ export const test = base.extend<{ page: Page }, { shared: Shared }>({
 export async function prefs(page: Page, locale: 'fa' | 'en', theme: 'light' | 'dark') {
   if (!page.url().startsWith('http')) await page.goto('/#/dashboard');
   await page.evaluate(([l, t]) => {
-    localStorage.setItem('stg.locale', l);
-    localStorage.setItem('stg.theme', t);
+    for (const [key, value] of [['stg.locale', l], ['stg.theme', t]]) {
+      localStorage.setItem(key, value);
+      window.dispatchEvent(new StorageEvent('storage', { key, newValue: value }));
+    }
   }, [locale, theme] as const);
 }
 
+const stale = new WeakSet<Page>();
+
+export function needsReload(page: Page) {
+  stale.add(page);
+}
+
 export async function open(page: Page, hash: string) {
-  await page.goto(`/#/${hash}`);
-  await page.reload();
+  if (stale.has(page) || !page.url().startsWith('http')) {
+    stale.delete(page);
+    await page.goto(`/#/${hash}`);
+    await page.reload();
+  } else {
+    await page.goto(hash.startsWith('dashboard') ? '/#/audit' : '/#/dashboard');
+    await page.goto(`/#/${hash}`);
+  }
   await expect(page.locator('.topbar')).toBeVisible();
 }
 
 export async function toastOk(page: Page) {
   await expect(page.locator('.toast-ok').last()).toBeVisible();
 }
+
+export const adminPassword = () => ADMIN_PASSWORD;
 
 export const stamp = () => String(Date.now() % 1_000_000);

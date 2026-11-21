@@ -1,5 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
+process.env.STG_DB ??= 'stg-panel';
+
 export default defineConfig({
   testDir: './panel',
   fullyParallel: false,
@@ -9,7 +11,6 @@ export default defineConfig({
   expect: { timeout: 8_000 },
   reporter: [['list']],
   outputDir: '../.local/test-results',
-  globalSetup: './panel/global-setup.ts',
   use: {
     baseURL: process.env.PANEL_URL ?? 'http://127.0.0.1:7510',
     channel: 'chrome',

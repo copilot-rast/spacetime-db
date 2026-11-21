@@ -5,7 +5,8 @@ import { mkdirSync } from 'node:fs';
 const DIR = '../.local/shots';
 mkdirSync(DIR, { recursive: true });
 
-const SECTIONS = ['brand', 'languages', 'setup', 'key-types', 'categories', 'tags', 'sms', 'test-phones', 'sandbox', 'otp'];
+const SECTIONS = ['brand', 'languages', 'setup', 'key-types', 'categories', 'tags', 'sms', 'test-phones', 'sandbox', 'otp', 'admin-login', 'account-rules', 'app-versions', 'countries', 'report-titles', 'report-rules', 'payment-methods', 'economy-settings'];
+const PAGES2 = ['players', 'restrictions', 'reports', 'economy', 'currencies', 'metas', 'prizes', 'prize-groups', 'products', 'gifts', 'payments'];
 
 async function settle(page: Page) {
   await page.waitForTimeout(450);
@@ -19,7 +20,6 @@ async function shot(page: Page, name: string) {
 
 async function setPrefs(page: Page, locale: 'fa' | 'en', theme: 'light' | 'dark') {
   await prefs(page, locale, theme);
-  await page.reload();
 }
 
 test.describe('screenshots', () => {
@@ -28,9 +28,49 @@ test.describe('screenshots', () => {
     await open(page, 'dashboard');
     await expect(page.getByTestId('page-dashboard')).toBeVisible();
     await shot(page, 'fa-dashboard');
-    await open(page, 'players');
-    await expect(page.getByTestId('pl-table')).toBeVisible();
-    await shot(page, 'fa-players');
+    for (const p of PAGES2) {
+      await open(page, p);
+      await shot(page, `fa-${p}`);
+    }
+    await open(page, 'restrictions?status=all');
+    await shot(page, 'fa-restrictions-all');
+    await open(page, 'reports?status=all');
+    await settle(page);
+    const rp = page.locator('[data-testid^="rp-open-"]').first();
+    if (await rp.count()) {
+      await rp.click();
+      await shot(page, 'fa-dialog-report');
+      await page.keyboard.press('Escape');
+    }
+    await open(page, 'payments');
+    await settle(page);
+    const py = page.locator('[data-testid^="py-row-"]').first();
+    if (await py.count()) {
+      await py.click();
+      await shot(page, 'fa-dialog-payment');
+      await page.keyboard.press('Escape');
+    }
+    await open(page, 'players?status=tagged');
+    await settle(page);
+    const pl = page.locator('[data-testid^="pl-open-"]').first();
+    if (await pl.count()) {
+      await pl.click();
+      await expect(page.getByTestId('pd-name')).toBeVisible();
+      await shot(page, 'fa-player');
+      await page.getByTestId('pd-suspend').click();
+      await shot(page, 'fa-dialog-restrict');
+      await page.keyboard.press('Escape');
+    }
+    await open(page, 'prizes');
+    await page.getByTestId('pz-add').click();
+    await page.getByTestId('item-add').click();
+    await shot(page, 'fa-dialog-prize');
+    await page.keyboard.press('Escape');
+    await open(page, 'products');
+    await page.getByTestId('pr-add').click();
+    await page.getByTestId('pr-method-in_app').click();
+    await shot(page, 'fa-dialog-product');
+    await page.keyboard.press('Escape');
     await open(page, 'admins');
     await shot(page, 'fa-admins');
     await open(page, 'audit');
@@ -75,8 +115,9 @@ test.describe('screenshots', () => {
     const page = await freshPage(browser);
     await page.goto('/');
     await shot(page, 'fa-connect');
-    await page.getByTestId('connect-go').click();
-    await expect(page.getByTestId('login-phone')).toBeVisible();
+    await page.locator('#c-db').fill(process.env.STG_DB!);
+  await page.getByTestId('connect-go').click();
+    await expect(page.getByTestId('login-password')).toBeVisible();
     await shot(page, 'fa-login');
   });
 
@@ -90,6 +131,12 @@ test.describe('screenshots', () => {
     await shot(page, 'en-settings-brand');
     await open(page, 'settings/sms');
     await shot(page, 'en-settings-sms');
+    await open(page, 'economy');
+    await shot(page, 'en-economy');
+    await open(page, 'reports?status=all');
+    await shot(page, 'en-reports');
+    await open(page, 'settings/payment-methods');
+    await shot(page, 'en-settings-payment-methods');
   });
 
   test('dark', async ({ page }) => {
@@ -102,6 +149,10 @@ test.describe('screenshots', () => {
     await shot(page, 'dark-settings-categories');
     await open(page, 'settings/sandbox');
     await shot(page, 'dark-settings-sandbox');
+    await open(page, 'products');
+    await shot(page, 'dark-products');
+    await open(page, 'restrictions?status=all');
+    await shot(page, 'dark-restrictions');
   });
 
   test('mobile', async ({ page }) => {
@@ -117,5 +168,16 @@ test.describe('screenshots', () => {
     await shot(page, 'mobile-settings-list');
     await open(page, 'settings/languages');
     await shot(page, 'mobile-settings-languages');
+    await open(page, 'payments');
+    await shot(page, 'mobile-payments');
+    await open(page, 'economy');
+    await shot(page, 'mobile-economy');
+    await open(page, 'players?status=tagged');
+    await settle(page);
+    const pl = page.locator('[data-testid^="pl-card-"] a').first();
+    if (await pl.count()) {
+      await pl.click();
+      await shot(page, 'mobile-player');
+    }
   });
 });
