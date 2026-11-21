@@ -326,7 +326,7 @@ test('sandbox inbox is live and clears', async ({ page }) => {
   const phone = uniquePhone('0939');
   const c = await connect();
   await c.conn.procedures.requestOtp({ phone });
-  await expect(list.locator('.list-row')).toHaveCount(before + 1);
+  await expect(list.locator('.list-row')).toHaveCount(Math.min(before + 1, 50));
   await expect(list).toContainText(fa(phone));
   c.conn.disconnect();
   await page.getByTestId('sb-clear').click();

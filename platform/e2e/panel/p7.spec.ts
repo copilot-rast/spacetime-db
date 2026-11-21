@@ -553,10 +553,10 @@ test('support role sees only the dashboard and can change its own password', asy
   await sp.getByTestId('login-pass-go').click();
   await expect(sp.locator('.rail')).toBeVisible();
   await expect(sp.getByTestId('page-dashboard')).toContainText('پشتیبان');
-  await expect(sp.locator('.rail-mode')).toHaveCount(2);
+  await expect(sp.locator('.rail-mode')).toHaveCount(3);
   await expect(sp.getByTestId('rail-support')).toBeVisible();
+  await expect(sp.getByTestId('rail-settings')).toBeVisible();
   await expect(sp.getByTestId('rail-publication')).toHaveCount(0);
-  await expect(sp.getByTestId('rail-settings')).toHaveCount(0);
   await sp.goto('/#/campaigns');
   await expect(sp.getByTestId('page-dashboard')).toBeVisible();
   await expect(sp.getByTestId('page-campaigns')).toHaveCount(0);

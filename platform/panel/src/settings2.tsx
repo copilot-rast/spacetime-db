@@ -614,21 +614,22 @@ export function ReportTitlesSection(props: { ro: boolean }) {
 
 export function ReportRulesSection(props: { ro: boolean }) {
   const rules = useRows('adminReportRules')[0];
+  const tagRows = useRows('tag');
   type V = { perHour: number; duplicateHours: number; minAccountHours: number; noteRequired: boolean; trustedTagIds: bigint[]; trustedPerHour: number };
   const [v, setV] = useState<V | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   useEffect(() => {
-    if (rules && !v)
+    if (rules && !v && tagRows.length)
       setV({
         perHour: rules.perHour,
         duplicateHours: rules.duplicateHours,
         minAccountHours: rules.minAccountHours,
         noteRequired: rules.noteRequired,
-        trustedTagIds: rules.trustedTagIds,
+        trustedTagIds: rules.trustedTagIds.filter(id => tagRows.some(x => x.id === id)),
         trustedPerHour: rules.trustedPerHour,
       });
-  }, [rules, v]);
+  }, [rules, v, tagRows.length]);
   if (!v) return <FormSkel n={4} />;
   return (
     <form
