@@ -16,6 +16,7 @@ async function main() {
   check('owner sees settings', await waitFor(() => [...owner.conn.db.adminSettings.iter()].length === 1));
 
   const s0 = [...owner.conn.db.adminSettings.iter()][0];
+  const b0 = [...owner.conn.db.brand.iter()][0];
   await owner.conn.reducers.adminSaveSettings({ otpLength: 6, otpTtlSec: 180, otpResendSec: 30, otpMaxAttempts: 3, otpDailyCap: 2 });
   check('settings save', await waitFor(() => [...owner.conn.db.adminSettings.iter()][0]?.otpLength === 6));
   check('bad settings are refused', (await errorOf(owner.conn.reducers.adminSaveSettings({ otpLength: 2, otpTtlSec: 180, otpResendSec: 30, otpMaxAttempts: 3, otpDailyCap: 2 }))).includes('INVALID_OTP_LENGTH'));
@@ -149,8 +150,8 @@ async function main() {
   check('setup flag', await waitFor(() => [...owner.conn.db.adminSettings.iter()][0]?.setupDone === true));
 
   await owner.conn.reducers.adminSaveSettings({ otpLength: s0.otpLength, otpTtlSec: s0.otpTtlSec, otpResendSec: s0.otpResendSec, otpMaxAttempts: s0.otpMaxAttempts, otpDailyCap: s0.otpDailyCap });
-  await owner.conn.reducers.adminSaveBrand({ name: tr('بازی من', 'My Game'), shortName: '', logoUrl: '', iconUrl: '', primaryColor: '#3f76ff', supportPhone: '', supportEmail: '', website: '' });
-  await owner.conn.reducers.adminCompleteSetup({ done: false });
+  await owner.conn.reducers.adminSaveBrand({ name: b0.name, shortName: b0.shortName, logoUrl: b0.logoUrl, iconUrl: b0.iconUrl, primaryColor: b0.primaryColor, supportPhone: b0.supportPhone, supportEmail: b0.supportEmail, website: b0.website });
+  await owner.conn.reducers.adminCompleteSetup({ done: s0.setupDone });
 
   done('base');
 }
