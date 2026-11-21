@@ -173,7 +173,7 @@ export function defineCatalog(st: EconomySchema) {
         exclusive: p.audienceTagIds.length > 0,
         prizeId: p.prizeId,
       }))
-      .filter(p => p.paymentMethods.length > 0);
+      .filter(p => p.paymentMethods.length > 0 && shopFilters.every(f => f(ctx as any, a?.id, p.id)));
   });
 
   const syncEconomy = st.reducer(ctx => {
@@ -550,6 +550,7 @@ export function defineCatalog(st: EconomySchema) {
   };
 }
 
+export const shopFilters: ((ctx: { db: ETx['db'] }, accountId: bigint | undefined, productId: bigint) => boolean)[] = [];
 export const prizeUseChecks: ((ctx: ETx, prizeId: bigint) => boolean)[] = [];
 export const metaUseChecks: ((ctx: ETx, metaKey: string) => boolean)[] = [];
 export const itemValidators: ((ctx: ETx, item: { type: string; key: string; action: string; value: number }) => void)[] = [];

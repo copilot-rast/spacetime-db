@@ -7,6 +7,7 @@
     "@stg/players": "*",
     "@stg/economy": "*",
     "@stg/gamification": "*",
+    "@stg/items": "*",
     "spacetimedb": "2.12.0"
   },
   "devDependencies": {

@@ -334,6 +334,16 @@ export function userLevelOf(ctx: { db: GTx['db'] }, accountId: bigint, tableId: 
   return [...ctx.db.userLevel.byAccountTable.filter([accountId, tableId])][0]?.level ?? 0;
 }
 
+export function mainLevelTable(ctx: { db: GTx['db'] }) {
+  return [...ctx.db.levelTable.iter()].filter(l => l.isActive).sort((a, b) => a.sort - b.sort || (a.id < b.id ? -1 : 1))[0];
+}
+
+export function playerLevel(raw: unknown, accountId: bigint, tableId = 0n) {
+  const ctx = raw as { db: GTx['db'] };
+  const id = tableId || mainLevelTable(ctx)?.id;
+  return id ? userLevelOf(ctx, accountId, id) : 0;
+}
+
 export function onMetaChange(ctx: GTx, accountId: bigint, key: string, depth: number) {
   const s = ctx.db.gamSettings.id.find(0);
   if (!s || depth > s.chainDepth) return;

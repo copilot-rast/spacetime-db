@@ -43,6 +43,17 @@
         "packages/gamification/src/events.ts",
         "packages/gamification/src/missions.ts"
       ]
+    },
+    {
+      "name": "@stg/items",
+      "define": "defineItems",
+      "seed": "seedItems",
+      "tables": "itemsTables",
+      "env": "itemsEnv",
+      "files": [
+        "packages/items/src/offers.ts",
+        "packages/items/src/inventory.ts"
+      ]
     }
   ]
 }

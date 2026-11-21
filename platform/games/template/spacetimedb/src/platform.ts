@@ -2,6 +2,7 @@ import { defineBase, seedBase } from '@stg/base';
 import { definePlayers, seedPlayers } from '@stg/players';
 import { defineEconomy, seedEconomy } from '@stg/economy';
 import { defineGamification, seedGamification } from '@stg/gamification';
+import { defineItems, seedItems } from '@stg/items';
 import spacetimedb from './schema';
 import { gameInit } from './game/init';
 
@@ -10,6 +11,7 @@ function seedAll(ctx: unknown) {
   seedPlayers(ctx as never);
   seedEconomy(ctx as never);
   seedGamification(ctx as never);
+  seedItems(ctx as never);
 }
 
 export const init = spacetimedb.init(ctx => {
@@ -192,3 +194,44 @@ export const {
   myAchievements,
   claimAchievement,
 } = defineGamification(spacetimedb);
+
+export const {
+  adminOffers,
+  adminOfferSettings,
+  adminSaveOfferSettings,
+  adminSaveOffer,
+  adminDeleteOffer,
+  adminPlayerOffers,
+  adminResetDailyOffers,
+  adminResetEntryOffer,
+  adminExpireOffer,
+  myOffers,
+  offersReroll,
+  offerSeen,
+  offerBuy,
+  itemsTick,
+  myInventory,
+  shopFlags,
+  adminItemsSettings,
+  adminSaveItemsSettings,
+  adminSetItemsClockOffset,
+  adminSaveItemType,
+  adminDeleteItemType,
+  adminSaveItem,
+  adminDeleteItem,
+  adminItems,
+  adminUserItems,
+  adminGiveItem,
+  adminTakeItem,
+  adminSaveProductRule,
+  adminDeleteProductRule,
+  syncItems,
+  myItems,
+  itemBuy,
+  itemUnlock,
+  itemUpgrade,
+  itemEquip,
+  itemUnequip,
+  itemUse,
+  myPurchases,
+} = defineItems(spacetimedb);

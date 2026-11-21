@@ -45,7 +45,7 @@ const MethodView = t.row('PaymentMethodView', {
   updatedAt: t.timestamp(),
 });
 
-const StartResult = t.object('PurchaseStartResult', {
+export const StartResult = t.object('PurchaseStartResult', {
   paymentId: t.u64(),
   status: t.string(),
   redirectUrl: t.string(),
@@ -280,6 +280,13 @@ export function grantPayment(ctx: { withTx: EProc['withTx'] }, paymentId: bigint
       if (!p || p.status !== 'success' || p.rewardGranted) return p?.rewards ?? '[]';
       const product = tx.db.product.id.find(p.productId);
       if (!product) fail('PRODUCT_NOT_FOUND');
+      for (const h of settleChecks) {
+        const refused = h(tx, p, product);
+        if (!refused) continue;
+        if (p.method === 'in_app' && p.coinAmount > 0n) changeBalance(tx, p.accountId, p.coinCurrency, p.coinAmount, `refund:${product.key}`, 'payment', String(p.id));
+        tx.db.payment.id.update({ ...p, status: 'refused', error: refused, rewardError: refused, updatedAt: tx.timestamp });
+        return '[]';
+      }
       const rewards = JSON.stringify(grantPrize(tx, p.accountId, product.prizeId, 'payment', String(p.id)));
       tx.db.payment.id.update({ ...p, rewardGranted: true, rewardError: '', rewards, updatedAt: tx.timestamp });
       for (const h of paymentHooks) h(tx, p.accountId, p.id, p.productId);
@@ -296,6 +303,14 @@ export function grantPayment(ctx: { withTx: EProc['withTx'] }, paymentId: bigint
 }
 
 export const paymentHooks: ((ctx: ETx, accountId: bigint, paymentId: bigint, productId: bigint) => void)[] = [];
+
+export type ProductRow = NonNullable<ReturnType<ETx['db']['product']['id']['find']>>;
+export type PaymentRow = NonNullable<ReturnType<ETx['db']['payment']['id']['find']>>;
+export type PurchaseRequest = { accountId: bigint; product: ProductRow; method: string; context: string };
+export type PurchaseQuote = { available: boolean; originalToman: bigint; priceToman: bigint; discountPercent: number; coinCurrency: string; coinAmount: bigint; methods: string[]; giftAllowed: boolean };
+export const purchaseChecks: ((ctx: ETx, req: PurchaseRequest, quote: PurchaseQuote) => PurchaseQuote | void)[] = [];
+export const purchaseCreatedHooks: ((ctx: ETx, paymentId: bigint, req: PurchaseRequest) => void)[] = [];
+export const settleChecks: ((ctx: ETx, payment: PaymentRow, product: ProductRow) => string | undefined)[] = [];
 
 function verifyAndSettle(ctx: Http & { withTx: EProc['withTx'] }, paymentId: bigint, action: string) {
   const p = ctx.withTx(tx => {
@@ -323,6 +338,109 @@ function redirectTo(url: string, paymentId: bigint, success: boolean) {
   const target = (url || 'stg://payment?success={success}&paymentId={paymentId}').replace('{success}', String(success)).replace('{paymentId}', String(paymentId));
   return new SyncResponse('', { status: 302, headers: { Location: target, 'Cache-Control': 'no-store' } });
 }
+
+export function startPurchase(ctx: EProc, a: { productId: bigint; method: string; giftCode: string }, context: string) {
+    const salt = bytesToHex(ctx.random.fill(new Uint8Array(8)));
+    const plan = ctx.withTx(tx => {
+      const me = requireAccount(base(tx));
+      const product = tx.db.product.id.find(a.productId);
+      if (!product) fail('PRODUCT_NOT_FOUND');
+      const req = { accountId: me.id, product, method: a.method, context };
+      let quote: PurchaseQuote = {
+        available: !context && product.isActive && productVisible(tx, me.id, product.audienceTagIds),
+        originalToman: product.priceToman,
+        priceToman: discounted(product.priceToman, product.discountPercent),
+        discountPercent: product.discountPercent,
+        coinCurrency: product.coinCurrency,
+        coinAmount: product.coinAmount,
+        methods: product.paymentMethods,
+        giftAllowed: true,
+      };
+      for (const h of purchaseChecks) quote = h(tx, req, quote) ?? quote;
+      if (!quote.available) fail('PRODUCT_NOT_FOUND');
+      if (!quote.methods.includes(a.method)) fail('METHOD_NOT_ALLOWED');
+      if (!activeMethods(tx).has(a.method)) fail('METHOD_NOT_ACTIVE');
+      const cfg = cfgOf(tx, a.method);
+      if (!configured(a.method, cfg)) fail('PAYMENT_METHOD_NOT_CONFIGURED');
+      const s = settings(tx);
+      const original = quote.priceToman;
+      let giftId = 0n;
+      let giftPercent = 0;
+      if (a.giftCode.trim()) {
+        if (!GATEWAYS.includes(a.method) || !quote.giftAllowed) fail('GIFT_NOT_ALLOWED');
+        const g = checkGift(tx, me.id, a.giftCode, 'discount');
+        giftId = g.id;
+        giftPercent = g.discountPercent;
+      }
+      const final = a.method === 'in_app' ? 0n : discounted(original, giftPercent);
+      const pay = tx.db.payment.insert({
+        id: 0n,
+        accountId: me.id,
+        productId: product.id,
+        method: a.method,
+        sandbox: cfg.sandbox === true,
+        status: 'pending',
+        originalToman: quote.originalToman,
+        finalToman: final,
+        amountRial: final * 10n,
+        coinCurrency: a.method === 'in_app' ? quote.coinCurrency : '',
+        coinAmount: a.method === 'in_app' ? quote.coinAmount : 0n,
+        giftId,
+        discountPercent: quote.discountPercent,
+        authority: '',
+        refId: '',
+        storeToken: '',
+        cardMask: '',
+        error: '',
+        rewardGranted: false,
+        rewardError: '',
+        rewards: '[]',
+        inquiryCount: 0,
+        inquiredAt: undefined,
+        verifiedAt: undefined,
+        createdAt: tx.timestamp,
+        updatedAt: tx.timestamp,
+      });
+      if (giftId) tx.db.giftUse.insert({ id: 0n, giftId, accountId: me.id, paymentId: pay.id, status: 'reserved', createdAt: tx.timestamp, updatedAt: tx.timestamp });
+      for (const h of purchaseCreatedHooks) h(tx, pay.id, req);
+      if (a.method === 'in_app') {
+        changeBalance(tx, me.id, quote.coinCurrency, -quote.coinAmount, `buy:${product.key}`, 'payment', String(pay.id));
+        markPaid(tx, pay.id, `in_app-${pay.id}`, '');
+        return { kind: 'settled' as const, pay, product, cfg, s };
+      }
+      if (GATEWAYS.includes(a.method) && final === 0n) {
+        markPaid(tx, pay.id, `free-${pay.id}`, '');
+        return { kind: 'settled' as const, pay, product, cfg, s };
+      }
+      if (STORES.includes(a.method)) return { kind: 'store' as const, pay, product, cfg, s };
+      if (!s.publicBaseUrl) fail('PUBLIC_BASE_URL_MISSING');
+      return { kind: 'gateway' as const, pay, product, cfg, s, db: tx.databaseIdentity.toHexString() };
+    });
+
+    if (plan.kind === 'settled') {
+      const rewards = grantPayment(ctx, plan.pay.id);
+      const after = ctx.withTx(tx => tx.db.payment.id.find(plan.pay.id));
+      if (after?.status === 'refused') fail(after.error);
+      return { paymentId: plan.pay.id, status: 'success', redirectUrl: '', sku: '', developerPayload: '', rewards };
+    }
+    if (plan.kind === 'store') {
+      return { paymentId: plan.pay.id, status: 'store', redirectUrl: '', sku: a.method === 'bazaar' ? plan.product.skuBazaar : plan.product.skuMyket, developerPayload: String(plan.pay.id), rewards: '[]' };
+    }
+    const expires = ctx.timestamp.microsSinceUnixEpoch / 1_000_000n + 48n * 3600n;
+    const ticket = ticketFor(ctx.env.OTP_SECRET, plan.pay.id, expires);
+    const dbId = plan.db;
+    const callbackUrl = `${plan.s.publicBaseUrl}/v1/database/${dbId}/route/economy/callback?t=${ticket}&n=${salt}`;
+    const r = gatewayRequest(ctx, a.method, plan.cfg, plan.pay.amountRial, callbackUrl, plan.pay.id, `${plan.product.key} #${plan.pay.id}`);
+    ctx.withTx(tx => {
+      logCall(tx, plan.pay.id, 'request', r.log.url, r.log.req, r.log.res, r.log.status);
+      const row = tx.db.payment.id.find(plan.pay.id);
+      if (!row) return;
+      if (r.ok) tx.db.payment.id.update({ ...row, authority: r.authority, updatedAt: tx.timestamp });
+      else markFailed(tx, row.id, 'failed', 'GATEWAY_REQUEST_FAILED');
+    });
+    if (!r.ok) fail('GATEWAY_REQUEST_FAILED');
+    return { paymentId: plan.pay.id, status: 'redirect', redirectUrl: r.redirectUrl, sku: '', developerPayload: '', rewards: '[]' };
+  }
 
 export function definePayments(st: EconomySchema) {
   const adminPaymentMethods = st.view({ name: 'admin_payment_methods', public: true }, t.array(MethodView), ctx => {
@@ -384,91 +502,7 @@ export function definePayments(st: EconomySchema) {
     audit(base(ctx), me.id, 'economy_settings.save', 'settings');
   });
 
-  const purchaseStart = st.procedure({ productId: t.u64(), method: t.string(), giftCode: t.string() }, StartResult, (ctx, a) => {
-    const salt = bytesToHex(ctx.random.fill(new Uint8Array(8)));
-    const plan = ctx.withTx(tx => {
-      const me = requireAccount(base(tx));
-      const product = tx.db.product.id.find(a.productId);
-      if (!product || !product.isActive || !productVisible(tx, me.id, product.audienceTagIds)) fail('PRODUCT_NOT_FOUND');
-      if (!product.paymentMethods.includes(a.method)) fail('METHOD_NOT_ALLOWED');
-      if (!activeMethods(tx).has(a.method)) fail('METHOD_NOT_ACTIVE');
-      const cfg = cfgOf(tx, a.method);
-      if (!configured(a.method, cfg)) fail('PAYMENT_METHOD_NOT_CONFIGURED');
-      const s = settings(tx);
-      const original = discounted(product.priceToman, product.discountPercent);
-      let giftId = 0n;
-      let giftPercent = 0;
-      if (a.giftCode.trim()) {
-        if (!GATEWAYS.includes(a.method)) fail('GIFT_NOT_ALLOWED');
-        const g = checkGift(tx, me.id, a.giftCode, 'discount');
-        giftId = g.id;
-        giftPercent = g.discountPercent;
-      }
-      const final = a.method === 'in_app' ? 0n : discounted(original, giftPercent);
-      const pay = tx.db.payment.insert({
-        id: 0n,
-        accountId: me.id,
-        productId: product.id,
-        method: a.method,
-        sandbox: cfg.sandbox === true,
-        status: 'pending',
-        originalToman: product.priceToman,
-        finalToman: final,
-        amountRial: final * 10n,
-        coinCurrency: a.method === 'in_app' ? product.coinCurrency : '',
-        coinAmount: a.method === 'in_app' ? product.coinAmount : 0n,
-        giftId,
-        discountPercent: product.discountPercent,
-        authority: '',
-        refId: '',
-        storeToken: '',
-        cardMask: '',
-        error: '',
-        rewardGranted: false,
-        rewardError: '',
-        rewards: '[]',
-        inquiryCount: 0,
-        inquiredAt: undefined,
-        verifiedAt: undefined,
-        createdAt: tx.timestamp,
-        updatedAt: tx.timestamp,
-      });
-      if (giftId) tx.db.giftUse.insert({ id: 0n, giftId, accountId: me.id, paymentId: pay.id, status: 'reserved', createdAt: tx.timestamp, updatedAt: tx.timestamp });
-      if (a.method === 'in_app') {
-        changeBalance(tx, me.id, product.coinCurrency, -product.coinAmount, `buy:${product.key}`, 'payment', String(pay.id));
-        markPaid(tx, pay.id, `in_app-${pay.id}`, '');
-        return { kind: 'settled' as const, pay, product, cfg, s };
-      }
-      if (GATEWAYS.includes(a.method) && final === 0n) {
-        markPaid(tx, pay.id, `free-${pay.id}`, '');
-        return { kind: 'settled' as const, pay, product, cfg, s };
-      }
-      if (STORES.includes(a.method)) return { kind: 'store' as const, pay, product, cfg, s };
-      if (!s.publicBaseUrl) fail('PUBLIC_BASE_URL_MISSING');
-      return { kind: 'gateway' as const, pay, product, cfg, s, db: tx.databaseIdentity.toHexString() };
-    });
-
-    if (plan.kind === 'settled') {
-      return { paymentId: plan.pay.id, status: 'success', redirectUrl: '', sku: '', developerPayload: '', rewards: grantPayment(ctx, plan.pay.id) };
-    }
-    if (plan.kind === 'store') {
-      return { paymentId: plan.pay.id, status: 'store', redirectUrl: '', sku: a.method === 'bazaar' ? plan.product.skuBazaar : plan.product.skuMyket, developerPayload: String(plan.pay.id), rewards: '[]' };
-    }
-    const expires = ctx.timestamp.microsSinceUnixEpoch / 1_000_000n + 48n * 3600n;
-    const ticket = ticketFor(ctx.env.OTP_SECRET, plan.pay.id, expires);
-    const dbId = plan.db;
-    const callbackUrl = `${plan.s.publicBaseUrl}/v1/database/${dbId}/route/economy/callback?t=${ticket}&n=${salt}`;
-    const r = gatewayRequest(ctx, a.method, plan.cfg, plan.pay.amountRial, callbackUrl, plan.pay.id, `${plan.product.key} #${plan.pay.id}`);
-    ctx.withTx(tx => {
-      logCall(tx, plan.pay.id, 'request', r.log.url, r.log.req, r.log.res, r.log.status);
-      const row = tx.db.payment.id.find(plan.pay.id);
-      if (!row) return;
-      if (r.ok) tx.db.payment.id.update({ ...row, authority: r.authority, updatedAt: tx.timestamp });
-      else markFailed(tx, row.id, 'failed', 'GATEWAY_REQUEST_FAILED');
-    });
-    if (!r.ok) fail('GATEWAY_REQUEST_FAILED');
-    return { paymentId: plan.pay.id, status: 'redirect', redirectUrl: r.redirectUrl, sku: '', developerPayload: '', rewards: '[]' };
-  });
+  const purchaseStart = st.procedure({ productId: t.u64(), method: t.string(), giftCode: t.string() }, StartResult, (ctx, a) => startPurchase(ctx as unknown as EProc, a, ''));
 
   const purchaseSubmit = st.procedure({ paymentId: t.u64(), token: t.string() }, StatusResult, (ctx, a) => {
     const token = a.token.trim();
