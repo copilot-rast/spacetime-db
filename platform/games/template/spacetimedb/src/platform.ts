@@ -20,6 +20,7 @@ export const onConnect = spacetimedb.clientConnected(ctx => {
 });
 
 export const {
+  adminLogin,
   requestOtp,
   verifyOtp,
   logout,
@@ -28,6 +29,8 @@ export const {
   myRole,
   adminSettings,
   adminSaveSettings,
+  adminSaveLoginRules,
+  adminClearLoginLocks,
   adminCompleteSetup,
   adminSaveBrand,
   adminSmsProviders,

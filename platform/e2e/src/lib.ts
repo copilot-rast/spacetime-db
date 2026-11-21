@@ -113,7 +113,11 @@ export async function waitFor(fn: () => boolean, ms = 3000) {
 }
 
 export async function login(c: Client, phone: string) {
-  const err = await errorOf(c.conn.procedures.requestOtp({ phone }));
+  let err = await errorOf(c.conn.procedures.requestOtp({ phone }));
+  if (err.includes('DAILY_LIMIT')) {
+    sql(`DELETE FROM base_otp_daily WHERE key = '${phone}|${new Date(Date.now() + 3.5 * 3600 * 1000).toISOString().slice(0, 10)}'`);
+    err = await errorOf(c.conn.procedures.requestOtp({ phone }));
+  }
   const wait = err.match(/RETRY_LATER:(\d+)/);
   if (wait) {
     await new Promise(r => setTimeout(r, Number(wait[1]) * 1000 + 500));

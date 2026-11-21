@@ -131,6 +131,20 @@ export function defineAdmin(st: BaseSchema) {
     }
   );
 
+  const adminSaveLoginRules = st.reducer({ adminLoginMaxAttempts: t.u32(), adminLoginLockMinutes: t.u32() }, (ctx, a) => {
+    const me = requireRole(ctx, 'owner');
+    if (a.adminLoginMaxAttempts < 1 || a.adminLoginMaxAttempts > 50) fail('INVALID_RULE:adminLoginMaxAttempts');
+    if (a.adminLoginLockMinutes < 1 || a.adminLoginLockMinutes > 24 * 60) fail('INVALID_RULE:adminLoginLockMinutes');
+    ctx.db.settings.id.update({ ...settingsOf(ctx), ...a, updatedAt: ctx.timestamp });
+    audit(ctx, me.id, 'settings.save', 'admin_login', JSON.stringify(a));
+  });
+
+  const adminClearLoginLocks = st.reducer(ctx => {
+    const me = requireRole(ctx, 'owner');
+    ctx.db.loginAttempt.clear();
+    audit(ctx, me.id, 'admin_login.unlock', '');
+  });
+
   const adminCompleteSetup = st.reducer({ done: t.bool() }, (ctx, { done }) => {
     const me = requireRole(ctx, 'admin');
     ctx.db.settings.id.update({ ...settingsOf(ctx), setupDone: done, updatedAt: ctx.timestamp });
@@ -577,6 +591,8 @@ export function defineAdmin(st: BaseSchema) {
   return {
     adminSettings,
     adminSaveSettings,
+    adminSaveLoginRules,
+    adminClearLoginLocks,
     adminCompleteSetup,
     adminSaveBrand,
     adminSmsProviders,

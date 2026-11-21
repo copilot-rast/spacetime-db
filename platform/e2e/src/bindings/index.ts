@@ -36,6 +36,7 @@ import {
 // Import all reducer arg schemas
 import AdminAdjustReducer from "./admin_adjust_reducer";
 import AdminBulkPlayerTagsReducer from "./admin_bulk_player_tags_reducer";
+import AdminClearLoginLocksReducer from "./admin_clear_login_locks_reducer";
 import AdminClearSandboxSmsReducer from "./admin_clear_sandbox_sms_reducer";
 import AdminCompleteSetupReducer from "./admin_complete_setup_reducer";
 import AdminDeleteAppVersionReducer from "./admin_delete_app_version_reducer";
@@ -69,6 +70,7 @@ import AdminSaveEconomySettingsReducer from "./admin_save_economy_settings_reduc
 import AdminSaveGiftReducer from "./admin_save_gift_reducer";
 import AdminSaveKeyTypeReducer from "./admin_save_key_type_reducer";
 import AdminSaveLanguageReducer from "./admin_save_language_reducer";
+import AdminSaveLoginRulesReducer from "./admin_save_login_rules_reducer";
 import AdminSaveMetaReducer from "./admin_save_meta_reducer";
 import AdminSavePaymentMethodReducer from "./admin_save_payment_method_reducer";
 import AdminSavePrizeReducer from "./admin_save_prize_reducer";
@@ -99,6 +101,7 @@ import * as AdminEconomySummaryProcedure from "./admin_economy_summary_procedure
 import * as AdminGiftsProcedure from "./admin_gifts_procedure";
 import * as AdminGrantPrizeProcedure from "./admin_grant_prize_procedure";
 import * as AdminInquirePaymentProcedure from "./admin_inquire_payment_procedure";
+import * as AdminLoginProcedure from "./admin_login_procedure";
 import * as AdminModerationSummaryProcedure from "./admin_moderation_summary_procedure";
 import * as AdminPaymentProcedure from "./admin_payment_procedure";
 import * as AdminPaymentsProcedure from "./admin_payments_procedure";
@@ -461,6 +464,7 @@ const tablesSchema = __schema({
 const reducersSchema = __reducers(
   __reducerSchema("admin_adjust", AdminAdjustReducer),
   __reducerSchema("admin_bulk_player_tags", AdminBulkPlayerTagsReducer),
+  __reducerSchema("admin_clear_login_locks", AdminClearLoginLocksReducer),
   __reducerSchema("admin_clear_sandbox_sms", AdminClearSandboxSmsReducer),
   __reducerSchema("admin_complete_setup", AdminCompleteSetupReducer),
   __reducerSchema("admin_delete_app_version", AdminDeleteAppVersionReducer),
@@ -494,6 +498,7 @@ const reducersSchema = __reducers(
   __reducerSchema("admin_save_gift", AdminSaveGiftReducer),
   __reducerSchema("admin_save_key_type", AdminSaveKeyTypeReducer),
   __reducerSchema("admin_save_language", AdminSaveLanguageReducer),
+  __reducerSchema("admin_save_login_rules", AdminSaveLoginRulesReducer),
   __reducerSchema("admin_save_meta", AdminSaveMetaReducer),
   __reducerSchema("admin_save_payment_method", AdminSavePaymentMethodReducer),
   __reducerSchema("admin_save_prize", AdminSavePrizeReducer),
@@ -526,6 +531,7 @@ const proceduresSchema = __procedures(
   __procedureSchema("admin_gifts", AdminGiftsProcedure.params, AdminGiftsProcedure.returnType),
   __procedureSchema("admin_grant_prize", AdminGrantPrizeProcedure.params, AdminGrantPrizeProcedure.returnType),
   __procedureSchema("admin_inquire_payment", AdminInquirePaymentProcedure.params, AdminInquirePaymentProcedure.returnType),
+  __procedureSchema("admin_login", AdminLoginProcedure.params, AdminLoginProcedure.returnType),
   __procedureSchema("admin_moderation_summary", AdminModerationSummaryProcedure.params, AdminModerationSummaryProcedure.returnType),
   __procedureSchema("admin_payment", AdminPaymentProcedure.params, AdminPaymentProcedure.returnType),
   __procedureSchema("admin_payments", AdminPaymentsProcedure.params, AdminPaymentsProcedure.returnType),

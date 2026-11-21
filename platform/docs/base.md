@@ -8,6 +8,7 @@ Phase 1 of the roadmap. All names below are the wire names (SQL, subscriptions, 
 |---|---|---|
 | `OTP_SECRET` | yes | HMAC key for login codes and test codes. 32+ random bytes. |
 | `ADMIN_PHONES` | no | Comma list. These phones become `owner` on login. Use it to bootstrap the first owner. |
+| `ADMIN_USERNAME`, `ADMIN_PASSWORD` | no | Panel login without SMS, like the Nakama console. Both set and the password 8+ characters, or the login is off. |
 
 ## Roles
 
@@ -36,6 +37,12 @@ Phase 1 of the roadmap. All names below are the wire names (SQL, subscriptions, 
 | `admin_sms_providers` | admin | providers with `apiKeyMasked` and `hasKey`; the key itself never leaves the server |
 | `admin_test_phones` | admin | fixed-code phones |
 | `admin_sandbox_sms` | admin | last 50 sandbox messages |
+
+## Admin login with username and password
+
+`admin_login(username, password)` → `{ ok, error, accountId, role, retryAfterSec }`. It checks both values against `ADMIN_USERNAME` and `ADMIN_PASSWORD` and logs this device in as an account with phone `admin:<username>`, which is always `owner` (removing its role lasts only until its next login). Errors: `PASSWORD_LOGIN_DISABLED`, `INVALID_CREDENTIALS`, `TOO_MANY_ATTEMPTS` (with `retryAfterSec`).
+
+After `adminLoginMaxAttempts` (5) wrong tries the username is locked for `adminLoginLockMinutes` (15), even for the right password. The owner changes both with `admin_save_login_rules` and unlocks with `admin_clear_login_locks`. An SMS code can never reach this account. Every login writes `admin.password_login` to the audit log.
 
 ## Login
 

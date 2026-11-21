@@ -8,6 +8,7 @@ import { type Infer as __Infer } from "spacetimedb";
 // Import all reducer arg schemas
 import AdminAdjustReducer from "../admin_adjust_reducer";
 import AdminBulkPlayerTagsReducer from "../admin_bulk_player_tags_reducer";
+import AdminClearLoginLocksReducer from "../admin_clear_login_locks_reducer";
 import AdminClearSandboxSmsReducer from "../admin_clear_sandbox_sms_reducer";
 import AdminCompleteSetupReducer from "../admin_complete_setup_reducer";
 import AdminDeleteAppVersionReducer from "../admin_delete_app_version_reducer";
@@ -41,6 +42,7 @@ import AdminSaveEconomySettingsReducer from "../admin_save_economy_settings_redu
 import AdminSaveGiftReducer from "../admin_save_gift_reducer";
 import AdminSaveKeyTypeReducer from "../admin_save_key_type_reducer";
 import AdminSaveLanguageReducer from "../admin_save_language_reducer";
+import AdminSaveLoginRulesReducer from "../admin_save_login_rules_reducer";
 import AdminSaveMetaReducer from "../admin_save_meta_reducer";
 import AdminSavePaymentMethodReducer from "../admin_save_payment_method_reducer";
 import AdminSavePrizeReducer from "../admin_save_prize_reducer";
@@ -65,6 +67,7 @@ import UpdateProfileReducer from "../update_profile_reducer";
 
 export type AdminAdjustParams = __Infer<typeof AdminAdjustReducer>;
 export type AdminBulkPlayerTagsParams = __Infer<typeof AdminBulkPlayerTagsReducer>;
+export type AdminClearLoginLocksParams = __Infer<typeof AdminClearLoginLocksReducer>;
 export type AdminClearSandboxSmsParams = __Infer<typeof AdminClearSandboxSmsReducer>;
 export type AdminCompleteSetupParams = __Infer<typeof AdminCompleteSetupReducer>;
 export type AdminDeleteAppVersionParams = __Infer<typeof AdminDeleteAppVersionReducer>;
@@ -98,6 +101,7 @@ export type AdminSaveEconomySettingsParams = __Infer<typeof AdminSaveEconomySett
 export type AdminSaveGiftParams = __Infer<typeof AdminSaveGiftReducer>;
 export type AdminSaveKeyTypeParams = __Infer<typeof AdminSaveKeyTypeReducer>;
 export type AdminSaveLanguageParams = __Infer<typeof AdminSaveLanguageReducer>;
+export type AdminSaveLoginRulesParams = __Infer<typeof AdminSaveLoginRulesReducer>;
 export type AdminSaveMetaParams = __Infer<typeof AdminSaveMetaReducer>;
 export type AdminSavePaymentMethodParams = __Infer<typeof AdminSavePaymentMethodReducer>;
 export type AdminSavePrizeParams = __Infer<typeof AdminSavePrizeReducer>;

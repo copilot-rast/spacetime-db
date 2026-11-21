@@ -18,6 +18,8 @@ export function seedBase(ctx: Tx) {
       defaultLang: 'fa',
       setupDone: false,
       updatedAt: now,
+      adminLoginMaxAttempts: 5,
+      adminLoginLockMinutes: 15,
     });
   }
   if (!ctx.db.brand.id.find(0)) {
