@@ -91,9 +91,9 @@
         "packages/support/src/referral.ts",
         "packages/support/src/config.ts",
         "packages/support/src/activity.ts"
-        ]
-      },
-      {
+      ]
+    },
+    {
       "name": "@stg/social",
       "define": "defineSocial",
       "seed": "seedSocial",
@@ -105,6 +105,17 @@
         "packages/social/src/quota.ts",
         "packages/social/src/gifts.ts",
         "packages/social/src/tick.ts"
+      ]
+    },
+    {
+      "name": "@stg/games",
+      "define": "defineGames",
+      "seed": "seedGames",
+      "tables": "gamesTables",
+      "env": "gamesEnv",
+      "files": [
+        "packages/games/src/catalog.ts",
+        "packages/games/src/boards.ts"
       ]
     }
   ]

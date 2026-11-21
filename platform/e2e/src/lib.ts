@@ -143,6 +143,19 @@ export const SOCIAL_QUERIES = [
   'SELECT * FROM admin_giftables',
 ];
 
+export const GAMES_QUERIES = [
+  'SELECT * FROM games_list',
+  'SELECT * FROM my_game_tickets',
+  'SELECT * FROM my_matches',
+  'SELECT * FROM leaderboards',
+  'SELECT * FROM leaderboard_top',
+  'SELECT * FROM admin_games_settings',
+  'SELECT * FROM admin_games',
+  'SELECT * FROM admin_game_rooms',
+  'SELECT * FROM admin_game_servers',
+  'SELECT * FROM admin_leaderboards',
+];
+
 export const SUPPORT_QUERIES = [
   'SELECT * FROM support_departments',
   'SELECT * FROM my_tickets',
