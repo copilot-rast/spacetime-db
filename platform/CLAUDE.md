@@ -37,7 +37,7 @@ cd e2e && npm run gen && npx tsx base.test.ts && npx tsx players.test.ts && npx 
 - SpacetimeDB CLI stays on 2.12.0 (`spacetime version use 2.12.0`), matching the `spacetimedb` npm package.
 - Dev server: 127.0.0.1:7500, data in `.local/stdb`, CLI nickname `stglocal` (`spacetime server add stglocal --url http://127.0.0.1:7500 --no-fingerprint`).
 - Gamification tests move days with `admin_set_clock_offset`, items tests with `admin_set_items_clock_offset`, promo tests with `admin_set_promo_clock_offset` and publication tests with `admin_set_publication_clock_offset` (each package's own clock only); all set it back to 0 at the end.
-- The owner phone may request 10 codes a day per database; running every suite more than once a day needs `spacetime sql <db> -s stglocal --no-config "DELETE FROM base_otp_daily WHERE count >= 0"`.
+- Admins log in with ADMIN_USERNAME/ADMIN_PASSWORD (env owner) or panel users the owner creates; phones never carry a role. Test players may hit the daily SMS cap; `login()` in `e2e/src/lib.ts` clears today's `base_otp_daily` key when it does.
 - Publication runs its worker every 3 s (`pub_tick`); tests call `admin_publication_run` to run a pass at once. Push tests use the `log` provider; a token starting with `sandbox-dead` counts as unregistered.
 - Webhook and public routes live under `/v1/database/<db>/route/publication/...`; route paths are exact and cannot hold a dot, so keys go in the query string.
 - Sandbox SMS codes: `spacetime sql <db> -s stglocal --no-config "SELECT * FROM base_sandbox_sms"` or the panel's sandbox inbox.
