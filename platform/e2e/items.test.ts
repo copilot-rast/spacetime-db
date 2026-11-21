@@ -1,4 +1,4 @@
-import { DB, ECONOMY_QUERIES, GAMIFICATION_QUERIES, ITEMS_QUERIES, PLAYER_QUERIES, check, connect, done, errorOf, login, loginOwner, tr, uniquePhone, waitFor, type Client } from './src/lib.ts';
+import { DB, ECONOMY_QUERIES, GAMIFICATION_QUERIES, ITEMS_QUERIES, PLAYER_QUERIES, check, connect, done, errorOf, login, loginOwner, sql, tr, uniquePhone, waitFor, type Client } from './src/lib.ts';
 
 const BASE = process.env.STG_HTTP ?? 'http://127.0.0.1:7500';
 const PW = process.env.PLAYWRIGHT_CORE ?? new URL('../node_modules/playwright-core/index.mjs', import.meta.url).pathname;
@@ -229,6 +229,7 @@ async function main() {
   check('starter cannot need a level', (await errorOf(item(k('bad'), { isStarter: true, unlockLevel: 2 }))).includes('STARTER_HAS_LEVEL'));
   check('price with unknown currency refused', (await errorOf(item(k('bad'), { price: { currencyKey: 'nope', amount: 5n } }))).includes('CURRENCY_NOT_FOUND'));
 
+  sql('UPDATE items_item SET is_active = false WHERE is_starter = true');
   const starter = await item(k('starter_skin'), { isStarter: true, rarity: 'common' });
   const potion = await item(k('potion'), { typeKey: 'booster', stackable: true, maxStack: 20, isStarter: true, starterQuantity: 3, price: { currencyKey: gold, amount: 10n }, usePrizeId: pGold });
   const skinA = await item(k('skin_a'), { rarity: 'rare', price: { currencyKey: gold, amount: 100n }, upgrades: [{ currencyKey: gold, amount: 50n }, { currencyKey: gold, amount: 80n }], services: [{ key: 'polish', name: tr('براق'), currencyKey: gold, unitPrice: 5n, maxUnits: 3, prizeId: 0n }] });
