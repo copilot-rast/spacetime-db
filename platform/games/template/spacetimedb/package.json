@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "@stg/base": "*",
+    "@stg/players": "*",
     "spacetimedb": "2.12.0"
   },
   "devDependencies": {

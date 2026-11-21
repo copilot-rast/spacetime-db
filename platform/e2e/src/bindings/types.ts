@@ -33,6 +33,9 @@ export type AccountPage = __Infer<typeof AccountPage>;
 export const AdminAdmins = __t.object("AdminAdmins", {});
 export type AdminAdmins = __Infer<typeof AdminAdmins>;
 
+export const AdminReportRules = __t.object("AdminReportRules", {});
+export type AdminReportRules = __Infer<typeof AdminReportRules>;
+
 export const AdminSandboxSms = __t.object("AdminSandboxSms", {});
 export type AdminSandboxSms = __Infer<typeof AdminSandboxSms>;
 
@@ -53,6 +56,27 @@ export const AdminView = __t.object("AdminView", {
   createdAt: __t.timestamp(),
 });
 export type AdminView = __Infer<typeof AdminView>;
+
+export const AppVersionResult = __t.object("AppVersionResult", {
+  platform: __t.string(),
+  current: __t.string(),
+  status: __t.string(),
+  latest: __t.string(),
+  minimum: __t.string(),
+  message: __t.string(),
+  storeUrl: __t.string(),
+  get stores() {
+    return __t.array(AppVersionStore);
+  },
+});
+export type AppVersionResult = __Infer<typeof AppVersionResult>;
+
+export const AppVersionStore = __t.object("AppVersionStore", {
+  store: __t.string(),
+  name: __t.string(),
+  url: __t.string(),
+});
+export type AppVersionStore = __Infer<typeof AppVersionStore>;
 
 export const AuditListRow = __t.object("AuditListRow", {
   id: __t.u64(),
@@ -252,8 +276,320 @@ export type BaseTestPhone = __Infer<typeof BaseTestPhone>;
 export const Me = __t.object("Me", {});
 export type Me = __Infer<typeof Me>;
 
+export const ModerationSummary = __t.object("ModerationSummary", {
+  suspended: __t.u32(),
+  muted: __t.u32(),
+  reportsOpen: __t.u32(),
+  reportsReviewing: __t.u32(),
+  tagged: __t.u32(),
+});
+export type ModerationSummary = __Infer<typeof ModerationSummary>;
+
+export const MyProfile = __t.object("MyProfile", {});
+export type MyProfile = __Infer<typeof MyProfile>;
+
+export const MyReport = __t.object("MyReport", {
+  id: __t.u64(),
+  targetId: __t.u64(),
+  targetName: __t.string(),
+  titleKey: __t.string(),
+  title: __t.string(),
+  note: __t.string(),
+  matchId: __t.string(),
+  contentId: __t.string(),
+  gameKey: __t.string(),
+  status: __t.string(),
+  createdAt: __t.timestamp(),
+  closedAt: __t.option(__t.timestamp()),
+});
+export type MyReport = __Infer<typeof MyReport>;
+
+export const MyReportsPage = __t.object("MyReportsPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(MyReport);
+  },
+  perHour: __t.u32(),
+  remaining: __t.option(__t.u32()),
+  trusted: __t.bool(),
+  noteRequired: __t.bool(),
+  minAccountHours: __t.u32(),
+  duplicateHours: __t.u32(),
+});
+export type MyReportsPage = __Infer<typeof MyReportsPage>;
+
 export const MyRole = __t.object("MyRole", {});
 export type MyRole = __Infer<typeof MyRole>;
+
+export const MyStatus = __t.object("MyStatus", {});
+export type MyStatus = __Infer<typeof MyStatus>;
+
+export const MyStatusRow = __t.object("MyStatusRow", {
+  accountId: __t.u64(),
+  get suspension() {
+    return __t.option(RestrictionNotice);
+  },
+  get mute() {
+    return __t.option(RestrictionNotice);
+  },
+  get warnings() {
+    return __t.array(WarningNotice);
+  },
+});
+export type MyStatusRow = __Infer<typeof MyStatusRow>;
+
+export const MyTagRow = __t.object("MyTagRow", {
+  tagId: __t.u64(),
+  key: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  color: __t.string(),
+});
+export type MyTagRow = __Infer<typeof MyTagRow>;
+
+export const MyTags = __t.object("MyTags", {});
+export type MyTags = __Infer<typeof MyTags>;
+
+export const PlayerDetail = __t.object("PlayerDetail", {
+  get player() {
+    return PlayerRow;
+  },
+  get history() {
+    return __t.array(PlayersRestriction);
+  },
+  reportsAgainst: __t.u32(),
+  reportsBy: __t.u32(),
+  reportsOpen: __t.u32(),
+});
+export type PlayerDetail = __Infer<typeof PlayerDetail>;
+
+export const PlayerPage = __t.object("PlayerPage", {
+  total: __t.u32(),
+  get rows() {
+    return __t.array(PlayerRow);
+  },
+});
+export type PlayerPage = __Infer<typeof PlayerPage>;
+
+export const PlayerRow = __t.object("PlayerRow", {
+  id: __t.u64(),
+  phone: __t.string(),
+  displayName: __t.string(),
+  status: __t.string(),
+  role: __t.string(),
+  countryCode: __t.string(),
+  createdAt: __t.timestamp(),
+  lastLoginAt: __t.timestamp(),
+  get tags() {
+    return __t.array(TagRef);
+  },
+  get suspension() {
+    return __t.option(RestrictionRef);
+  },
+  get mute() {
+    return __t.option(RestrictionRef);
+  },
+});
+export type PlayerRow = __Infer<typeof PlayerRow>;
+
+export const PlayersAccountRules = __t.object("PlayersAccountRules", {
+  id: __t.u8(),
+  displayNameMin: __t.u8(),
+  displayNameMax: __t.u8(),
+  displayNameCharset: __t.string(),
+  displayNameUnique: __t.bool(),
+  updatedAt: __t.timestamp(),
+});
+export type PlayersAccountRules = __Infer<typeof PlayersAccountRules>;
+
+export const PlayersAppVersion = __t.object("PlayersAppVersion", {
+  platform: __t.string(),
+  latestVersion: __t.string(),
+  minVersion: __t.string(),
+  get storeLinks() {
+    return __t.array(StoreLink);
+  },
+  get updateMessage() {
+    return __t.array(Translation);
+  },
+  get forceMessage() {
+    return __t.array(Translation);
+  },
+  isActive: __t.bool(),
+  updatedAt: __t.timestamp(),
+});
+export type PlayersAppVersion = __Infer<typeof PlayersAppVersion>;
+
+export const PlayersCountry = __t.object("PlayersCountry", {
+  code: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  dialCode: __t.string(),
+  flagUrl: __t.string(),
+  isActive: __t.bool(),
+  sort: __t.i32(),
+});
+export type PlayersCountry = __Infer<typeof PlayersCountry>;
+
+export const PlayersExpireTimer = __t.object("PlayersExpireTimer", {
+  scheduledId: __t.u64(),
+  scheduledAt: __t.scheduleAt(),
+});
+export type PlayersExpireTimer = __Infer<typeof PlayersExpireTimer>;
+
+export const PlayersProfile = __t.object("PlayersProfile", {
+  accountId: __t.u64(),
+  countryCode: __t.string(),
+  updatedAt: __t.timestamp(),
+});
+export type PlayersProfile = __Infer<typeof PlayersProfile>;
+
+export const PlayersReport = __t.object("PlayersReport", {
+  id: __t.u64(),
+  reporterId: __t.u64(),
+  targetId: __t.u64(),
+  titleId: __t.u64(),
+  titleKey: __t.string(),
+  get titleName() {
+    return __t.array(Translation);
+  },
+  note: __t.string(),
+  matchId: __t.string(),
+  contentId: __t.string(),
+  gameKey: __t.string(),
+  status: __t.string(),
+  reviewerId: __t.u64(),
+  reviewStartedAt: __t.option(__t.timestamp()),
+  get notes() {
+    return __t.array(ReportNote);
+  },
+  action: __t.string(),
+  restrictionId: __t.u64(),
+  resolvedBy: __t.u64(),
+  resolvedAt: __t.option(__t.timestamp()),
+  resolutionNote: __t.string(),
+  createdAt: __t.timestamp(),
+});
+export type PlayersReport = __Infer<typeof PlayersReport>;
+
+export const PlayersReportRate = __t.object("PlayersReportRate", {
+  key: __t.string(),
+  count: __t.u32(),
+});
+export type PlayersReportRate = __Infer<typeof PlayersReportRate>;
+
+export const PlayersReportRules = __t.object("PlayersReportRules", {
+  id: __t.u8(),
+  perHour: __t.u32(),
+  duplicateHours: __t.u32(),
+  minAccountHours: __t.u32(),
+  noteRequired: __t.bool(),
+  trustedTagIds: __t.array(__t.u64()),
+  trustedPerHour: __t.u32(),
+  updatedAt: __t.timestamp(),
+});
+export type PlayersReportRules = __Infer<typeof PlayersReportRules>;
+
+export const PlayersReportTitle = __t.object("PlayersReportTitle", {
+  id: __t.u64(),
+  key: __t.string(),
+  get name() {
+    return __t.array(Translation);
+  },
+  get description() {
+    return __t.array(Translation);
+  },
+  isActive: __t.bool(),
+  sort: __t.i32(),
+});
+export type PlayersReportTitle = __Infer<typeof PlayersReportTitle>;
+
+export const PlayersRestriction = __t.object("PlayersRestriction", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  kind: __t.string(),
+  status: __t.string(),
+  startsAt: __t.timestamp(),
+  endsAt: __t.timestamp(),
+  get reason() {
+    return __t.array(Translation);
+  },
+  note: __t.string(),
+  reportId: __t.u64(),
+  createdBy: __t.u64(),
+  createdAt: __t.timestamp(),
+  liftedBy: __t.u64(),
+  liftedAt: __t.option(__t.timestamp()),
+  liftNote: __t.string(),
+});
+export type PlayersRestriction = __Infer<typeof PlayersRestriction>;
+
+export const PlayersTagMeta = __t.object("PlayersTagMeta", {
+  tagId: __t.u64(),
+  isPublic: __t.bool(),
+});
+export type PlayersTagMeta = __Infer<typeof PlayersTagMeta>;
+
+export const PlayersUserTag = __t.object("PlayersUserTag", {
+  id: __t.u64(),
+  accountId: __t.u64(),
+  tagId: __t.u64(),
+  createdBy: __t.u64(),
+  createdAt: __t.timestamp(),
+});
+export type PlayersUserTag = __Infer<typeof PlayersUserTag>;
+
+export const ReportDetail = __t.object("ReportDetail", {
+  get row() {
+    return ReportListRow;
+  },
+  get others() {
+    return __t.array(PlayersReport);
+  },
+  get target() {
+    return PlayerRow;
+  },
+  warns: __t.u32(),
+  mutes: __t.u32(),
+  suspends: __t.u32(),
+});
+export type ReportDetail = __Infer<typeof ReportDetail>;
+
+export const ReportListRow = __t.object("ReportListRow", {
+  get report() {
+    return PlayersReport;
+  },
+  targetPhone: __t.string(),
+  targetName: __t.string(),
+  reporterPhone: __t.string(),
+  reporterName: __t.string(),
+  againstTarget: __t.u32(),
+});
+export type ReportListRow = __Infer<typeof ReportListRow>;
+
+export const ReportNote = __t.object("ReportNote", {
+  by: __t.u64(),
+  at: __t.timestamp(),
+  text: __t.string(),
+});
+export type ReportNote = __Infer<typeof ReportNote>;
+
+export const ReportPage = __t.object("ReportPage", {
+  total: __t.u32(),
+  activeTotal: __t.u32(),
+  get rows() {
+    return __t.array(ReportListRow);
+  },
+});
+export type ReportPage = __Infer<typeof ReportPage>;
+
+export const ReportPlayerResult = __t.object("ReportPlayerResult", {
+  reportId: __t.u64(),
+  duplicate: __t.bool(),
+});
+export type ReportPlayerResult = __Infer<typeof ReportPlayerResult>;
 
 export const RequestOtpResult = __t.object("RequestOtpResult", {
   phone: __t.string(),
@@ -262,6 +598,43 @@ export const RequestOtpResult = __t.object("RequestOtpResult", {
   retryAfterSec: __t.u32(),
 });
 export type RequestOtpResult = __Infer<typeof RequestOtpResult>;
+
+export const RestrictionListRow = __t.object("RestrictionListRow", {
+  get restriction() {
+    return PlayersRestriction;
+  },
+  phone: __t.string(),
+  displayName: __t.string(),
+  createdByPhone: __t.string(),
+  effectiveStatus: __t.string(),
+});
+export type RestrictionListRow = __Infer<typeof RestrictionListRow>;
+
+export const RestrictionNotice = __t.object("RestrictionNotice", {
+  id: __t.u64(),
+  kind: __t.string(),
+  until: __t.timestamp(),
+  reason: __t.string(),
+});
+export type RestrictionNotice = __Infer<typeof RestrictionNotice>;
+
+export const RestrictionPage = __t.object("RestrictionPage", {
+  total: __t.u32(),
+  activeTotal: __t.u32(),
+  get rows() {
+    return __t.array(RestrictionListRow);
+  },
+});
+export type RestrictionPage = __Infer<typeof RestrictionPage>;
+
+export const RestrictionRef = __t.object("RestrictionRef", {
+  id: __t.u64(),
+  endsAt: __t.timestamp(),
+  get reason() {
+    return __t.array(Translation);
+  },
+});
+export type RestrictionRef = __Infer<typeof RestrictionRef>;
 
 export const SmsProviderView = __t.object("SmsProviderView", {
   id: __t.u64(),
@@ -276,6 +649,25 @@ export const SmsProviderView = __t.object("SmsProviderView", {
   updatedAt: __t.timestamp(),
 });
 export type SmsProviderView = __Infer<typeof SmsProviderView>;
+
+export const StoreLink = __t.object("StoreLink", {
+  store: __t.string(),
+  url: __t.string(),
+  get label() {
+    return __t.array(Translation);
+  },
+});
+export type StoreLink = __Infer<typeof StoreLink>;
+
+export const TagRef = __t.object("TagRef", {
+  id: __t.u64(),
+  key: __t.string(),
+  get title() {
+    return __t.array(Translation);
+  },
+  isPublic: __t.bool(),
+});
+export type TagRef = __Infer<typeof TagRef>;
 
 export const TestSmsResult = __t.object("TestSmsResult", {
   mode: __t.string(),
@@ -296,6 +688,14 @@ export const VerifyOtpResult = __t.object("VerifyOtpResult", {
   isNew: __t.bool(),
   attemptsLeft: __t.u32(),
   role: __t.string(),
+  detail: __t.string(),
 });
 export type VerifyOtpResult = __Infer<typeof VerifyOtpResult>;
+
+export const WarningNotice = __t.object("WarningNotice", {
+  id: __t.u64(),
+  reason: __t.string(),
+  createdAt: __t.timestamp(),
+});
+export type WarningNotice = __Infer<typeof WarningNotice>;
 

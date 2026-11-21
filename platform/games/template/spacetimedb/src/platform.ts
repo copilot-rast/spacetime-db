@@ -1,10 +1,20 @@
-import { defineBase, seedBase, type Tx } from '@stg/base';
+import { defineBase, seedBase } from '@stg/base';
+import { definePlayers, seedPlayers } from '@stg/players';
 import spacetimedb from './schema';
 import { gameInit } from './game/init';
 
+function seedAll(ctx: unknown) {
+  seedBase(ctx as never);
+  seedPlayers(ctx as never);
+}
+
 export const init = spacetimedb.init(ctx => {
-  seedBase(ctx as unknown as Tx);
+  seedAll(ctx);
   gameInit(ctx);
+});
+
+export const onConnect = spacetimedb.clientConnected(ctx => {
+  seedAll(ctx);
 });
 
 export const {
@@ -44,3 +54,38 @@ export const {
   adminAudit,
   adminDashboard,
 } = defineBase(spacetimedb);
+
+export const {
+  adminSaveAccountRules,
+  adminSaveAppVersion,
+  adminDeleteAppVersion,
+  checkAppVersion,
+  adminSaveCountry,
+  adminSetCountryActive,
+  adminDeleteCountry,
+  setMyCountry,
+  myProfile,
+  expireRestrictions,
+  myStatus,
+  myTags,
+  adminSetTagVisibility,
+  adminSetPlayerTags,
+  adminBulkPlayerTags,
+  adminRestrict,
+  adminLiftRestriction,
+  adminPlayers,
+  adminPlayer,
+  adminRestrictions,
+  adminSaveReportTitle,
+  adminDeleteReportTitle,
+  adminReportRules,
+  adminSaveReportRules,
+  reportPlayer,
+  myReports,
+  adminReports,
+  adminReport,
+  adminReportStatus,
+  adminReportNote,
+  adminResolveReport,
+  adminModerationSummary,
+} = definePlayers(spacetimedb);
