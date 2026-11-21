@@ -1,0 +1,33 @@
+import { test } from '@playwright/test';
+import { expect, freshPage, lastSandboxCode, STATE } from './fixtures.ts';
+import { OWNER } from './global-setup.ts';
+
+test('owner logs in with a sandbox code', async ({ browser }) => {
+  const page = await freshPage(browser);
+  await page.goto('/');
+  await expect(page.getByTestId('connect')).toBeVisible();
+  await expect(page.locator('#c-server')).toHaveValue(/\/stdb\/$/);
+  await expect(page.locator('#c-db')).toHaveValue('stg-template');
+  await page.getByTestId('connect-go').click();
+  await expect(page.getByTestId('login-phone')).toBeVisible();
+  await expect(page.getByTestId('brand-name')).not.toBeEmpty();
+  await page.locator('#l-phone').fill('۰۹۱۲۰۰۰۰۰۰۱');
+  await page.getByTestId('login-send').click();
+  await expect(page.getByTestId('login-code')).toBeVisible();
+  await expect(page.getByTestId('login-resend')).toBeDisabled();
+  await expect(page.getByTestId('login-resend')).toContainText(/[۰-۹]/);
+  const code = lastSandboxCode(OWNER);
+  const wrong = code.split('').map(d => String((Number(d) + 1) % 10)).join('');
+  await page.locator('input[name=code]').fill(wrong);
+  await page.getByTestId('login-verify').click();
+  await expect(page.getByTestId('attempts-left')).toBeVisible();
+  await expect(page.locator('.err-box')).toContainText('کد اشتباه است');
+  await page.locator('input[name=code]').fill(code);
+  await page.getByTestId('login-verify').click();
+  await expect(page.locator('.rail')).toBeVisible();
+  await expect(page.getByTestId('wizard')).toBeVisible();
+  await page.getByTestId('wz-later').click();
+  await expect(page.getByTestId('wizard')).toHaveCount(0);
+  await expect(page.getByTestId('dash-setup')).toBeVisible();
+  await page.context().storageState({ path: STATE });
+});
