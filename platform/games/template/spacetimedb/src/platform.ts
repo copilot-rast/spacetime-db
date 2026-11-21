@@ -7,6 +7,7 @@ import { definePromo, seedPromo } from '@stg/promo';
 import { definePublication, seedPublication } from '@stg/publication';
 import { defineSupport, seedSupport } from '@stg/support';
 import { defineSocial, seedSocial } from '@stg/social';
+import { defineGames, seedGames } from '@stg/games';
 import spacetimedb from './schema';
 import { gameInit } from './game/init';
 
@@ -20,6 +21,7 @@ function seedAll(ctx: unknown) {
   seedPublication(ctx as never);
   seedSupport(ctx as never);
   seedSocial(ctx as never);
+  seedGames(ctx as never);
 }
 
 export const init = spacetimedb.init(ctx => {
@@ -513,3 +515,51 @@ export const {
   socialTick,
   adminSocialRun,
 } = defineSocial(spacetimedb);
+
+export const {
+  gamesTick,
+  gamesPayoutWorker,
+  gamesList,
+  myGameTickets,
+  myMatches,
+  gamesCheck,
+  gamesJoin,
+  gamesCancel,
+  gamesFriendStart,
+  gamesReady,
+  gamesLeave,
+  gamesStartMatch,
+  gamesReportResult,
+  adminGamesSettings,
+  adminGames,
+  adminGameRooms,
+  adminGameServers,
+  adminSaveGamesSettings,
+  adminSetGamesClockOffset,
+  adminSaveGame,
+  adminDeleteGame,
+  adminSaveGameRoom,
+  adminDeleteGameRoom,
+  adminSaveGameServer,
+  adminDeleteGameServer,
+  adminMatches,
+  adminMatch,
+  adminCancelMatch,
+  adminPlayerGames,
+  adminGamePayouts,
+  adminRetryGamePayout,
+  adminGamesRun,
+  leaderboards,
+  leaderboardTop,
+  leaderboardHistory,
+  leaderboardWinners,
+  adminLeaderboards,
+  adminSaveLeaderboard,
+  adminDeleteLeaderboard,
+  adminResetLeaderboard,
+  adminSetLeaderboardScore,
+  adminLeaderboardStandings,
+  adminLeaderboardPeriods,
+  adminLeaderboardResults,
+  adminLeaderboardPay,
+} = defineGames(spacetimedb);

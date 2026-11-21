@@ -12,6 +12,7 @@
     "@stg/publication": "*",
     "@stg/support": "*",
     "@stg/social": "*",
+    "@stg/games": "*",
     "spacetimedb": "2.12.0"
   },
   "devDependencies": {
