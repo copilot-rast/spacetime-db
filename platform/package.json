@@ -1,0 +1,9 @@
+{
+  "name": "stg-platform",
+  "private": true,
+  "type": "module",
+  "workspaces": ["packages/*", "games/*/spacetimedb", "panel", "e2e"],
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  }
+}

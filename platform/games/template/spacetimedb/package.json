@@ -1,0 +1,12 @@
+{
+  "name": "@stg/game-template",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@stg/base": "*",
+    "spacetimedb": "2.12.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  }
+}
