@@ -5,7 +5,7 @@ Everything we build lives in `platform/`. The rest of this repository is upstrea
 ## Layout
 
 - `packages/<name>`: shared TypeScript packages (`@stg/base`, later economy, gamification, publication, social). Each exports its tables, env declarations and a `define<Name>(spacetimedb)` function. Game modules spread the tables into one `schema()` and re-export the functions by name.
-- `games/template/spacetimedb`: the module every game starts from. Game repos add `games/<game>/spacetimedb` with their own tables and reducers.
+- `games/template/spacetimedb`: the one module every game publishes. `schema.ts`, `platform.ts`, `platform-tables.ts` and `index.ts` belong to this repo. Game repos change only `src/game/` (`tables.ts` for tables and env, `index.ts` for reducers and views, `init.ts` for seed data), so upstream merges never touch game code.
 - `panel/`: admin panel (React + Vite), connects straight to a game database over WebSocket.
 - `e2e/`: Node end-to-end tests (`npx tsx base.test.ts`) and generated bindings in `e2e/src/bindings`.
 - `docs/`: roadmap and one contract file per package.
