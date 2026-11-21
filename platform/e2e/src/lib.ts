@@ -83,6 +83,17 @@ export const GAMIFICATION_QUERIES = [
   'SELECT * FROM admin_achievements',
 ];
 
+export const ITEMS_QUERIES = [
+  'SELECT * FROM items_type',
+  'SELECT * FROM items_item',
+  'SELECT * FROM items_product_rule',
+  'SELECT * FROM my_inventory',
+  'SELECT * FROM shop_flags',
+  'SELECT * FROM admin_items_settings',
+  'SELECT * FROM admin_offers',
+  'SELECT * FROM admin_offer_settings',
+];
+
 export function connect(token?: string, extra: string[] = []): Promise<Client> {
   return new Promise((resolve, reject) => {
     const b = DbConnection.builder()

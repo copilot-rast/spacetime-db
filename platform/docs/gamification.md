@@ -15,6 +15,8 @@ Phase 4: player events, event prizes, level tables, streaks with milestones (saf
 - `metaUseChecks` (new in economy): a meta used by a level table (source or level meta) or a relation (source or target) cannot be deleted.
 - `extraItemTypes` / `itemHandlers` / `itemValidators` (the last new in economy): prize item `{type: 'achievement', key, action: 'give', value: tier}` gives an achievement inside the grant; an unknown key is refused on save (`ACHIEVEMENT_NOT_FOUND`).
 
+`playerLevel(ctx, accountId, tableId = 0)` (exported) reads a player's stored level on a table; 0 means the main table, the first active one by `sort`. Other packages use it for level rules.
+
 Server code records events with `recordEvent(ctx, accountId, key, value = 1, metadata = '', source = 'server')` (exported). A server call with an unknown or inactive type returns `undefined` instead of failing, so a missing type never breaks a login or a purchase.
 
 ## Settings (`gam_settings`, id 0)
