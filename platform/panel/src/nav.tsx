@@ -36,12 +36,34 @@ import {
   Scales,
   CreditCard,
   Wallet,
+  Trophy,
+  Backpack,
+  Megaphone,
+  Lightning,
+  Receipt as ReceiptIc,
+  FlagBanner,
+  TrendUp,
+  TreeStructure,
+  Fire,
+  ListChecks,
+  Stack as StackIc,
+  Medal,
+  HandCoins,
+  SquaresFour,
+  Package as PackageIc,
+  Sparkle,
+  Layout,
+  Image,
+  Handshake,
+  Ticket as TicketIc,
+  ClipboardText,
+  SlidersHorizontal as Sliders2,
 } from '@phosphor-icons/react';
 import { t } from './i18n.ts';
 
 export type Need = 'operator' | 'admin' | 'owner';
 
-export type ModeId = 'overview' | 'players' | 'economy' | 'access' | 'settings';
+export type ModeId = 'overview' | 'players' | 'economy' | 'progress' | 'items' | 'promo' | 'access' | 'settings';
 
 export type PageDef = { id: string; path: string; mode: ModeId; label: () => string; icon: Icon; need: Need };
 
@@ -49,6 +71,9 @@ export const MODES: { id: ModeId; label: () => string; icon: Icon }[] = [
   { id: 'overview', label: () => t('navOverview'), icon: ChartPieSlice },
   { id: 'players', label: () => t('navModeration'), icon: UsersThree },
   { id: 'economy', label: () => t('navEconomy'), icon: Coins },
+  { id: 'progress', label: () => t('navProgress'), icon: Trophy },
+  { id: 'items', label: () => t('navItemsMode'), icon: Backpack },
+  { id: 'promo', label: () => t('navPromo'), icon: Megaphone },
   { id: 'access', label: () => t('navAccess'), icon: ShieldCheck },
   { id: 'settings', label: () => t('navSettings'), icon: GearSix },
 ];
@@ -66,11 +91,29 @@ export const PAGES: PageDef[] = [
   { id: 'products', path: 'products', mode: 'economy', label: () => t('navProducts'), icon: Storefront, need: 'operator' },
   { id: 'gifts', path: 'gifts', mode: 'economy', label: () => t('navGifts'), icon: Ticket, need: 'operator' },
   { id: 'payments', path: 'payments', mode: 'economy', label: () => t('navPayments'), icon: Receipt, need: 'operator' },
+  { id: 'event-types', path: 'event-types', mode: 'progress', label: () => t('navEventTypes'), icon: Lightning, need: 'operator' },
+  { id: 'event-log', path: 'event-log', mode: 'progress', label: () => t('navEventLog'), icon: ClipboardText, need: 'operator' },
+  { id: 'event-rules', path: 'event-rules', mode: 'progress', label: () => t('navEventRules'), icon: FlagBanner, need: 'operator' },
+  { id: 'level-tables', path: 'level-tables', mode: 'progress', label: () => t('navLevelTables'), icon: TrendUp, need: 'operator' },
+  { id: 'meta-relations', path: 'meta-relations', mode: 'progress', label: () => t('navMetaRelations'), icon: TreeStructure, need: 'operator' },
+  { id: 'streaks', path: 'streaks', mode: 'progress', label: () => t('navStreaks'), icon: Fire, need: 'operator' },
+  { id: 'tasks', path: 'tasks', mode: 'progress', label: () => t('navTasks'), icon: ListChecks, need: 'operator' },
+  { id: 'task-groups', path: 'task-groups', mode: 'progress', label: () => t('navTaskGroups'), icon: StackIc, need: 'operator' },
+  { id: 'achievements', path: 'achievements', mode: 'progress', label: () => t('navAchievements'), icon: Medal, need: 'operator' },
+  { id: 'claims', path: 'claims', mode: 'progress', label: () => t('navClaims'), icon: HandCoins, need: 'operator' },
+  { id: 'item-types', path: 'item-types', mode: 'items', label: () => t('navItemTypes'), icon: SquaresFour, need: 'operator' },
+  { id: 'items', path: 'items', mode: 'items', label: () => t('navItems'), icon: PackageIc, need: 'operator' },
+  { id: 'offers', path: 'offers', mode: 'items', label: () => t('navOffers'), icon: Sparkle, need: 'operator' },
+  { id: 'placements', path: 'placements', mode: 'promo', label: () => t('navPlacements'), icon: Layout, need: 'operator' },
+  { id: 'banners', path: 'banners', mode: 'promo', label: () => t('navBanners'), icon: Image, need: 'operator' },
+  { id: 'sponsors', path: 'sponsors', mode: 'promo', label: () => t('navSponsors'), icon: Handshake, need: 'operator' },
+  { id: 'chance-games', path: 'chance-games', mode: 'promo', label: () => t('navChanceGames'), icon: TicketIc, need: 'operator' },
+  { id: 'chance-plays', path: 'chance-plays', mode: 'promo', label: () => t('navChancePlays'), icon: ReceiptIc, need: 'operator' },
   { id: 'admins', path: 'admins', mode: 'access', label: () => t('navAdmins'), icon: IdentificationBadge, need: 'operator' },
   { id: 'audit', path: 'audit', mode: 'access', label: () => t('navAudit'), icon: ClockCounterClockwise, need: 'admin' },
 ];
 
-export type SectionDef = { id: string; group: 'project' | 'content' | 'login' | 'players' | 'economy'; label: () => string; icon: Icon; need: Need };
+export type SectionDef = { id: string; group: 'project' | 'content' | 'login' | 'players' | 'economy' | 'progress' | 'items' | 'promo'; label: () => string; icon: Icon; need: Need };
 
 export const SECTIONS: SectionDef[] = [
   { id: 'brand', group: 'project', label: () => t('stBrand'), icon: Palette, need: 'operator' },
@@ -91,6 +134,10 @@ export const SECTIONS: SectionDef[] = [
   { id: 'report-rules', group: 'players', label: () => t('stReportRules'), icon: Scales, need: 'operator' },
   { id: 'payment-methods', group: 'economy', label: () => t('stPaymentMethods'), icon: CreditCard, need: 'admin' },
   { id: 'economy-settings', group: 'economy', label: () => t('stEconomySettings'), icon: Wallet, need: 'admin' },
+  { id: 'gam-settings', group: 'progress', label: () => t('stGamSettings'), icon: Sliders2, need: 'operator' },
+  { id: 'items-settings', group: 'items', label: () => t('stItemsSettings'), icon: Backpack, need: 'operator' },
+  { id: 'offer-settings', group: 'items', label: () => t('stOfferSettings'), icon: Sparkle, need: 'operator' },
+  { id: 'promo-settings', group: 'promo', label: () => t('stPromoSettings'), icon: Megaphone, need: 'operator' },
 ];
 
 export const GROUPS: { id: SectionDef['group']; label: () => string }[] = [
@@ -99,9 +146,13 @@ export const GROUPS: { id: SectionDef['group']; label: () => string }[] = [
   { id: 'login', label: () => t('stGroupLogin') },
   { id: 'players', label: () => t('stGroupPlayers') },
   { id: 'economy', label: () => t('stGroupEconomy') },
+  { id: 'progress', label: () => t('navProgress') },
+  { id: 'items', label: () => t('navItemsMode') },
+  { id: 'promo', label: () => t('navPromo') },
 ];
 
 export function pageMode(page: string): ModeId {
   if (page === 'player') return 'players';
+  if (page === 'sponsor-report') return 'promo';
   return PAGES.find(p => p.id === page)?.mode ?? 'overview';
 }

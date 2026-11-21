@@ -24,6 +24,7 @@ import {
   type TestPhoneRow,
 } from './dialogs.tsx';
 import { openWizard } from './shell.tsx';
+import { GamSettingsSection, ItemsSettingsSection, OfferSettingsSection, PromoSettingsSection } from './settings3.tsx';
 import { AdminLoginSection, AccountRulesSection, AppVersionsSection, CountriesSection, EconomySettingsSection, PaymentMethodsSection, ReportRulesSection, ReportTitlesSection } from './settings2.tsx';
 
 export function SettingsWindow() {
@@ -98,6 +99,10 @@ export function SettingsWindow() {
             {section?.id === 'report-rules' && <ReportRulesSection ro={ro} />}
             {section?.id === 'payment-methods' && <PaymentMethodsSection />}
             {section?.id === 'economy-settings' && <EconomySettingsSection />}
+            {section?.id === 'gam-settings' && <GamSettingsSection ro={ro} />}
+            {section?.id === 'items-settings' && <ItemsSettingsSection ro={ro} />}
+            {section?.id === 'offer-settings' && <OfferSettingsSection ro={ro} />}
+            {section?.id === 'promo-settings' && <PromoSettingsSection ro={ro} />}
           </div>
         </div>
       </div>

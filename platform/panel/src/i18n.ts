@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react';
 import { enP2, faP2, type DictP2 } from './i18n-p2.ts';
+import { enP3, faP3, type DictP3 } from './i18n-p3.ts';
 
 export type Locale = 'fa' | 'en';
 
@@ -879,19 +880,20 @@ const en: DictBase = {
   },
 };
 
-function merge(base: DictBase, p2: DictP2) {
+function merge(base: DictBase, p2: DictP2, p3: DictP3) {
   return {
     ...base,
     ...p2,
-    err: { ...base.err, ...p2.errP2 } as Record<string, string>,
-    act: { ...base.act, ...p2.actP2 },
-    actGroup: { ...base.actGroup, ...p2.actGroupP2 },
+    ...p3,
+    err: { ...base.err, ...p2.errP2, ...p3.errP3 } as Record<string, string>,
+    act: { ...base.act, ...p2.actP2, ...p3.actP3 },
+    actGroup: { ...base.actGroup, ...p2.actGroupP2, ...p3.actGroupP3 },
   };
 }
 
 export type Dict = ReturnType<typeof merge>;
 
-const dicts: Record<Locale, Dict> = { fa: merge(fa, faP2), en: merge(en, enP2) };
+const dicts: Record<Locale, Dict> = { fa: merge(fa, faP2, faP3), en: merge(en, enP2, enP3) };
 
 export type StrKey = { [K in keyof Dict]: Dict[K] extends string ? K : never }[keyof Dict];
 
@@ -988,9 +990,9 @@ export function actionGroups(): [string, string][] {
   return Object.entries(dicts[locale].actGroup);
 }
 
-const ERR_CODES = Object.keys(dicts.fa.err).filter(k => k !== 'UNKNOWN' && k !== 'GATEWAY_CODE' && k !== 'INVALID_RULE');
+const ERR_CODES = Object.keys(dicts.fa.err).filter(k => k !== 'UNKNOWN' && k !== 'GATEWAY_CODE');
 
-export type ErrInfo = { code: string; seconds?: number; field?: string; raw: string };
+export type ErrInfo = { code: string; seconds?: number; field?: string; extra?: string; raw: string };
 
 export function parseError(e: unknown): ErrInfo {
   const raw = typeof e === 'string' ? e : (e as Error)?.message ?? String(e);
@@ -1000,7 +1002,14 @@ export function parseError(e: unknown): ErrInfo {
   if (rule) return { code: 'INVALID_RULE', field: rule[1], raw };
   const gw = raw.match(/\b((?:ZARINPAL|ZIBAL)_-?\w+)/);
   if (gw && !ERR_CODES.includes(gw[1])) return { code: 'GATEWAY_CODE', field: gw[1], raw };
-  const found = (raw.match(/[A-Z][A-Z_]{2,}/g) ?? []).filter(c => ERR_CODES.includes(c));
+  const sfx = [...raw.matchAll(/\b([A-Z][A-Z0-9_]*[A-Z0-9]):([^\s,]+)/g)].filter(m => ERR_CODES.includes(m[1]));
+  if (sfx.length) {
+    const m = sfx[sfx.length - 1];
+    const parts = m[2].split(':');
+    const secs = /^\d+$/.test(parts[0]) ? Number(parts[0]) : undefined;
+    return { code: m[1], field: parts[0], extra: parts[1], seconds: secs, raw };
+  }
+  const found = (raw.match(/[A-Z][A-Z0-9_]{2,}/g) ?? []).filter(c => ERR_CODES.includes(c));
   if (found.length) return { code: found[found.length - 1], raw };
   return { code: 'UNKNOWN', raw };
 }
@@ -1010,7 +1019,7 @@ export function errorText(e: unknown | ErrInfo, seconds?: number): string {
   const errs = dicts[locale].err as Record<string, string>;
   const s = seconds ?? info.seconds ?? 0;
   const field = info.field ? dicts[locale].fieldP2[info.field] ?? info.field : '';
-  return fill(errs[info.code] ?? errs.UNKNOWN, { s, raw: info.raw.slice(0, 160), field, code: info.field ?? '' });
+  return fill(errs[info.code] ?? errs.UNKNOWN, { s, raw: info.raw.slice(0, 160), field, code: info.field ?? '', n: info.field && /^\d+(\.\d+)?$/.test(info.field) ? digits(info.field) : info.field ?? '', m: info.extra ? digits(info.extra) : '' });
 }
 
 export function codeText(code: string): string {

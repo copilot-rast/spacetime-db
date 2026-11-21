@@ -21,11 +21,12 @@ import { codeText, date, digits, errorText, num, parseError, phone as fmtPhone, 
 import { go, pageQuery, run, runToast, toast, trText, useDebounced, useFetch, useLanguages, useRoute, useSession, type Tr } from './app.ts';
 import { Dialog, Empty, ErrBox, Field, NumInput, OkBox, Pager, Seg, Skel, SwitchRow, TableSkeleton, TrInputs, confirmAsk, trMissingDefault } from './ui.tsx';
 import { CategoryPicker } from './dialogs.tsx';
+import { ProductRuleFields, saveProductRule, useProductRule } from './itemsui.tsx';
 import { BigInput, FloatInput, METHODS, Section, TagPicker, fmtNum, inputFromTs, methodLabel, microsFromInput, payStatusBadge, toman, when } from './widgets.tsx';
 
 const PAGE = 20;
 
-function useCatName() {
+export function useCatName() {
   const cats = useRows('category');
   const { def } = useLanguages();
   return (id: bigint) => {
@@ -35,7 +36,7 @@ function useCatName() {
   };
 }
 
-function FormDialog(props: {
+export function FormDialog(props: {
   title: string;
   testId: string;
   width?: number;
@@ -83,16 +84,16 @@ function FormDialog(props: {
   );
 }
 
-async function save(fn: () => Promise<unknown>) {
+export async function save(fn: () => Promise<unknown>) {
   const r = await run(() => fn(), t('saved'));
   return r.ok ? ({ ok: true } as const) : ({ ok: false, err: r.err } as const);
 }
 
-function needTitle(name: Tr[], def: string) {
+export function needTitle(name: Tr[], def: string) {
   return trMissingDefault(name, def) ? ({ ok: false, msg: t('trRequired', { lang: def }) } as const) : null;
 }
 
-function PageHead(props: { title: string; sub?: ReactNode; action?: ReactNode }) {
+export function PageHead(props: { title: string; sub?: ReactNode; action?: ReactNode }) {
   return (
     <div className="page-head">
       <div className="grow">
@@ -104,7 +105,7 @@ function PageHead(props: { title: string; sub?: ReactNode; action?: ReactNode })
   );
 }
 
-function AddButton(props: { label: string; onClick: () => void; testId: string }) {
+export function AddButton(props: { label: string; onClick: () => void; testId: string }) {
   const { can } = useSession();
   if (!can('admin')) return null;
   return (
@@ -115,7 +116,7 @@ function AddButton(props: { label: string; onClick: () => void; testId: string }
   );
 }
 
-function RowActions(props: { onEdit: () => void; onDelete: () => void; prefix: string; k: string }) {
+export function RowActions(props: { onEdit: () => void; onDelete: () => void; prefix: string; k: string }) {
   const { can } = useSession();
   if (!can('admin')) return null;
   return (
@@ -130,11 +131,11 @@ function RowActions(props: { onEdit: () => void; onDelete: () => void; prefix: s
   );
 }
 
-function ActiveBadge(props: { on: boolean }) {
+export function ActiveBadge(props: { on: boolean }) {
   return <span className={`badge ${props.on ? 'b-ok' : ''}`}>{props.on ? t('active') : t('inactive')}</span>;
 }
 
-function NameCell(props: { name: Tr[]; k: string }) {
+export function NameCell(props: { name: Tr[]; k: string }) {
   const { def } = useLanguages();
   return (
     <>
@@ -144,7 +145,7 @@ function NameCell(props: { name: Tr[]; k: string }) {
   );
 }
 
-async function del(text: string, fn: () => Promise<unknown>) {
+export async function del(text: string, fn: () => Promise<unknown>) {
   if (!(await confirmAsk(text, { danger: true, ok: t('delete') }))) return;
   await runToast(() => fn(), t('deleted'));
 }
@@ -440,29 +441,27 @@ export function Metas() {
   );
 }
 
-type Item = { type: string; key: string; action: string; value: number };
+export type Item = { type: string; key: string; action: string; value: number };
 
-const ACTIONS: Record<string, string[]> = { currency: ['add'], meta: ['add', 'set'], prize_group: ['give'] };
+const ACTIONS: Record<string, string[]> = { currency: ['add'], meta: ['add', 'set'], prize_group: ['give'], item: ['give'], achievement: ['give'] };
 
 function actionLabelI(a: string) {
   return a === 'add' ? t('acAdd') : a === 'set' ? t('acSet') : a === 'give' ? t('acGive') : a;
 }
 
 function typeLabelI(x: string) {
-  return x === 'currency' ? t('itCurrency') : x === 'meta' ? t('itMeta') : x === 'prize_group' ? t('itPrizeGroup') : x;
+  return x === 'currency' ? t('itCurrency') : x === 'meta' ? t('itMeta') : x === 'prize_group' ? t('itPrizeGroup') : x === 'item' ? t('itItem') : x === 'achievement' ? t('itAchievement') : x;
 }
 
 function ItemsEditor(props: { value: Item[]; onChange: (v: Item[]) => void }) {
   const currencies = useRows('currency');
   const metas = useRows('meta');
   const groups = useRows('prizeGroup');
+  const items = useRows('item');
+  const achievements = useRows('adminAchievements');
   const { def } = useLanguages();
   const keys = (type: string) =>
-    type === 'currency'
-      ? currencies.map(c => ({ key: c.key, name: trText(c.name, def) }))
-      : type === 'meta'
-        ? metas.map(c => ({ key: c.key, name: trText(c.name, def) }))
-        : groups.map(c => ({ key: c.key, name: trText(c.name, def) }));
+    (type === 'currency' ? currencies : type === 'meta' ? metas : type === 'item' ? items : type === 'achievement' ? achievements : groups).map(c => ({ key: c.key, name: trText(c.name, def) }));
   const up = (i: number, p: Partial<Item>) => props.onChange(props.value.map((x, j) => (j === i ? { ...x, ...p } : x)));
   return (
     <div className="stack stack-sm" data-testid="items">
@@ -477,7 +476,7 @@ function ItemsEditor(props: { value: Item[]; onChange: (v: Item[]) => void }) {
       )}
       {props.value.map((it, i) => (
         <div className="item-row" key={i} data-testid={`item-${i}`}>
-          <select className="select" value={it.type} aria-label={t('pzItemType')} onChange={e => up(i, { type: e.target.value, key: '', action: ACTIONS[e.target.value][0], value: e.target.value === 'prize_group' ? 1 : it.value })}>
+          <select className="select" value={it.type} aria-label={t('pzItemType')} onChange={e => up(i, { type: e.target.value, key: '', action: ACTIONS[e.target.value][0], value: ['prize_group', 'item', 'achievement'].includes(e.target.value) ? 1 : it.value })}>
             {Object.keys(ACTIONS).map(x => (
               <option key={x} value={x}>
                 {typeLabelI(x)}
@@ -563,17 +562,19 @@ function PrizeDialog(props: { row?: PrizeRow; onClose: () => void }) {
   );
 }
 
-function itemsText(items: Item[], names: (type: string, key: string) => string) {
+export function itemsText(items: Item[], names: (type: string, key: string) => string) {
   return items.map(i => `${names(i.type, i.key)} ${i.action === 'set' ? '=' : i.action === 'give' ? '×' : i.value < 0 ? '' : '+'}${fmtNum(i.value)}`).join('، ');
 }
 
-function useItemNames() {
+export function useItemNames() {
   const currencies = useRows('currency');
   const metas = useRows('meta');
   const groups = useRows('prizeGroup');
+  const items = useRows('item');
+  const achievements = useRows('adminAchievements');
   const { def } = useLanguages();
   return (type: string, key: string) => {
-    const list = type === 'currency' ? currencies : type === 'meta' ? metas : groups;
+    const list: { key: string; name: Tr[] }[] = type === 'currency' ? currencies : type === 'meta' ? metas : type === 'item' ? items : type === 'achievement' ? achievements : groups;
     const x = list.find(r => r.key === key);
     return x ? trText(x.name, def) || key : key;
   };
@@ -792,6 +793,8 @@ function ProductDialog(props: { row?: ProductRow; onClose: () => void }) {
   const [coverUrl, setCover] = useState(r?.coverUrl ?? '');
   const [sort, setSort] = useState(r?.sort ?? 0);
   const [isActive, setActive] = useState(r?.isActive ?? true);
+  const [rule, setRule] = useProductRule(r?.id);
+  const ruleExisted = useRows('productRule').some(x => x.productId === r?.id);
   const has = (m: string) => methods.includes(m);
   const money = has('zarinpal') || has('zibal') || has('bazaar') || has('myket');
   const gateway = has('zarinpal') || has('zibal');
@@ -804,8 +807,8 @@ function ProductDialog(props: { row?: ProductRow; onClose: () => void }) {
       submit={async () =>
         needTitle(name, def) ??
         (has('in_app') && (!coinCurrency || coinAmount <= 0n) ? ({ ok: false, msg: codeText('COIN_PRICE_REQUIRED') } as const) : null) ??
-        save(() =>
-          getConn().reducers.adminSaveProduct({
+        save(async () => {
+          await getConn().reducers.adminSaveProduct({
             id: r?.id ?? 0n,
             key: key.trim().toLowerCase(),
             name,
@@ -825,8 +828,10 @@ function ProductDialog(props: { row?: ProductRow; onClose: () => void }) {
             iconUrl: iconUrl.trim(),
             coverUrl: coverUrl.trim(),
             sort,
-          })
-        )
+          });
+          const id = r?.id ?? (await getConn().procedures.adminProducts({ query: key.trim().toLowerCase(), categoryId: 0n, isActive: '', page: 1, pageSize: 50 })).rows.find(x => x.key === key.trim().toLowerCase())?.id;
+          if (id) await saveProductRule(id, rule, ruleExisted);
+        })
       }
     >
       <Field label={t('key')} hint={t('ktKeyHint')} required>
@@ -901,6 +906,7 @@ function ProductDialog(props: { row?: ProductRow; onClose: () => void }) {
       <Field label={t('prAudience')} hint={t('prAudienceHint')} className="span-2">
         <TagPicker keyType="user" value={audienceTagIds} onChange={setAudience} testId="pr-audience" />
       </Field>
+      <ProductRuleFields value={rule} onChange={setRule} />
       <Field label={t('description')} className="span-2" hint={t('optional')}>
         <TrInputs value={description} onChange={setDescription} name="description" multiline />
       </Field>
@@ -933,7 +939,7 @@ function priceText(p: ProductRow, cur: (k: string) => string) {
   return parts.join(' · ');
 }
 
-function useCurName() {
+export function useCurName() {
   const currencies = useRows('currency');
   const { def } = useLanguages();
   return (k: string) => trText(currencies.find(c => c.key === k)?.name, def) || k;

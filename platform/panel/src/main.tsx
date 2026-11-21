@@ -9,6 +9,9 @@ import { ConnectScreen, ConnectingScreen, LoginScreen, NoAccessScreen } from './
 import { Shell } from './shell.tsx';
 import { Admins, Audit, Dashboard } from './pages.tsx';
 import { PlayerPage, PlayersList, Reports, Restrictions } from './moderation.tsx';
+import { Achievements, Claims, EventLog, EventRules, EventTypes, LevelTables, MetaRelations, Streaks, TaskGroups, Tasks } from './progress.tsx';
+import { ItemTypes, Items, Offers } from './itemsui.tsx';
+import { Banners, ChanceGames, ChancePlays, Placements, SponsorReport, Sponsors } from './promo.tsx';
 import { Currencies, EconomyOverview, Gifts, Metas, Payments, PrizeGroups, Prizes, Products } from './economy.tsx';
 import { SettingsWindow } from './settings.tsx';
 import { Wizard } from './wizard.tsx';
@@ -36,7 +39,7 @@ function Panel() {
     setWizard(true);
   }, [settings?.setupDone, !!settings, me?.id, can('admin')]);
 
-  const known = route.page === 'player' || PAGES.some(p => p.id === route.page && can(p.need));
+  const known = route.page === 'player' || route.page === 'sponsor-report' || PAGES.some(p => p.id === route.page && can(p.need));
   const def = known ? route.page : 'dashboard';
   const PAGE_EL: Record<string, () => ReactNode> = {
     players: () => <PlayersList />,
@@ -51,12 +54,31 @@ function Panel() {
     products: () => <Products />,
     gifts: () => <Gifts />,
     payments: () => <Payments />,
+    'event-types': () => <EventTypes />,
+    'event-log': () => <EventLog />,
+    'event-rules': () => <EventRules />,
+    'level-tables': () => <LevelTables />,
+    'meta-relations': () => <MetaRelations />,
+    streaks: () => <Streaks />,
+    tasks: () => <Tasks />,
+    'task-groups': () => <TaskGroups />,
+    achievements: () => <Achievements />,
+    claims: () => <Claims />,
+    'item-types': () => <ItemTypes />,
+    items: () => <Items />,
+    offers: () => <Offers />,
+    placements: () => <Placements />,
+    banners: () => <Banners />,
+    sponsors: () => <Sponsors />,
+    'sponsor-report': () => <SponsorReport key={route.query.get('id') ?? ''} />,
+    'chance-games': () => <ChanceGames />,
+    'chance-plays': () => <ChancePlays />,
     admins: () => <Admins />,
     audit: () => <Audit />,
   };
   const page = (PAGE_EL[def] ?? (() => <Dashboard />))();
   const mode = MODES.find(m => m.id === pageMode(def));
-  const pageLabel = def === 'player' ? t('navPlayer') : PAGES.find(p => p.id === def)?.label() ?? t('dashTitle');
+  const pageLabel = def === 'player' ? t('navPlayer') : def === 'sponsor-report' ? t('spReport') : PAGES.find(p => p.id === def)?.label() ?? t('dashTitle');
   const crumbs = mode && mode.label() !== pageLabel ? [mode.label(), pageLabel] : [pageLabel];
 
   return (

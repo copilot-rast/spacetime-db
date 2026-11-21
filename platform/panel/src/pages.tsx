@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import {
+  HandCoins,
+  Lightning,
+  ListChecks,
+  Medal,
   Key,
   LockKey,
   ChartBar,
@@ -91,6 +95,7 @@ export function Dashboard() {
   const { data, error, loading } = useFetch(() => getConn().procedures.adminDashboard({}), []);
   const mod = useFetch(() => getConn().procedures.adminModerationSummary({}), []);
   const eco = useFetch(() => getConn().procedures.adminEconomySummary({}), []);
+  const gam = useFetch(() => getConn().procedures.adminGamificationSummary({}), []);
   type Tile = { key: string; label: string; value: string; icon: React.ReactNode; tint: string; go: () => void };
   const modTiles: Tile[] = mod.data
     ? [
@@ -131,6 +136,15 @@ export function Dashboard() {
         },
       ]
     : [];
+  const gamTiles: Tile[] = gam.data
+    ? [
+        { key: 'eventsToday', label: t('dashEventsToday'), value: num(gam.data.eventsToday), icon: <Lightning className="ic" weight="duotone" />, tint: 'b-info', go: () => go('event-log') },
+        { key: 'claimsReady', label: t('dashClaimsReady'), value: num(gam.data.claimsReady), icon: <HandCoins className="ic" weight="duotone" />, tint: 'b-warn', go: () => go('claims?status=ready') },
+        { key: 'claimsFailed', label: t('dashClaimsFailed'), value: num(gam.data.claimsFailed), icon: <Warning className="ic" weight="duotone" />, tint: gam.data.claimsFailed ? 'b-bad' : '', go: () => go('claims?status=failed') },
+        { key: 'tasksCount', label: t('navTasks'), value: num(gam.data.tasks), icon: <ListChecks className="ic" weight="duotone" />, tint: 'b-teal', go: () => go('tasks') },
+        { key: 'achievementsCount', label: t('navAchievements'), value: num(gam.data.achievements), icon: <Medal className="ic" weight="duotone" />, tint: 'b-violet', go: () => go('achievements') },
+      ]
+    : [];
   return (
     <main className="page" data-testid="page-dashboard">
       <div className="page-head">
@@ -159,6 +173,9 @@ export function Dashboard() {
       <TileGrid tiles={modTiles} loading={!mod.data} n={5} testId="tiles-mod" />
       <div className="section-label">{t('dashEconomy')}</div>
       <TileGrid tiles={ecoTiles} loading={!eco.data} n={5} testId="tiles-eco" />
+      <div className="section-label">{t('navProgress')}</div>
+      {gam.data && gam.data.clockOffsetSec !== 0n && <Notice kind="warn" title={t('ckTitle')} text={t('dashClockOff')} />}
+      <TileGrid tiles={gamTiles} loading={!gam.data} n={5} testId="tiles-gam" />
     </main>
   );
 }
