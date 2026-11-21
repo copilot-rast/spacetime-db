@@ -5,8 +5,8 @@ import { mkdirSync } from 'node:fs';
 const DIR = '../.local/shots';
 mkdirSync(DIR, { recursive: true });
 
-const SECTIONS = ['brand', 'languages', 'setup', 'key-types', 'categories', 'tags', 'sms', 'test-phones', 'sandbox', 'otp', 'admin-login', 'account-rules', 'app-versions', 'countries', 'report-titles', 'report-rules', 'payment-methods', 'economy-settings'];
-const PAGES2 = ['players', 'restrictions', 'reports', 'economy', 'currencies', 'metas', 'prizes', 'prize-groups', 'products', 'gifts', 'payments'];
+const SECTIONS = ['brand', 'languages', 'setup', 'key-types', 'categories', 'tags', 'sms', 'test-phones', 'sandbox', 'otp', 'admin-login', 'account-rules', 'app-versions', 'countries', 'report-titles', 'report-rules', 'payment-methods', 'economy-settings', 'gam-settings', 'items-settings', 'offer-settings', 'promo-settings'];
+const PAGES2 = ['players', 'restrictions', 'reports', 'economy', 'currencies', 'metas', 'prizes', 'prize-groups', 'products', 'gifts', 'payments', 'event-types', 'event-log', 'event-rules', 'level-tables', 'meta-relations', 'streaks', 'tasks', 'task-groups', 'achievements', 'claims', 'item-types', 'items', 'offers', 'placements', 'banners', 'sponsors', 'chance-games', 'chance-plays'];
 
 async function settle(page: Page) {
   await page.waitForTimeout(450);
@@ -71,6 +71,52 @@ test.describe('screenshots', () => {
     await page.getByTestId('pr-method-in_app').click();
     await shot(page, 'fa-dialog-product');
     await page.keyboard.press('Escape');
+    await open(page, 'streaks');
+    await page.getByTestId('sk-add').click();
+    await page.getByTestId('sk-rewards-add').click();
+    await page.getByTestId('sk-milestones-add').click();
+    await page.getByTestId('sk-milestones-add').click();
+    await page.locator('input[name="sk-milestone-1-day"]').fill('۳۰');
+    await page.getByTestId('sk-dialog').locator('.dialog-body').evaluate(e => (e.scrollTop = e.scrollHeight));
+    await shot(page, 'fa-dialog-streak');
+    await page.keyboard.press('Escape');
+    await open(page, 'chance-games');
+    await page.getByTestId('cg-add').click();
+    await page.locator('input[name="cg-slot-0-chance"]').fill('40');
+    await page.getByTestId('cg-slots-add').click();
+    await page.getByTestId('cg-slots-add').click();
+    await page.locator('input[name="cg-slot-2-chance"]').fill('10');
+    await page.getByTestId('cg-dialog').locator('.dialog-body').evaluate(e => (e.scrollTop = 260));
+    await shot(page, 'fa-dialog-chance');
+    await page.keyboard.press('Escape');
+    await open(page, 'banners');
+    await page.getByTestId('bn-add').click();
+    await page.getByTestId('bn-dialog').locator('.dialog-body').evaluate(e => (e.scrollTop = 620));
+    await shot(page, 'fa-dialog-banner');
+    await page.keyboard.press('Escape');
+    await open(page, 'tasks');
+    await page.getByTestId('tk-add').click();
+    await shot(page, 'fa-dialog-task');
+    await page.keyboard.press('Escape');
+    await open(page, 'offers');
+    await page.getByTestId('of-add').click();
+    await shot(page, 'fa-dialog-offer');
+    await page.keyboard.press('Escape');
+    await open(page, 'items');
+    await page.getByTestId('im-add').click();
+    await page.getByTestId('im-upgrades-add').click();
+    await page.getByTestId('im-services-add').click();
+    await page.getByTestId('im-dialog').locator('.dialog-body').evaluate(e => (e.scrollTop = 520));
+    await shot(page, 'fa-dialog-item');
+    await page.keyboard.press('Escape');
+    await open(page, 'sponsors');
+    await page.getByTestId('sp-add').click();
+    await page.getByTestId('sp-dialog').locator('input[name="key"]').fill(`shot${Date.now() % 100000}`);
+    await page.getByTestId('sp-dialog').locator('input[name="name-fa"]').fill('اسپانسر نمونه');
+    await page.getByTestId('sp-dialog').getByTestId('dialog-save').click();
+    await expect(page.getByTestId('sp-dialog')).toHaveCount(0);
+    await page.locator('[data-testid^="sp-report-shot"]').first().click();
+    await shot(page, 'fa-sponsor-report');
     await open(page, 'admins');
     await shot(page, 'fa-admins');
     await open(page, 'audit');
@@ -137,6 +183,10 @@ test.describe('screenshots', () => {
     await shot(page, 'en-reports');
     await open(page, 'settings/payment-methods');
     await shot(page, 'en-settings-payment-methods');
+    await open(page, 'event-types');
+    await shot(page, 'en-event-types');
+    await open(page, 'chance-games');
+    await shot(page, 'en-chance-games');
   });
 
   test('dark', async ({ page }) => {
@@ -153,6 +203,10 @@ test.describe('screenshots', () => {
     await shot(page, 'dark-products');
     await open(page, 'restrictions?status=all');
     await shot(page, 'dark-restrictions');
+    await open(page, 'streaks');
+    await shot(page, 'dark-streaks');
+    await open(page, 'settings/promo-settings');
+    await shot(page, 'dark-settings-promo-settings');
   });
 
   test('mobile', async ({ page }) => {
@@ -172,6 +226,10 @@ test.describe('screenshots', () => {
     await shot(page, 'mobile-payments');
     await open(page, 'economy');
     await shot(page, 'mobile-economy');
+    await open(page, 'tasks');
+    await shot(page, 'mobile-tasks');
+    await open(page, 'banners');
+    await shot(page, 'mobile-banners');
     await open(page, 'players?status=tagged');
     await settle(page);
     const pl = page.locator('[data-testid^="pl-card-"] a').first();

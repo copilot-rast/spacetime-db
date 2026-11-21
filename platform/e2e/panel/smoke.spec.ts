@@ -1,7 +1,7 @@
 import { expect, open, test } from './fixtures.ts';
 
-const PAGES = ['dashboard', 'players', 'restrictions', 'reports', 'economy', 'currencies', 'metas', 'prizes', 'prize-groups', 'products', 'gifts', 'payments'];
-const SECTIONS = ['tags', 'account-rules', 'app-versions', 'countries', 'report-titles', 'report-rules', 'payment-methods', 'economy-settings'];
+const PAGES = ['dashboard', 'players', 'restrictions', 'reports', 'economy', 'currencies', 'metas', 'prizes', 'prize-groups', 'products', 'gifts', 'payments', 'event-types', 'event-log', 'event-rules', 'level-tables', 'meta-relations', 'streaks', 'tasks', 'task-groups', 'achievements', 'claims', 'item-types', 'items', 'offers', 'placements', 'banners', 'sponsors', 'chance-games', 'chance-plays'];
+const SECTIONS = ['tags', 'account-rules', 'app-versions', 'countries', 'report-titles', 'report-rules', 'payment-methods', 'economy-settings', 'gam-settings', 'items-settings', 'offer-settings', 'promo-settings'];
 
 test('every new page renders without errors', async ({ page }) => {
   const errors: string[] = [];
